@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {episodes.map((episode) => (
+            {episodes.map((episode: Awaited<ReturnType<typeof prisma.episode.findMany>>[number]) => (
               <Link
                 key={episode.id}
                 href={`/admin/episodes/${episode.id}`}
@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {guests.map((guest) => (
+            {guests.map((guest: Awaited<ReturnType<typeof prisma.guest.findMany>>[number]) => (
               <Link
                 key={guest.id}
                 href={`/admin/guests/${guest.id}`}
@@ -106,7 +106,7 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {sponsors.map((sponsor) => (
+            {sponsors.map((sponsor: Awaited<ReturnType<typeof prisma.sponsor.findMany>>[number]) => (
               <Link
                 key={sponsor.id}
                 href={`/admin/sponsors/${sponsor.id}`}
@@ -130,7 +130,7 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {surveys.map((survey) => (
+            {surveys.map((survey: Awaited<ReturnType<typeof prisma.survey.findMany>>[number]) => (
               <Link
                 key={survey.id}
                 href={`/admin/surveys/${survey.id}`}

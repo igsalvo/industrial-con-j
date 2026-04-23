@@ -147,7 +147,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
       <div className="mt-12">
         <h2 className="text-3xl font-black">Episodios relacionados</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {relatedEpisodes.map((item) => (
+          {relatedEpisodes.map((item: (typeof relatedEpisodes)[number]) => (
             <EpisodeCard key={item.id} episode={item} />
           ))}
         </div>

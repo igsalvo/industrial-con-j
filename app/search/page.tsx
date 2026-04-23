@@ -21,7 +21,7 @@ export default async function SearchPage({
           <input className="field lg:col-span-2" defaultValue={resolvedSearchParams.q} name="q" placeholder="Lean, mantenimiento, mineria..." />
           <select className="field" defaultValue={resolvedSearchParams.guest || ""} name="guest">
             <option value="">Todos los invitados</option>
-            {results.filters.guests.map((guest) => (
+            {results.filters.guests.map((guest: (typeof results.filters.guests)[number]) => (
               <option key={guest.id} value={guest.slug}>
                 {guest.name}
               </option>
@@ -29,7 +29,7 @@ export default async function SearchPage({
           </select>
           <select className="field" defaultValue={resolvedSearchParams.tag || ""} name="tag">
             <option value="">Todos los temas</option>
-            {results.filters.tags.map((tag) => (
+            {results.filters.tags.map((tag: (typeof results.filters.tags)[number]) => (
               <option key={tag} value={tag}>
                 {tag}
               </option>
@@ -37,7 +37,7 @@ export default async function SearchPage({
           </select>
           <select className="field" defaultValue={resolvedSearchParams.industry || ""} name="industry">
             <option value="">Todas las industrias</option>
-            {results.filters.industries.map((industry) => (
+            {results.filters.industries.map((industry: (typeof results.filters.industries)[number]) => (
               <option key={industry} value={industry}>
                 {industry}
               </option>
@@ -55,7 +55,7 @@ export default async function SearchPage({
           {results.episodes.length === 0 ? (
             <EmptyState title="Sin coincidencias" description="Prueba otra combinacion de filtros o crea mas contenido desde admin." />
           ) : (
-            results.episodes.map((episode) => <EpisodeCard key={episode.id} episode={episode} />)
+            results.episodes.map((episode: (typeof results.episodes)[number]) => <EpisodeCard key={episode.id} episode={episode} />)
           )}
         </div>
       </div>
@@ -66,7 +66,7 @@ export default async function SearchPage({
           {results.guests.length === 0 ? (
             <EmptyState title="No encontramos invitados" description="La busqueda tambien cubre biografias y empresas." />
           ) : (
-            results.guests.map((guest) => <GuestCard key={guest.id} guest={guest} />)
+            results.guests.map((guest: (typeof results.guests)[number]) => <GuestCard key={guest.id} guest={guest} />)
           )}
         </div>
       </div>

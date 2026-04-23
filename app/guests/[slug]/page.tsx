@@ -30,8 +30,8 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
           <p className="mt-5 text-sm leading-7 text-[color:var(--muted)]">{guest.bio}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             {Object.entries(socialLinks)
-              .filter(([, value]) => value)
-              .map(([key, value]) => (
+              .filter(([, value]: [string, string | undefined]) => value)
+              .map(([key, value]: [string, string | undefined]) => (
                 <a key={key} href={value} target="_blank" rel="noreferrer" className="btn-secondary !px-4 !py-2 text-sm capitalize">
                   {key}
                 </a>
@@ -42,7 +42,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
         <div>
           <h2 className="text-3xl font-black">Episodios donde participa</h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            {guest.episodes.map((episode) => (
+            {guest.episodes.map((episode: (typeof guest.episodes)[number]) => (
               <EpisodeCard key={episode.id} episode={episode} />
             ))}
           </div>

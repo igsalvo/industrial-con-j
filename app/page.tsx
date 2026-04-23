@@ -20,7 +20,7 @@ export default async function HomePage() {
           description="Usa clips cortos como puerta de entrada a episodios completos y contenido descargable."
         />
         <div className="grid gap-6 lg:grid-cols-3">
-          {featuredClips.map((episode) => (
+          {featuredClips.map((episode: (typeof featuredClips)[number]) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>
@@ -33,7 +33,7 @@ export default async function HomePage() {
           description="Desde mejora continua hasta transformacion digital, con invitados del mundo industrial."
         />
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {latestEpisodes.map((episode) => (
+          {latestEpisodes.map((episode: (typeof latestEpisodes)[number]) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>
@@ -55,7 +55,7 @@ export default async function HomePage() {
           description="Selecciones editoriales para facilitar descubrimiento y aumentar tiempo de sesion."
         />
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
-          {recommendedEpisodes.map((episode) => (
+          {recommendedEpisodes.map((episode: (typeof recommendedEpisodes)[number]) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>
@@ -68,7 +68,7 @@ export default async function HomePage() {
           description="Expertos, operadores y lideres que aterrizan teoria en ejecucion."
         />
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {guests.map((guest) => (
+          {guests.map((guest: (typeof guests)[number]) => (
             <GuestCard key={guest.id} guest={guest} />
           ))}
         </div>

@@ -20,7 +20,7 @@ export default async function EpisodesPage() {
         <EmptyState title="Aun no hay episodios publicados" description="El panel de administracion permite crear el primer episodio sin tocar codigo." />
       ) : (
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {episodes.map((episode) => (
+          {episodes.map((episode: Awaited<ReturnType<typeof prisma.episode.findMany>>[number]) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>

@@ -26,7 +26,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
       />
       <div className="p-6">
         <div className="flex flex-wrap gap-2">
-          {episode.tags.slice(0, 3).map((tag) => (
+          {episode.tags.slice(0, 3).map((tag: string) => (
             <span key={tag} className="pill">
               {tag}
             </span>
@@ -39,7 +39,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
         <div className="mt-6 flex items-center justify-between gap-4 text-sm text-[color:var(--muted)]">
           <div>
             <p>{formatDate(episode.publishedAt)}</p>
-            <p>{episode.guests.map((guest) => guest.name).join(", ") || "Sin invitado"}</p>
+            <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitado"}</p>
           </div>
           <Link href={`/episodes/${episode.slug}`} className="btn-secondary gap-2 !px-4 !py-2 text-xs">
             Ver episodio

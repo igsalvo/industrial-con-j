@@ -36,7 +36,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             />
             <div className="p-8">
               <div className="flex flex-wrap gap-2">
-                {episode.tags.map((tag) => (
+                {episode.tags.map((tag: string) => (
                   <span key={tag} className="pill">
                     {tag}
                   </span>
@@ -73,7 +73,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           <div className="card p-8">
             <h2 className="text-2xl font-bold">Timestamps</h2>
             <ul className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
-              {episode.timestamps.map((timestamp) => (
+              {episode.timestamps.map((timestamp: string) => (
                 <li key={timestamp}>{timestamp}</li>
               ))}
             </ul>

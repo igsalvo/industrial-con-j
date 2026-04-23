@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { ensureAdminApiSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -13,7 +14,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     const payload = toSurveyPayload(surveyInputSchema.parse(await request.json()));
 
-    const survey = await prisma.$transaction(async (tx) => {
+    const survey = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       await tx.survey.update({
         where: { id },
         data: {

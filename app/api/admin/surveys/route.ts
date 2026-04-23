@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { ensureAdminApiSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
 
   try {
     const payload = toSurveyPayload(surveyInputSchema.parse(await request.json()));
-    const survey = await prisma.$transaction(async (tx) => {
+    const survey = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const createdSurvey = await tx.survey.create({
         data: {
           title: payload.title,

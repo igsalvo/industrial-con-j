@@ -19,7 +19,7 @@
     "bcrypt": "6.0.0",
     "jsonwebtoken": "9.0.2",
     "lucide-react": "0.473.0",
-    "next": "15.5.2",
+    "next": "15.5.9",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "zod": "4.1.5"

@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SurveyKind {
+  SURVEY
+  CONTEST
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  EMAIL
+}
+
+enum SurveyStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+model Episode {
+  id                 String           @id @default(cuid())
+  slug               String           @unique
+  title              String
+  shortDescription   String
+  longDescription    String
+  timestamps         String[]
+  spotifyUrl         String?
+  youtubeUrl         String?
+  applePodcastsUrl   String?
+  videoEmbedUrl      String?
+  audioEmbedUrl      String?
+  clipThumbnailUrl   String?
+  clipVideoUrl       String?
+  resourceLinks      Json?
+  tags               String[]
+  industries         String[]
+  isFeatured         Boolean          @default(false)
+  publishedAt        DateTime         @default(now())
+  sponsorId          String?
+  sponsor            Sponsor?         @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
+  guests             Guest[]
+  surveys            Survey[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([publishedAt])
+  @@index([sponsorId])
+}
+
+model Guest {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  name         String
+  profileImage String?
+  bio          String
+  company      String?
+  role         String?
+  industries   String[]
+  socialLinks  Json?
+  episodes     Episode[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Sponsor {
+  id              String    @id @default(cuid())
+  name            String
+  slug            String    @unique
+  logoUrl         String?
+  websiteUrl      String
+  description     String?
+  tier            String?
+  isFeatured      Boolean   @default(false)
+  episodes        Episode[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Survey {
+  id           String           @id @default(cuid())
+  title        String
+  slug         String           @unique
+  description  String?
+  kind         SurveyKind       @default(SURVEY)
+  status       SurveyStatus     @default(DRAFT)
+  successCopy  String?
+  episodeId    String?
+  episode      Episode?         @relation(fields: [episodeId], references: [id], onDelete: SetNull)
+  questions    SurveyQuestion[]
+  responses    SurveyResponse[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([episodeId])
+}
+
+model SurveyQuestion {
+  id                   String        @id @default(cuid())
+  surveyId             String
+  survey               Survey        @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  label                String
+  type                 QuestionType
+  placeholder          String?
+  helpText             String?
+  position             Int
+  isRequired           Boolean       @default(true)
+  options              String[]
+  conditionQuestionId  String?
+  conditionValue       String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  answers              SurveyAnswer[]
+
+  @@index([surveyId, position])
+}
+
+model SurveyResponse {
+  id           String         @id @default(cuid())
+  surveyId     String
+  survey       Survey         @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  episodeId    String?
+  episode      Episode?       @relation(fields: [episodeId], references: [id], onDelete: SetNull)
+  name         String?
+  email        String?
+  fingerprint  String
+  answers      SurveyAnswer[]
+  createdAt    DateTime       @default(now())
+
+  @@unique([surveyId, fingerprint])
+  @@index([surveyId, createdAt])
+}
+
+model SurveyAnswer {
+  id          String         @id @default(cuid())
+  responseId  String
+  response    SurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  questionId  String
+  question    SurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  value       String
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

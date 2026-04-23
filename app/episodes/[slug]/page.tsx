@@ -46,7 +46,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
               <p className="mt-4 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
               <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
                 <p>{formatDate(episode.publishedAt)}</p>
-                <p>{episode.guests.map((guest) => guest.name).join(", ") || "Sin invitados asociados"}</p>
+                <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitados asociados"}</p>
                 <p>{episode.sponsor ? `Sponsor: ${episode.sponsor.name}` : "Sin sponsor"}</p>
               </div>
             </div>
@@ -125,7 +125,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             <h2 className="text-2xl font-bold">Invitados</h2>
             <div className="mt-4 space-y-4">
               {episode.guests.length ? (
-                episode.guests.map((guest) => (
+                episode.guests.map((guest: (typeof episode.guests)[number]) => (
                   <div key={guest.id} className="rounded-2xl border border-[color:var(--line)] p-4">
                     <p className="font-semibold">{guest.name}</p>
                     <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>

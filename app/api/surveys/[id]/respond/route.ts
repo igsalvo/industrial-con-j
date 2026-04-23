@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { surveyResponseSchema } from "@/lib/validation";
@@ -31,7 +31,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       message: "Gracias por participar."
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json({ error: "Ya registramos una respuesta desde este dispositivo." }, { status: 409 });
     }
 

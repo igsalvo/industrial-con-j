@@ -21,7 +21,7 @@ export default async function EpisodesPage() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {episodes.map((episode: Awaited<ReturnType<typeof prisma.episode.findMany>>[number]) => (
-            <EpisodeCard key={episode.id} episode={episode} />
+            <EpisodeCard key={episode.slug} episode={episode} />
           ))}
         </div>
       )}

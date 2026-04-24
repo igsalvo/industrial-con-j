@@ -21,7 +21,7 @@ export default async function HomePage() {
         />
         <div className="grid gap-6 lg:grid-cols-3">
           {featuredClips.map((episode: (typeof featuredClips)[number]) => (
-            <EpisodeCard key={episode.id} episode={episode} />
+            <EpisodeCard key={episode.slug} episode={episode} />
           ))}
         </div>
       </section>
@@ -34,7 +34,7 @@ export default async function HomePage() {
         />
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {latestEpisodes.map((episode: (typeof latestEpisodes)[number]) => (
-            <EpisodeCard key={episode.id} episode={episode} />
+            <EpisodeCard key={episode.slug} episode={episode} />
           ))}
         </div>
       </section>
@@ -56,7 +56,7 @@ export default async function HomePage() {
         />
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
           {recommendedEpisodes.map((episode: (typeof recommendedEpisodes)[number]) => (
-            <EpisodeCard key={episode.id} episode={episode} />
+            <EpisodeCard key={episode.slug} episode={episode} />
           ))}
         </div>
       </section>
@@ -69,7 +69,7 @@ export default async function HomePage() {
         />
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {guests.map((guest: (typeof guests)[number]) => (
-            <GuestCard key={guest.id} guest={guest} />
+            <GuestCard key={guest.slug} guest={guest} />
           ))}
         </div>
       </section>

@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/utils";
 
 type EpisodeCardProps = {
   episode: {
+    id?: string;
     slug: string;
     title: string;
     shortDescription: string;

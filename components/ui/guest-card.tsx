@@ -4,6 +4,7 @@ export function GuestCard({
   guest
 }: {
   guest: {
+    id?: string;
     slug: string;
     name: string;
     company: string | null;

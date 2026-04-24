@@ -71,7 +71,7 @@ export default async function SearchPage({
           {guests.length === 0 ? (
             <EmptyState title="No encontramos invitados" description="La busqueda tambien cubre biografias y empresas." />
           ) : (
-            guests.map((guest) => <GuestCard key={guest.id} guest={guest} />)
+            guests.map((guest) => <GuestCard key={guest.slug} guest={guest} />)
           )}
         </div>
       </div>

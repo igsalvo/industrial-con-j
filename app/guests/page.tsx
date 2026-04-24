@@ -20,7 +20,7 @@ export default async function GuestsPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {guests.map((guest: Awaited<ReturnType<typeof prisma.guest.findMany>>[number]) => (
-            <GuestCard key={guest.id} guest={guest} />
+            <GuestCard key={guest.slug} guest={guest} />
           ))}
         </div>
       )}

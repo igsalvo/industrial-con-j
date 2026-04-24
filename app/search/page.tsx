@@ -11,6 +11,8 @@ export default async function SearchPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const results = await getSearchResults(resolvedSearchParams);
+  const tags = results.filters.tags as string[];
+  const industries = results.filters.industries as string[];
 
   return (
     <section className="shell py-12">
@@ -29,7 +31,7 @@ export default async function SearchPage({
           </select>
           <select className="field" defaultValue={resolvedSearchParams.tag || ""} name="tag">
             <option value="">Todos los temas</option>
-            {results.filters.tags.map((tag: (typeof results.filters.tags)[number]) => (
+            {tags.map((tag: string) => (
               <option key={tag} value={tag}>
                 {tag}
               </option>
@@ -37,7 +39,7 @@ export default async function SearchPage({
           </select>
           <select className="field" defaultValue={resolvedSearchParams.industry || ""} name="industry">
             <option value="">Todas las industrias</option>
-            {results.filters.industries.map((industry: (typeof results.filters.industries)[number]) => (
+            {industries.map((industry: string) => (
               <option key={industry} value={industry}>
                 {industry}
               </option>

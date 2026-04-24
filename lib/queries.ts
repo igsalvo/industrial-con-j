@@ -146,8 +146,8 @@ export async function getSearchResults(searchParams: {
     })
   ]);
 
-  const distinctTags = Array.from(new Set(episodes.flatMap((episode) => episode.tags))).sort();
-  const distinctIndustries = Array.from(new Set(episodes.flatMap((episode) => episode.industries))).sort();
+  const distinctTags = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.tags))).sort();
+  const distinctIndustries = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.industries))).sort();
 
   return {
     episodes,

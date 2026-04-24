@@ -11,8 +11,11 @@ export default async function SearchPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const results = await getSearchResults(resolvedSearchParams);
+  const guestFilters = results.filters.guests as Array<{ id: string; slug: string; name: string }>;
   const tags = results.filters.tags as string[];
   const industries = results.filters.industries as string[];
+  const episodes = results.episodes as Array<Parameters<typeof EpisodeCard>[0]["episode"]>;
+  const guests = results.guests as Array<Parameters<typeof GuestCard>[0]["guest"]>;
 
   return (
     <section className="shell py-12">
@@ -23,7 +26,7 @@ export default async function SearchPage({
           <input className="field lg:col-span-2" defaultValue={resolvedSearchParams.q} name="q" placeholder="Lean, mantenimiento, mineria..." />
           <select className="field" defaultValue={resolvedSearchParams.guest || ""} name="guest">
             <option value="">Todos los invitados</option>
-            {results.filters.guests.map((guest: (typeof results.filters.guests)[number]) => (
+            {guestFilters.map((guest) => (
               <option key={guest.id} value={guest.slug}>
                 {guest.name}
               </option>
@@ -54,10 +57,10 @@ export default async function SearchPage({
       <div className="mt-10">
         <h2 className="text-3xl font-black">Episodios</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {results.episodes.length === 0 ? (
+          {episodes.length === 0 ? (
             <EmptyState title="Sin coincidencias" description="Prueba otra combinacion de filtros o crea mas contenido desde admin." />
           ) : (
-            results.episodes.map((episode: (typeof results.episodes)[number]) => <EpisodeCard key={episode.id} episode={episode} />)
+            episodes.map((episode) => <EpisodeCard key={episode.id} episode={episode} />)
           )}
         </div>
       </div>
@@ -65,10 +68,10 @@ export default async function SearchPage({
       <div className="mt-10">
         <h2 className="text-3xl font-black">Invitados</h2>
         <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {results.guests.length === 0 ? (
+          {guests.length === 0 ? (
             <EmptyState title="No encontramos invitados" description="La busqueda tambien cubre biografias y empresas." />
           ) : (
-            results.guests.map((guest: (typeof results.guests)[number]) => <GuestCard key={guest.id} guest={guest} />)
+            guests.map((guest) => <GuestCard key={guest.id} guest={guest} />)
           )}
         </div>
       </div>

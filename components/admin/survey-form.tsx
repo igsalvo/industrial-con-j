@@ -1,8 +1,15 @@
 "use client";
 
-import { QuestionType, SurveyKind, SurveyStatus } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+type QuestionType = "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "EMAIL";
+type SurveyKind = "SURVEY" | "CONTEST";
+type SurveyStatus = "DRAFT" | "PUBLISHED" | "CLOSED";
+
+const QUESTION_TYPES: QuestionType[] = ["SHORT_TEXT", "LONG_TEXT", "SINGLE_CHOICE", "MULTIPLE_CHOICE", "EMAIL"];
+const SURVEY_KINDS: SurveyKind[] = ["SURVEY", "CONTEST"];
+const SURVEY_STATUSES: SurveyStatus[] = ["DRAFT", "PUBLISHED", "CLOSED"];
 
 type DraftQuestion = {
   id?: string;
@@ -64,7 +71,7 @@ export function SurveyForm({
     })) || [
       {
         label: "",
-        type: QuestionType.SHORT_TEXT,
+        type: "SHORT_TEXT",
         placeholder: "",
         helpText: "",
         position: 1,
@@ -151,15 +158,15 @@ export function SurveyForm({
       </div>
       <textarea className="field min-h-28" name="description" placeholder="Descripcion" defaultValue={survey?.description || ""} />
       <div className="grid gap-4 lg:grid-cols-4">
-        <select className="field" defaultValue={survey?.kind || SurveyKind.SURVEY} name="kind">
-          {Object.values(SurveyKind).map((kind) => (
+        <select className="field" defaultValue={survey?.kind || "SURVEY"} name="kind">
+          {SURVEY_KINDS.map((kind) => (
             <option key={kind} value={kind}>
               {kind}
             </option>
           ))}
         </select>
-        <select className="field" defaultValue={survey?.status || SurveyStatus.DRAFT} name="status">
-          {Object.values(SurveyStatus).map((status) => (
+        <select className="field" defaultValue={survey?.status || "DRAFT"} name="status">
+          {SURVEY_STATUSES.map((status) => (
             <option key={status} value={status}>
               {status}
             </option>
@@ -190,7 +197,7 @@ export function SurveyForm({
                 ...current,
                 {
                   label: "",
-                  type: QuestionType.SHORT_TEXT,
+                  type: "SHORT_TEXT",
                   placeholder: "",
                   helpText: "",
                   position: current.length + 1,
@@ -217,7 +224,7 @@ export function SurveyForm({
                   onChange={(event) => updateQuestion(index, "label", event.target.value)}
                 />
                 <select className="field" value={question.type} onChange={(event) => updateQuestion(index, "type", event.target.value as QuestionType)}>
-                  {Object.values(QuestionType).map((type) => (
+                  {QUESTION_TYPES.map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>

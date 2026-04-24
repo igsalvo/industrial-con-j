@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export const publicEpisodeInclude = {
@@ -14,7 +13,7 @@ export const publicEpisodeInclude = {
       }
     }
   }
-} satisfies Prisma.EpisodeInclude;
+};
 
 export async function getHomepageData() {
   const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([

@@ -27,7 +27,7 @@ export default async function SearchPage({
           <select className="field" defaultValue={resolvedSearchParams.guest || ""} name="guest">
             <option value="">Todos los invitados</option>
             {guestFilters.map((guest) => (
-              <option key={guest.id} value={guest.slug}>
+              <option key={guest.slug} value={guest.slug}>
                 {guest.name}
               </option>
             ))}

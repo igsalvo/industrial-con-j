@@ -43,7 +43,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
           <h2 className="text-3xl font-black">Episodios donde participa</h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             {guest.episodes.map((episode: (typeof guest.episodes)[number]) => (
-              <EpisodeCard key={episode.id} episode={episode} />
+              <EpisodeCard key={episode.slug} episode={episode} />
             ))}
           </div>
         </div>

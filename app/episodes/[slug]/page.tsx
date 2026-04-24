@@ -126,7 +126,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             <div className="mt-4 space-y-4">
               {episode.guests.length ? (
                 episode.guests.map((guest: (typeof episode.guests)[number]) => (
-                  <div key={guest.id} className="rounded-2xl border border-[color:var(--line)] p-4">
+                  <div key={guest.slug} className="rounded-2xl border border-[color:var(--line)] p-4">
                     <p className="font-semibold">{guest.name}</p>
                     <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>
                     <Link href={`/guests/${guest.slug}`} className="mt-3 inline-block text-sm font-semibold text-[color:var(--accent)]">
@@ -148,7 +148,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
         <h2 className="text-3xl font-black">Episodios relacionados</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           {relatedEpisodes.map((item: (typeof relatedEpisodes)[number]) => (
-            <EpisodeCard key={item.id} episode={item} />
+            <EpisodeCard key={item.slug} episode={item} />
           ))}
         </div>
       </div>

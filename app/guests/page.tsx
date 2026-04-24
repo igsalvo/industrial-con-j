@@ -19,7 +19,7 @@ export default async function GuestsPage() {
         <EmptyState title="Todavia no hay invitados" description="Agrega invitados desde el panel admin para poblar esta seccion." />
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {guests.map((guest: Awaited<ReturnType<typeof prisma.guest.findMany>>[number]) => (
+          {guests.map((guest) => (
             <GuestCard key={guest.slug} guest={guest} />
           ))}
         </div>

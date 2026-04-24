@@ -13,7 +13,7 @@ export const publicEpisodeInclude = {
       }
     }
   }
-};
+} as const;
 
 export async function getHomepageData() {
   const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([

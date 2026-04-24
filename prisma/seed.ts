@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
-import { PrismaClient, QuestionType, SurveyKind, SurveyStatus } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { QuestionType, SurveyKind, SurveyStatus } from "../lib/validation";
 
 const prisma = new PrismaClient();
 

@@ -27,7 +27,7 @@ export default async function CommunityPage() {
         {surveys.length === 0 ? (
           <EmptyState title="No hay encuestas activas" description="Publica una encuesta o concurso desde el admin para activar esta seccion." />
         ) : (
-          surveys.map((survey: Awaited<ReturnType<typeof prisma.survey.findMany>>[number]) => (
+          surveys.map((survey) => (
             <PublicSurveyForm key={survey.id} survey={survey} />
           ))
         )}

@@ -49,6 +49,7 @@ model Episode {
   sponsor            Sponsor?         @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
   guests             Guest[]
   surveys            Survey[]
+  surveyResponses    SurveyResponse[]
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 

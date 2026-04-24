@@ -57,7 +57,7 @@ export function SurveyForm({
   const router = useRouter();
   const [error, setError] = useState("");
   const [questions, setQuestions] = useState<DraftQuestion[]>(
-    survey?.questions.map((question) => ({
+    survey?.questions.map((question: NonNullable<typeof survey>["questions"][number]) => ({
       id: question.id,
       label: question.label,
       type: question.type,
@@ -121,7 +121,7 @@ export function SurveyForm({
           isRequired: question.isRequired,
           options: question.options
             .split(",")
-            .map((item) => item.trim())
+            .map((item: string) => item.trim())
             .filter(Boolean),
           conditionQuestionId: question.conditionQuestionId,
           conditionValue: question.conditionValue
@@ -159,14 +159,14 @@ export function SurveyForm({
       <textarea className="field min-h-28" name="description" placeholder="Descripcion" defaultValue={survey?.description || ""} />
       <div className="grid gap-4 lg:grid-cols-4">
         <select className="field" defaultValue={survey?.kind || "SURVEY"} name="kind">
-          {SURVEY_KINDS.map((kind) => (
+          {SURVEY_KINDS.map((kind: SurveyKind) => (
             <option key={kind} value={kind}>
               {kind}
             </option>
           ))}
         </select>
         <select className="field" defaultValue={survey?.status || "DRAFT"} name="status">
-          {SURVEY_STATUSES.map((status) => (
+          {SURVEY_STATUSES.map((status: SurveyStatus) => (
             <option key={status} value={status}>
               {status}
             </option>
@@ -174,7 +174,7 @@ export function SurveyForm({
         </select>
         <select className="field" defaultValue={survey?.episodeId || ""} name="episodeId">
           <option value="">Sin episodio asociado</option>
-          {episodes.map((episode) => (
+          {episodes.map((episode: { id: string; title: string }) => (
             <option key={episode.id} value={episode.id}>
               {episode.title}
             </option>
@@ -214,7 +214,7 @@ export function SurveyForm({
         </div>
 
         <div className="space-y-4">
-          {questions.map((question, index) => (
+          {questions.map((question: DraftQuestion, index: number) => (
             <div key={`${question.id || "new"}-${index}`} className="rounded-[1.5rem] border border-[color:var(--line)] p-4">
               <div className="grid gap-4 lg:grid-cols-2">
                 <input
@@ -224,7 +224,7 @@ export function SurveyForm({
                   onChange={(event) => updateQuestion(index, "label", event.target.value)}
                 />
                 <select className="field" value={question.type} onChange={(event) => updateQuestion(index, "type", event.target.value as QuestionType)}>
-                  {QUESTION_TYPES.map((type) => (
+                  {QUESTION_TYPES.map((type: QuestionType) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
@@ -260,7 +260,7 @@ export function SurveyForm({
                   <option value="">Sin condicion</option>
                   {questions
                     .filter((_, candidateIndex) => candidateIndex < index)
-                    .map((candidate, candidateIndex) => (
+                    .map((candidate: DraftQuestion, candidateIndex: number) => (
                       <option key={`${candidate.id || "candidate"}-${candidateIndex}`} value={candidate.id || `temp-${candidateIndex}`}>
                         {candidate.label || `Pregunta ${candidateIndex + 1}`}
                       </option>

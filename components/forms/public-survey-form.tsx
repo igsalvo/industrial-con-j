@@ -57,11 +57,11 @@ export function PublicSurveyForm({ survey }: { survey: SurveyWithQuestions }) {
         email,
         fingerprint,
         answers: visibleQuestions
-          .map((question) => ({
+          .map((question: SurveyQuestion) => ({
             questionId: question.id,
             value: answers[question.id]
           }))
-          .filter((item) => item.value)
+          .filter((item: { questionId: string; value: string | undefined }) => item.value)
       })
     });
 
@@ -90,7 +90,7 @@ export function PublicSurveyForm({ survey }: { survey: SurveyWithQuestions }) {
         <input className="field" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
       </div>
 
-      {visibleQuestions.map((question) => (
+      {visibleQuestions.map((question: SurveyQuestion) => (
         <div key={question.id} className="space-y-2">
           <label className="block text-sm font-semibold">{question.label}</label>
           {question.helpText ? <p className="text-xs text-[color:var(--muted)]">{question.helpText}</p> : null}
@@ -113,7 +113,7 @@ export function PublicSurveyForm({ survey }: { survey: SurveyWithQuestions }) {
           ) : null}
           {question.type === "SINGLE_CHOICE" ? (
             <div className="flex flex-wrap gap-2">
-              {question.options.map((option) => (
+              {question.options.map((option: string) => (
                 <button
                   key={option}
                   type="button"

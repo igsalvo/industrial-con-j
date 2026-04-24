@@ -25,7 +25,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
-          {links.map((link) => (
+          {links.map((link: { href: string; label: string }) => (
             <Link key={link.href} href={link.href} className="text-sm font-medium text-[color:var(--muted)] transition hover:text-[color:var(--foreground)]">
               {link.label}
             </Link>

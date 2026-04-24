@@ -36,7 +36,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedGuestIds, setSelectedGuestIds] = useState<string[]>(episode?.guests.map((guest) => guest.id) || []);
+  const [selectedGuestIds, setSelectedGuestIds] = useState<string[]>(episode?.guests.map((guest: { id: string }) => guest.id) || []);
   const defaultResources = useMemo(() => JSON.stringify(episode?.resourceLinks ?? [], null, 2), [episode?.resourceLinks]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -139,7 +139,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         />
         <select className="field" name="sponsorId" defaultValue={episode?.sponsorId || ""}>
           <option value="">Sin sponsor</option>
-          {sponsors.map((sponsor) => (
+          {sponsors.map((sponsor: { id: string; name: string }) => (
             <option key={sponsor.id} value={sponsor.id}>
               {sponsor.name}
             </option>
@@ -154,7 +154,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       <div className="card p-6">
         <p className="text-lg font-semibold">Invitados asociados</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {guests.map((guest) => {
+          {guests.map((guest: { id: string; name: string }) => {
             const checked = selectedGuestIds.includes(guest.id);
             return (
               <label key={guest.id} className="flex items-center gap-3 rounded-2xl border border-[color:var(--line)] p-3">

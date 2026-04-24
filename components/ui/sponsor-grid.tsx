@@ -11,7 +11,7 @@ export function SponsorGrid({
 }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {sponsors.map((sponsor) => (
+      {sponsors.map((sponsor: { id: string; name: string; websiteUrl: string; logoUrl: string | null; tier: string | null }) => (
         <a
           key={sponsor.id}
           href={sponsor.websiteUrl}

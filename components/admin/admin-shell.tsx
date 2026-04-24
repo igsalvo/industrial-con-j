@@ -30,7 +30,7 @@ export function AdminShell({
           <p className="mt-2 text-sm text-[color:var(--muted)]">{email}</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          {links.map((link) => (
+          {links.map((link: { href: string; label: string }) => (
             <Link key={link.href} href={link.href} className="btn-secondary !px-4 !py-2 text-sm">
               {link.label}
             </Link>

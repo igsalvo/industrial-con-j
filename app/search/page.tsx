@@ -60,7 +60,7 @@ export default async function SearchPage({
           {episodes.length === 0 ? (
             <EmptyState title="Sin coincidencias" description="Prueba otra combinacion de filtros o crea mas contenido desde admin." />
           ) : (
-            episodes.map((episode) => <EpisodeCard key={episode.id} episode={episode} />)
+            episodes.map((episode) => <EpisodeCard key={episode.slug} episode={episode} />)
           )}
         </div>
       </div>

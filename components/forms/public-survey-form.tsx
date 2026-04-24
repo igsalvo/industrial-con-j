@@ -1,9 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Survey, SurveyQuestion } from "@prisma/client";
+type SurveyQuestion = {
+  id: string;
+  label: string;
+  type: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "EMAIL";
+  placeholder: string | null;
+  helpText: string | null;
+  options: string[];
+  conditionQuestionId: string | null;
+  conditionValue: string | null;
+};
 
-type SurveyWithQuestions = Survey & {
+type SurveyWithQuestions = {
+  id: string;
+  title: string;
+  description: string | null;
+  kind: "SURVEY" | "CONTEST";
+  successCopy: string | null;
   questions: SurveyQuestion[];
 };
 

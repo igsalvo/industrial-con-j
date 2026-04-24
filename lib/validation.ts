@@ -1,6 +1,24 @@
-import { QuestionType, SurveyKind, SurveyStatus } from "@prisma/client";
 import { z } from "zod";
 import { normalizeList, slugify } from "@/lib/utils";
+
+export const QuestionType = {
+  SHORT_TEXT: "SHORT_TEXT",
+  LONG_TEXT: "LONG_TEXT",
+  SINGLE_CHOICE: "SINGLE_CHOICE",
+  MULTIPLE_CHOICE: "MULTIPLE_CHOICE",
+  EMAIL: "EMAIL"
+} as const;
+
+export const SurveyKind = {
+  SURVEY: "SURVEY",
+  CONTEST: "CONTEST"
+} as const;
+
+export const SurveyStatus = {
+  DRAFT: "DRAFT",
+  PUBLISHED: "PUBLISHED",
+  CLOSED: "CLOSED"
+} as const;
 
 const optionalUrl = z.string().trim().url().or(z.literal("")).optional().transform((value) => value || undefined);
 

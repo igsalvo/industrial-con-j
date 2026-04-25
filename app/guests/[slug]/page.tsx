@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getGuestBySlug } from "@/lib/queries";
+import { getGuestBySlug } from "@/lib/mvp-data";
 import { EpisodeCard } from "@/components/ui/episode-card";
 
 export default async function GuestDetailPage({ params }: { params: Promise<{ slug: string }> }) {

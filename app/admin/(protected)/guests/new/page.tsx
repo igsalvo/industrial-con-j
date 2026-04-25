@@ -1,12 +1,5 @@
-import { GuestForm } from "@/components/admin/guest-form";
+import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
 
-export default function NewGuestPage() {
-  return (
-    <div className="card p-8">
-      <h2 className="text-3xl font-black">Nuevo invitado</h2>
-      <div className="mt-6">
-        <GuestForm mode="create" />
-      </div>
-    </div>
-  );
+export default function AdminGuestNewPage() {
+  return <MvpPlaceholder eyebrow="Admin" title="Crear invitados proximamente" description="La carga de invitados se pospuso para mantener un despliegue simple." />;
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getHomepageData } from "@/lib/queries";
+import { getHomepageData } from "@/lib/mvp-data";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";
@@ -90,8 +90,8 @@ export default async function HomePage() {
             <a className="btn-secondary" href="https://open.spotify.com" target="_blank" rel="noreferrer">
               Spotify
             </a>
-            <Link className="btn-secondary" href="/community">
-              Encuestas y concursos
+            <Link className="btn-secondary" href="/search">
+              Explorar contenido
             </Link>
           </div>
         </div>

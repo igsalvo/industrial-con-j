@@ -1,12 +1,5 @@
-import { SponsorForm } from "@/components/admin/sponsor-form";
+import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
 
-export default function NewSponsorPage() {
-  return (
-    <div className="card p-8">
-      <h2 className="text-3xl font-black">Nuevo sponsor</h2>
-      <div className="mt-6">
-        <SponsorForm mode="create" />
-      </div>
-    </div>
-  );
+export default function AdminSponsorNewPage() {
+  return <MvpPlaceholder eyebrow="Admin" title="Crear sponsors proximamente" description="La vitrina comercial del MVP es estatica; el CRUD queda para una siguiente etapa." />;
 }

@@ -1,21 +1,5 @@
-import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { SponsorForm } from "@/components/admin/sponsor-form";
+import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
 
-export default async function EditSponsorPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const sponsor = await prisma.sponsor.findUnique({ where: { id } });
-
-  if (!sponsor) {
-    notFound();
-  }
-
-  return (
-    <div className="card p-8">
-      <h2 className="text-3xl font-black">Editar sponsor</h2>
-      <div className="mt-6">
-        <SponsorForm mode="edit" sponsor={sponsor} />
-      </div>
-    </div>
-  );
+export default function AdminSponsorDetailPage() {
+  return <MvpPlaceholder eyebrow="Admin" title="Edicion de sponsors deshabilitada" description="La edicion de marcas y patrocinios no forma parte de este primer release." />;
 }

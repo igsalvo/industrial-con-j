@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getSearchResults } from "@/lib/queries";
+import { getSearchResults } from "@/lib/mvp-data";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
@@ -11,11 +11,11 @@ export default async function SearchPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const results = await getSearchResults(resolvedSearchParams);
-  const guestFilters = results.filters.guests as Array<{ id: string; slug: string; name: string }>;
-  const tags = results.filters.tags as string[];
-  const industries = results.filters.industries as string[];
-  const episodes = results.episodes as Array<Parameters<typeof EpisodeCard>[0]["episode"]>;
-  const guests = results.guests as Array<Parameters<typeof GuestCard>[0]["guest"]>;
+  const guestFilters = results.filters.guests;
+  const tags = results.filters.tags;
+  const industries = results.filters.industries;
+  const episodes = results.episodes;
+  const guests = results.guests;
 
   return (
     <section className="shell py-12">

@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/queries";
+import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/mvp-data";
 import { formatDate } from "@/lib/utils";
 import { EpisodeCard } from "@/components/ui/episode-card";
-import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 
 type ResourceLink = {
   label: string;
@@ -140,7 +139,16 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          {episode.surveys[0] ? <PublicSurveyForm survey={episode.surveys[0]} /> : null}
+          <div className="card p-8">
+            <p className="pill">MVP</p>
+            <h2 className="mt-4 text-2xl font-bold">Comunidad proximamente</h2>
+            <p className="mt-3 text-sm text-[color:var(--muted)]">
+              Las encuestas y concursos quedaron fuera de este primer release para priorizar una experiencia estable.
+            </p>
+            <Link href="/community" className="btn-secondary mt-5 !px-4 !py-2 text-sm">
+              Ver roadmap
+            </Link>
+          </div>
         </aside>
       </div>
 

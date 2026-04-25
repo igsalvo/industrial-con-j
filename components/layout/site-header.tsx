@@ -7,7 +7,7 @@ const links = [
   { href: "/guests", label: "Invitados" },
   { href: "/sponsors", label: "Sponsors" },
   { href: "/community", label: "Comunidad" },
-  { href: "/admin", label: "Admin" }
+  { href: "/admin", label: "Admin (pronto)" }
 ];
 
 export function SiteHeader() {

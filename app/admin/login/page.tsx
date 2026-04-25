@@ -1,11 +1,17 @@
-import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
+import { getAdminSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { AdminLoginForm } from "@/components/admin/admin-login-form";
 
-export default function AdminLoginPage() {
+export default async function AdminLoginPage() {
+  const session = await getAdminSession();
+
+  if (session) {
+    redirect("/admin");
+  }
+
   return (
-    <MvpPlaceholder
-      eyebrow="Admin"
-      title="Admin temporalmente desactivado"
-      description="El panel de administracion y la autenticacion quedaron fuera de este MVP para priorizar un sitio publico estable y desplegable."
-    />
+    <section className="shell py-16">
+      <AdminLoginForm />
+    </section>
   );
 }

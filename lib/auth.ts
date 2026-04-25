@@ -1,8 +1,6 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 
 const COOKIE_NAME = "industrial_con_j_admin_token";
 
@@ -22,22 +20,31 @@ function getJwtSecret() {
   return secret;
 }
 
+function getAdminLoginEmail() {
+  return process.env.ADMIN_LOGIN_EMAIL ?? process.env.ADMIN_SEED_EMAIL;
+}
+
+function getAdminLoginPassword() {
+  return process.env.ADMIN_LOGIN_PASSWORD ?? process.env.ADMIN_SEED_PASSWORD;
+}
+
 export async function validateAdminCredentials(email: string, password: string) {
-  const admin = await prisma.adminUser.findUnique({
-    where: { email }
-  });
+  const adminEmail = getAdminLoginEmail();
+  const adminPassword = getAdminLoginPassword();
 
-  if (!admin) {
+  if (!adminEmail || !adminPassword) {
+    throw new Error("ADMIN_LOGIN_EMAIL and ADMIN_LOGIN_PASSWORD are not configured.");
+  }
+
+  if (email !== adminEmail || password !== adminPassword) {
     return null;
   }
 
-  const isValid = await bcrypt.compare(password, admin.passwordHash);
-
-  if (!isValid) {
-    return null;
-  }
-
-  return admin;
+  return {
+    id: "mvp-admin",
+    email: adminEmail,
+    role: "admin"
+  };
 }
 
 export function signAdminToken(payload: AdminToken) {

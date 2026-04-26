@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getAllSponsors } from "@/lib/queries";
 
 export async function GET() {
-  const sponsors = await prisma.sponsor.findMany({
-    orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
-  });
+  const sponsors = await getAllSponsors();
 
   return NextResponse.json(sponsors);
 }

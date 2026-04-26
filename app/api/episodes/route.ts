@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getAllEpisodes } from "@/lib/queries";
 
 export async function GET() {
-  const episodes = await prisma.episode.findMany({
-    include: { guests: true, sponsor: true },
-    orderBy: { publishedAt: "desc" }
-  });
+  const episodes = await getAllEpisodes();
 
   return NextResponse.json(episodes);
 }

@@ -1,10 +1,10 @@
-import { getAllGuests } from "@/lib/mvp-data";
+import { getAllGuests } from "@/lib/queries";
 import { GuestCard } from "@/components/ui/guest-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeading } from "@/components/sections/section-heading";
 
 export default async function GuestsPage() {
-  const guests = getAllGuests();
+  const guests = await getAllGuests();
 
   return (
     <section className="shell py-12">

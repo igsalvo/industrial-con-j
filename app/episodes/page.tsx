@@ -1,10 +1,10 @@
-import { getAllEpisodes } from "@/lib/mvp-data";
+import { getAllEpisodes } from "@/lib/queries";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeading } from "@/components/sections/section-heading";
 
 export default async function EpisodesPage() {
-  const episodes = getAllEpisodes();
+  const episodes = await getAllEpisodes();
 
   return (
     <section className="shell py-12">

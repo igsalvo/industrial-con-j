@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getSearchResults } from "@/lib/mvp-data";
+import { getSearchResults } from "@/lib/queries";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";

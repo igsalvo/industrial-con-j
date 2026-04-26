@@ -1,4 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import {
+  getAllEpisodes as getMvpEpisodes,
+  getAllGuests as getMvpGuests,
+  getAllSponsors as getMvpSponsors,
+  getEpisodeBySlug as getMvpEpisodeBySlug,
+  getGuestBySlug as getMvpGuestBySlug,
+  getHomepageData as getMvpHomepageData,
+  getRelatedEpisodes as getMvpRelatedEpisodes,
+  getSearchResults as getMvpSearchResults
+} from "@/lib/mvp-data";
 
 export const publicEpisodeInclude = {
   guests: true,
@@ -15,7 +25,15 @@ export const publicEpisodeInclude = {
   }
 } as const;
 
+export function hasDatabase() {
+  return Boolean(process.env.DATABASE_URL);
+}
+
 export async function getHomepageData() {
+  if (!hasDatabase()) {
+    return getMvpHomepageData();
+  }
+
   const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([
     prisma.episode.findMany({
       where: {
@@ -49,6 +67,10 @@ export async function getHomepageData() {
 }
 
 export async function getEpisodeBySlug(slug: string) {
+  if (!hasDatabase()) {
+    return getMvpEpisodeBySlug(slug);
+  }
+
   return prisma.episode.findUnique({
     where: { slug },
     include: publicEpisodeInclude
@@ -56,6 +78,10 @@ export async function getEpisodeBySlug(slug: string) {
 }
 
 export async function getRelatedEpisodes(tags: string[], episodeId: string) {
+  if (!hasDatabase()) {
+    return getMvpRelatedEpisodes(tags, episodeId);
+  }
+
   if (tags.length === 0) {
     return [];
   }
@@ -72,6 +98,10 @@ export async function getRelatedEpisodes(tags: string[], episodeId: string) {
 }
 
 export async function getGuestBySlug(slug: string) {
+  if (!hasDatabase()) {
+    return getMvpGuestBySlug(slug);
+  }
+
   return prisma.guest.findUnique({
     where: { slug },
     include: {
@@ -89,6 +119,10 @@ export async function getSearchResults(searchParams: {
   tag?: string;
   industry?: string;
 }) {
+  if (!hasDatabase()) {
+    return getMvpSearchResults(searchParams);
+  }
+
   const term = searchParams.q?.trim();
 
   const episodes = await prisma.episode.findMany({
@@ -158,4 +192,35 @@ export async function getSearchResults(searchParams: {
       industries: distinctIndustries
     }
   };
+}
+
+export async function getAllEpisodes() {
+  if (!hasDatabase()) {
+    return getMvpEpisodes();
+  }
+
+  return prisma.episode.findMany({
+    include: { guests: true, sponsor: true },
+    orderBy: { publishedAt: "desc" }
+  });
+}
+
+export async function getAllGuests() {
+  if (!hasDatabase()) {
+    return getMvpGuests();
+  }
+
+  return prisma.guest.findMany({
+    orderBy: { name: "asc" }
+  });
+}
+
+export async function getAllSponsors() {
+  if (!hasDatabase()) {
+    return getMvpSponsors();
+  }
+
+  return prisma.sponsor.findMany({
+    orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+  });
 }

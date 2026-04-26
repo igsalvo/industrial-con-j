@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getAllGuests } from "@/lib/queries";
 
 export async function GET() {
-  const guests = await prisma.guest.findMany({
-    include: {
-      episodes: {
-        take: 3
-      }
-    },
-    orderBy: { name: "asc" }
-  });
+  const guests = await getAllGuests();
 
   return NextResponse.json(guests);
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/mvp-data";
+import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 import { EpisodeCard } from "@/components/ui/episode-card";
 

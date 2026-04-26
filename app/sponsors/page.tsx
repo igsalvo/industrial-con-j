@@ -1,10 +1,10 @@
-import { getAllSponsors } from "@/lib/mvp-data";
+import { getAllSponsors } from "@/lib/queries";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function SponsorsPage() {
-  const sponsors = getAllSponsors();
+  const sponsors = await getAllSponsors();
 
   return (
     <section className="shell py-12">

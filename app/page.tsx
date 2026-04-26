@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getHomepageData } from "@/lib/mvp-data";
+import { getHomepageData } from "@/lib/queries";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";

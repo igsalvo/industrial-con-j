@@ -18,13 +18,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     const parsed = episodeInputSchema.parse(await request.json());
     const payload = toEpisodePayload(parsed);
+    const { guestIds, ...episodeData } = payload;
 
     const episode = await prisma.episode.update({
       where: { id },
       data: {
-        ...payload,
+        ...episodeData,
         guests: {
-          set: payload.guestIds.map((guestId) => ({ id: guestId }))
+          set: guestIds.map((guestId) => ({ id: guestId }))
         }
       }
     });

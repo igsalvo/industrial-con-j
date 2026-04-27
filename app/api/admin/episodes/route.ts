@@ -30,12 +30,13 @@ export async function POST(request: Request) {
   try {
     const parsed = episodeInputSchema.parse(await request.json());
     const payload = toEpisodePayload(parsed);
+    const { guestIds, ...episodeData } = payload;
 
     const episode = await prisma.episode.create({
       data: {
-        ...payload,
+        ...episodeData,
         guests: {
-          connect: payload.guestIds.map((id) => ({ id }))
+          connect: guestIds.map((id) => ({ id }))
         }
       }
     });

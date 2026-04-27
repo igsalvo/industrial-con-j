@@ -9,6 +9,38 @@ function isDirectVideoUrl(url: string | null) {
   return [".mp4", ".webm", ".ogg", ".mov"].some((extension) => url.toLowerCase().includes(extension));
 }
 
+function getYouTubeEmbedUrl(url: string | null | undefined) {
+  if (!url) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+
+    if (parsedUrl.hostname.includes("youtu.be")) {
+      const id = parsedUrl.pathname.replace("/", "").trim();
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+
+    if (parsedUrl.hostname.includes("youtube.com")) {
+      const id = parsedUrl.searchParams.get("v");
+
+      if (id) {
+        return `https://www.youtube.com/embed/${id}`;
+      }
+
+      const shortsMatch = parsedUrl.pathname.match(/\/shorts\/([^/?]+)/);
+      if (shortsMatch?.[1]) {
+        return `https://www.youtube.com/embed/${shortsMatch[1]}`;
+      }
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 export function ShortClipCard({
   episode
 }: {
@@ -21,10 +53,19 @@ export function ShortClipCard({
   };
 }) {
   const canEmbedVideo = isDirectVideoUrl(episode.clipVideoUrl ?? null);
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(episode.clipVideoUrl);
 
   return (
     <article className="card overflow-hidden">
-      {canEmbedVideo ? (
+      {youtubeEmbedUrl ? (
+        <iframe
+          className="h-64 w-full bg-black"
+          src={youtubeEmbedUrl}
+          title={`Short de ${episode.title}`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      ) : canEmbedVideo ? (
         <video
           className="h-64 w-full bg-black object-cover"
           controls

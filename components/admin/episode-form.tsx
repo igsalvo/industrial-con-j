@@ -130,7 +130,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
           defaultValue={episode?.clipVideoUrl || ""}
           accept="video/*"
           uploadLabel="Subir short"
-          urlPlaceholder="https://... o URL del video subido"
+          urlPlaceholder="https://youtube.com/... o URL del video subido"
         />
       </div>
       <div className="grid gap-4 lg:grid-cols-3">

@@ -157,3 +157,17 @@ model AdminUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model SiteConfig {
+  id                     String   @id @default("default")
+  showFeaturedClips      Boolean  @default(true)
+  showLatestEpisodes     Boolean  @default(true)
+  showSponsorsSection    Boolean  @default(true)
+  showRecommendedSection Boolean  @default(true)
+  showGuestsSection      Boolean  @default(true)
+  showCommunityLink      Boolean  @default(true)
+  showSponsorBanner      Boolean  @default(true)
+  sponsorBannerTitle     String?  @default("Auspiciadores")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}

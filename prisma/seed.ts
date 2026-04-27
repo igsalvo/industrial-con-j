@@ -23,6 +23,22 @@ async function main() {
     }
   });
 
+  await prisma.siteConfig.upsert({
+    where: { id: "default" },
+    update: {},
+    create: {
+      id: "default",
+      showFeaturedClips: true,
+      showLatestEpisodes: true,
+      showSponsorsSection: true,
+      showRecommendedSection: true,
+      showGuestsSection: true,
+      showCommunityLink: true,
+      showSponsorBanner: true,
+      sponsorBannerTitle: "Auspiciadores"
+    }
+  });
+
   const sponsor = await prisma.sponsor.upsert({
     where: { slug: "planta-digital" },
     update: {},

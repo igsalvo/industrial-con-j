@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { SiteConfigForm } from "@/components/admin/site-config-form";
 import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
-  const [episodes, guests, sponsors, surveys] = databaseReady
+  const [episodes, guests, sponsors, surveys, siteConfig] = databaseReady
     ? await Promise.all([
         prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
@@ -22,9 +23,12 @@ export default async function AdminDashboardPage() {
         prisma.survey.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
+        }),
+        prisma.siteConfig.findUnique({
+          where: { id: "default" }
         })
       ])
-    : [[], [], [], []];
+    : [[], [], [], [], null];
 
   return (
     <div className="space-y-6">
@@ -158,6 +162,19 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       )}
+
+      {databaseReady && siteConfig ? (
+        <div className="card p-8">
+          <div className="mb-6">
+            <p className="pill">Home</p>
+            <h2 className="mt-4 text-3xl font-black">Visibilidad de secciones</h2>
+            <p className="mt-2 text-sm text-[color:var(--muted)]">
+              Controla que modulos se muestran en la portada y si comunidad aparece en la navegacion publica.
+            </p>
+          </div>
+          <SiteConfigForm config={siteConfig} />
+        </div>
+      ) : null}
     </div>
   );
 }

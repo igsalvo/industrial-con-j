@@ -10,6 +10,17 @@ import {
   getSearchResults as getMvpSearchResults
 } from "@/lib/mvp-data";
 
+export const defaultSiteConfig = {
+  showFeaturedClips: true,
+  showLatestEpisodes: true,
+  showSponsorsSection: true,
+  showRecommendedSection: true,
+  showGuestsSection: true,
+  showCommunityLink: true,
+  showSponsorBanner: true,
+  sponsorBannerTitle: "Auspiciadores"
+} as const;
+
 export const publicEpisodeInclude = {
   guests: true,
   sponsor: true,
@@ -27,6 +38,22 @@ export const publicEpisodeInclude = {
 
 export function hasDatabase() {
   return Boolean(process.env.DATABASE_URL);
+}
+
+export async function getSiteConfig() {
+  if (!hasDatabase()) {
+    return defaultSiteConfig;
+  }
+
+  const config = await prisma.siteConfig.findUnique({
+    where: { id: "default" }
+  });
+
+  if (!config) {
+    return defaultSiteConfig;
+  }
+
+  return config;
 }
 
 export async function getHomepageData() {

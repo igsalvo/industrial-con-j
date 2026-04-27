@@ -12,9 +12,10 @@ const links = [
   { href: "/community", label: "Comunidad" }
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ showCommunityLink = true }: { showCommunityLink?: boolean }) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith("/admin");
+  const visibleLinks = showCommunityLink ? links : links.filter((link) => link.href !== "/community");
 
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--surface)]/90 backdrop-blur-xl">
@@ -32,7 +33,7 @@ export function SiteHeader() {
         </Link>
 
         {!isAdminRoute ? <nav className="hidden items-center gap-6 lg:flex">
-          {links.map((link: { href: string; label: string }) => (
+          {visibleLinks.map((link: { href: string; label: string }) => (
             <Link key={link.href} href={link.href} className="text-base text-[color:var(--muted)] transition hover:text-[color:var(--foreground)]" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
               {link.label}
             </Link>

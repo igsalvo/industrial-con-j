@@ -20,7 +20,7 @@ export function ShortClipCard({
     clipVideoUrl?: string | null;
   };
 }) {
-  const canEmbedVideo = isDirectVideoUrl(episode.clipVideoUrl);
+  const canEmbedVideo = isDirectVideoUrl(episode.clipVideoUrl ?? null);
 
   return (
     <article className="card overflow-hidden">

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
-      { error: "Falta configurar BLOB_READ_WRITE_TOKEN para subir imagenes." },
+      { error: "Falta configurar BLOB_READ_WRITE_TOKEN para subir archivos." },
       { status: 503 }
     );
   }

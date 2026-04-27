@@ -12,6 +12,14 @@ type SiteConfigShape = {
   showCommunityLink: boolean;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
+  heroEyebrow: string | null;
+  heroTitle: string | null;
+  heroTitleAccent: string | null;
+  heroDescription: string | null;
+  heroPrimaryCtaLabel: string | null;
+  heroPrimaryCtaHref: string | null;
+  heroSecondaryCtaLabel: string | null;
+  heroSecondaryCtaHref: string | null;
 };
 
 export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
@@ -36,7 +44,15 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         showGuestsSection: formData.get("showGuestsSection") === "on",
         showCommunityLink: formData.get("showCommunityLink") === "on",
         showSponsorBanner: formData.get("showSponsorBanner") === "on",
-        sponsorBannerTitle: formData.get("sponsorBannerTitle")
+        sponsorBannerTitle: formData.get("sponsorBannerTitle"),
+        heroEyebrow: formData.get("heroEyebrow"),
+        heroTitle: formData.get("heroTitle"),
+        heroTitleAccent: formData.get("heroTitleAccent"),
+        heroDescription: formData.get("heroDescription"),
+        heroPrimaryCtaLabel: formData.get("heroPrimaryCtaLabel"),
+        heroPrimaryCtaHref: formData.get("heroPrimaryCtaHref"),
+        heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
+        heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref")
       })
     });
 
@@ -74,6 +90,49 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       </div>
 
       <div>
+        <label className="mb-2 block text-sm font-semibold">Eyebrow del panel principal</label>
+        <input className="field" name="heroEyebrow" defaultValue={config.heroEyebrow || ""} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Titulo principal</label>
+          <input className="field" name="heroTitle" defaultValue={config.heroTitle || ""} />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Texto destacado del titulo</label>
+          <input className="field" name="heroTitleAccent" defaultValue={config.heroTitleAccent || ""} />
+        </div>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-semibold">Descripcion del panel principal</label>
+        <textarea className="field min-h-28" name="heroDescription" defaultValue={config.heroDescription || ""} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Boton principal</label>
+          <input className="field" name="heroPrimaryCtaLabel" defaultValue={config.heroPrimaryCtaLabel || ""} placeholder="Texto del boton" />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm font-semibold">URL boton principal</label>
+          <input className="field" name="heroPrimaryCtaHref" defaultValue={config.heroPrimaryCtaHref || ""} placeholder="/episodes" />
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Boton secundario</label>
+          <input className="field" name="heroSecondaryCtaLabel" defaultValue={config.heroSecondaryCtaLabel || ""} placeholder="Texto del boton" />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm font-semibold">URL boton secundario</label>
+          <input className="field" name="heroSecondaryCtaHref" defaultValue={config.heroSecondaryCtaHref || ""} placeholder="/community" />
+        </div>
+      </div>
+
+      <div>
         <label className="mb-2 block text-sm font-semibold">Titulo del banner de auspiciadores</label>
         <input className="field" name="sponsorBannerTitle" defaultValue={config.sponsorBannerTitle || "Auspiciadores"} />
       </div>
@@ -81,7 +140,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
 
       <button className="btn-primary" type="submit" disabled={loading}>
-        {loading ? "Guardando..." : "Guardar visibilidad"}
+        {loading ? "Guardando..." : "Guardar portada"}
       </button>
     </form>
   );

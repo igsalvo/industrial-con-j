@@ -6,6 +6,7 @@ import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { SponsorBanner } from "@/components/ui/sponsor-banner";
+import { ShortClipCard } from "@/components/ui/short-clip-card";
 import { getSiteConfig } from "@/lib/queries";
 
 export default async function HomePage() {
@@ -14,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <div className="pb-16">
-      <HeroSection />
+      <HeroSection config={siteConfig} />
 
       {siteConfig.showSponsorBanner ? (
         <SponsorBanner
@@ -27,12 +28,12 @@ export default async function HomePage() {
         <section className="shell py-8">
           <SectionHeading
             eyebrow="Clips destacados"
-            title="Microcontenido para crecer audiencia"
-            description="Usa clips cortos como puerta de entrada a episodios completos y contenido descargable."
+            title="Shorts de los capitulos"
+            description="Fragmentos cortos para destacar ideas clave y llevar trafico al episodio completo."
           />
           <div className="grid gap-6 lg:grid-cols-3">
             {featuredClips.map((episode: (typeof featuredClips)[number]) => (
-              <EpisodeCard key={episode.slug} episode={episode} />
+              <ShortClipCard key={episode.slug} episode={episode} />
             ))}
           </div>
         </section>

@@ -171,6 +171,14 @@ model SiteConfig {
   showCommunityLink      Boolean  @default(true)
   showSponsorBanner      Boolean  @default(true)
   sponsorBannerTitle     String?  @default("Auspiciadores")
+  heroEyebrow            String?  @default("Ingenieria industrial para equipos que ejecutan")
+  heroTitle              String?  @default("El hub de contenido, comunidad y patrocinio de")
+  heroTitleAccent        String?  @default("Industrial con J")
+  heroDescription        String?  @default("Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a lideres de operaciones.")
+  heroPrimaryCtaLabel    String?  @default("Explorar episodios")
+  heroPrimaryCtaHref     String?  @default("/episodes")
+  heroSecondaryCtaLabel  String?  @default("Participar en la comunidad")
+  heroSecondaryCtaHref   String?  @default("/community")
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }

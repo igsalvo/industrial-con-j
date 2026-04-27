@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search } from "lucide-react";
@@ -21,8 +22,8 @@ export function SiteHeader({ showCommunityLink = true }: { showCommunityLink?: b
     <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--surface)]/90 backdrop-blur-xl">
       <div className="shell flex items-center justify-between gap-4 py-4">
         <Link href={isAdminRoute ? "/admin" : "/"} className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-white" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
-            J
+          <div className="relative h-11 w-11 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white">
+            <Image src="/logo-podcast.jpg" alt="Logo Industrial con J" fill className="object-cover" sizes="44px" priority />
           </div>
           <div>
             <p className="brand-kicker text-xs text-[color:var(--muted)]">{isAdminRoute ? "Admin" : "Podcast"}</p>

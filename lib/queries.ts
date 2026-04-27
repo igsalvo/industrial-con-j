@@ -18,7 +18,15 @@ export const defaultSiteConfig = {
   showGuestsSection: true,
   showCommunityLink: true,
   showSponsorBanner: true,
-  sponsorBannerTitle: "Auspiciadores"
+  sponsorBannerTitle: "Auspiciadores",
+  heroEyebrow: "Ingenieria industrial para equipos que ejecutan",
+  heroTitle: "El hub de contenido, comunidad y patrocinio de",
+  heroTitleAccent: "Industrial con J",
+  heroDescription: "Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a lideres de operaciones.",
+  heroPrimaryCtaLabel: "Explorar episodios",
+  heroPrimaryCtaHref: "/episodes",
+  heroSecondaryCtaLabel: "Participar en la comunidad",
+  heroSecondaryCtaHref: "/community"
 } as const;
 
 export const publicEpisodeInclude = {
@@ -70,7 +78,7 @@ export async function getHomepageData() {
       prisma.episode.findMany({
         where: {
           isVisible: true,
-          clipThumbnailUrl: { not: null }
+          OR: [{ clipThumbnailUrl: { not: null } }, { clipVideoUrl: { not: null } }]
         },
         orderBy: { publishedAt: "desc" },
         take: 3,

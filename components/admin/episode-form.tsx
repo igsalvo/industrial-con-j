@@ -124,7 +124,14 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="videoEmbedUrl" placeholder="Video embed URL" defaultValue={episode?.videoEmbedUrl || ""} />
         <input className="field" name="audioEmbedUrl" placeholder="Audio embed URL" defaultValue={episode?.audioEmbedUrl || ""} />
-        <input className="field" name="clipVideoUrl" placeholder="Short clip URL" defaultValue={episode?.clipVideoUrl || ""} />
+        <UploadField
+          name="clipVideoUrl"
+          label="Video short del episodio"
+          defaultValue={episode?.clipVideoUrl || ""}
+          accept="video/*"
+          uploadLabel="Subir short"
+          urlPlaceholder="https://... o URL del video subido"
+        />
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <UploadField name="clipThumbnailUrl" label="Thumbnail del clip" defaultValue={episode?.clipThumbnailUrl || ""} />

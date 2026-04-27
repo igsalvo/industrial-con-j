@@ -18,6 +18,7 @@ export function GuestForm({
     role: string | null;
     profileImage: string | null;
     industries: string[];
+    isVisible: boolean;
     socialLinks: unknown;
   };
 }) {
@@ -42,7 +43,8 @@ export function GuestForm({
         industries: formData.get("industries"),
         linkedin: formData.get("linkedin"),
         x: formData.get("x"),
-        website: formData.get("website")
+        website: formData.get("website"),
+        isVisible: formData.get("isVisible") === "on"
       })
     });
 
@@ -85,6 +87,10 @@ export function GuestForm({
         <input className="field" name="x" placeholder="X URL" defaultValue={links.x || ""} />
         <input className="field" name="website" placeholder="Website URL" defaultValue={links.website || ""} />
       </div>
+      <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+        <input defaultChecked={guest?.isVisible ?? true} name="isVisible" type="checkbox" />
+        Mostrar en la pagina
+      </label>
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">
         <button className="btn-primary" type="submit">

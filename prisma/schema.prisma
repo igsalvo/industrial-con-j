@@ -44,6 +44,7 @@ model Episode {
   tags               String[]
   industries         String[]
   isFeatured         Boolean          @default(false)
+  isVisible          Boolean          @default(true)
   publishedAt        DateTime         @default(now())
   sponsorId          String?
   sponsor            Sponsor?         @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
@@ -66,6 +67,7 @@ model Guest {
   company      String?
   role         String?
   industries   String[]
+  isVisible    Boolean   @default(true)
   socialLinks  Json?
   episodes     Episode[]
   createdAt    DateTime  @default(now())
@@ -81,6 +83,7 @@ model Sponsor {
   description     String?
   tier            String?
   isFeatured      Boolean   @default(false)
+  isVisible       Boolean   @default(true)
   episodes        Episode[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt

@@ -43,7 +43,8 @@ export const guestInputSchema = z.object({
   industries: z.string().optional(),
   linkedin: optionalUrl,
   x: optionalUrl,
-  website: optionalUrl
+  website: optionalUrl,
+  isVisible: z.boolean().default(true)
 });
 
 export const sponsorInputSchema = z.object({
@@ -53,7 +54,8 @@ export const sponsorInputSchema = z.object({
   logoUrl: optionalUrl,
   description: z.string().optional(),
   tier: z.string().optional(),
-  isFeatured: z.boolean().default(false)
+  isFeatured: z.boolean().default(false),
+  isVisible: z.boolean().default(true)
 });
 
 export const episodeInputSchema = z.object({
@@ -82,6 +84,7 @@ export const episodeInputSchema = z.object({
   guestIds: z.array(z.string()).default([]),
   sponsorId: z.string().optional(),
   isFeatured: z.boolean().default(false),
+  isVisible: z.boolean().default(true),
   publishedAt: z.string().optional()
 });
 
@@ -131,6 +134,7 @@ export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
     role: input.role || undefined,
     profileImage: input.profileImage,
     industries: normalizeList(input.industries || ""),
+    isVisible: input.isVisible,
     socialLinks: {
       linkedin: input.linkedin,
       x: input.x,
@@ -147,7 +151,8 @@ export function toSponsorPayload(input: z.infer<typeof sponsorInputSchema>) {
     logoUrl: input.logoUrl,
     description: input.description || undefined,
     tier: input.tier || undefined,
-    isFeatured: input.isFeatured
+    isFeatured: input.isFeatured,
+    isVisible: input.isVisible
   };
 }
 
@@ -170,6 +175,7 @@ export function toEpisodePayload(input: z.infer<typeof episodeInputSchema>) {
     resourceLinks: input.resourceLinks,
     sponsorId: input.sponsorId || undefined,
     isFeatured: input.isFeatured,
+    isVisible: input.isVisible,
     publishedAt: input.publishedAt ? new Date(input.publishedAt) : new Date(),
     guestIds: input.guestIds
   };

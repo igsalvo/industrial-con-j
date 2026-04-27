@@ -45,7 +45,12 @@ export default async function AdminEpisodesPage() {
                 className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4"
               >
                 <div>
-                  <p className="font-semibold">{episode.title}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="font-semibold">{episode.title}</p>
+                    <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                      {episode.isVisible ? "Visible" : "Oculto"}
+                    </span>
+                  </div>
                   <p className="text-xs text-[color:var(--muted)]">{episode.slug}</p>
                 </div>
                 <p className="text-xs text-[color:var(--muted)]">{formatDate(episode.updatedAt)}</p>

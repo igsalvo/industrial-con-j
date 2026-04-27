@@ -45,7 +45,12 @@ export default async function AdminGuestsPage() {
                 className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4"
               >
                 <div>
-                  <p className="font-semibold">{guest.name}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="font-semibold">{guest.name}</p>
+                    <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                      {guest.isVisible ? "Visible" : "Oculto"}
+                    </span>
+                  </div>
                   <p className="text-xs text-[color:var(--muted)]">{guest.slug}</p>
                 </div>
                 <p className="text-xs text-[color:var(--muted)]">{formatDate(guest.updatedAt)}</p>

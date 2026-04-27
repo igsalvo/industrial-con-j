@@ -23,6 +23,7 @@ type EpisodeFormProps = {
     tags: string[];
     industries: string[];
     isFeatured: boolean;
+    isVisible: boolean;
     sponsorId: string | null;
     publishedAt: Date;
     resourceLinks: unknown;
@@ -72,6 +73,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       industries: formData.get("industries"),
       sponsorId: formData.get("sponsorId"),
       isFeatured: formData.get("isFeatured") === "on",
+      isVisible: formData.get("isVisible") === "on",
       publishedAt: formData.get("publishedAt"),
       guestIds: selectedGuestIds,
       resourceLinks
@@ -148,6 +150,10 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         <label className="card flex items-center gap-3 p-4 text-sm font-medium">
           <input defaultChecked={episode?.isFeatured} name="isFeatured" type="checkbox" />
           Destacar episodio
+        </label>
+        <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+          <input defaultChecked={episode?.isVisible ?? true} name="isVisible" type="checkbox" />
+          Mostrar en la pagina
         </label>
       </div>
 

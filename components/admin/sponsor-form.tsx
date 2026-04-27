@@ -18,6 +18,7 @@ export function SponsorForm({
     description: string | null;
     tier: string | null;
     isFeatured: boolean;
+    isVisible: boolean;
   };
 }) {
   const router = useRouter();
@@ -37,7 +38,8 @@ export function SponsorForm({
         logoUrl: formData.get("logoUrl"),
         description: formData.get("description"),
         tier: formData.get("tier"),
-        isFeatured: formData.get("isFeatured") === "on"
+        isFeatured: formData.get("isFeatured") === "on",
+        isVisible: formData.get("isVisible") === "on"
       })
     });
 
@@ -77,6 +79,10 @@ export function SponsorForm({
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={sponsor?.isFeatured} name="isFeatured" type="checkbox" />
         Sponsor destacado
+      </label>
+      <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+        <input defaultChecked={sponsor?.isVisible ?? true} name="isVisible" type="checkbox" />
+        Mostrar en la pagina
       </label>
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">

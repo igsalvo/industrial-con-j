@@ -45,15 +45,19 @@ export async function getSiteConfig() {
     return defaultSiteConfig;
   }
 
-  const config = await prisma.siteConfig.findUnique({
-    where: { id: "default" }
-  });
+  try {
+    const config = await prisma.siteConfig.findUnique({
+      where: { id: "default" }
+    });
 
-  if (!config) {
+    if (!config) {
+      return defaultSiteConfig;
+    }
+
+    return config;
+  } catch {
     return defaultSiteConfig;
   }
-
-  return config;
 }
 
 export async function getHomepageData() {
@@ -61,36 +65,44 @@ export async function getHomepageData() {
     return getMvpHomepageData();
   }
 
-  const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([
-    prisma.episode.findMany({
-      where: {
-        clipThumbnailUrl: { not: null }
-      },
-      orderBy: { publishedAt: "desc" },
-      take: 3,
-      include: { guests: true, sponsor: true }
-    }),
-    prisma.episode.findMany({
-      orderBy: { publishedAt: "desc" },
-      take: 6,
-      include: { guests: true, sponsor: true }
-    }),
-    prisma.episode.findMany({
-      where: { isFeatured: true },
-      orderBy: { publishedAt: "desc" },
-      take: 4,
-      include: { guests: true, sponsor: true }
-    }),
-    prisma.sponsor.findMany({
-      orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
-    }),
-    prisma.guest.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 4
-    })
-  ]);
+  try {
+    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([
+      prisma.episode.findMany({
+        where: {
+          isVisible: true,
+          clipThumbnailUrl: { not: null }
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 3,
+        include: { guests: true, sponsor: true }
+      }),
+      prisma.episode.findMany({
+        where: { isVisible: true },
+        orderBy: { publishedAt: "desc" },
+        take: 6,
+        include: { guests: true, sponsor: true }
+      }),
+      prisma.episode.findMany({
+        where: { isFeatured: true, isVisible: true },
+        orderBy: { publishedAt: "desc" },
+        take: 4,
+        include: { guests: true, sponsor: true }
+      }),
+      prisma.sponsor.findMany({
+        where: { isVisible: true },
+        orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+      }),
+      prisma.guest.findMany({
+        where: { isVisible: true },
+        orderBy: { createdAt: "desc" },
+        take: 4
+      })
+    ]);
 
-  return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests };
+    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests };
+  } catch {
+    return getMvpHomepageData();
+  }
 }
 
 export async function getEpisodeBySlug(slug: string) {
@@ -98,10 +110,14 @@ export async function getEpisodeBySlug(slug: string) {
     return getMvpEpisodeBySlug(slug);
   }
 
-  return prisma.episode.findUnique({
-    where: { slug },
-    include: publicEpisodeInclude
-  });
+  try {
+    return await prisma.episode.findFirst({
+      where: { slug, isVisible: true },
+      include: publicEpisodeInclude
+    });
+  } catch {
+    return getMvpEpisodeBySlug(slug);
+  }
 }
 
 export async function getRelatedEpisodes(tags: string[], episodeId: string) {
@@ -113,15 +129,20 @@ export async function getRelatedEpisodes(tags: string[], episodeId: string) {
     return [];
   }
 
-  return prisma.episode.findMany({
-    where: {
-      id: { not: episodeId },
-      tags: { hasSome: tags }
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 3,
-    include: { guests: true, sponsor: true }
-  });
+  try {
+    return await prisma.episode.findMany({
+      where: {
+        isVisible: true,
+        id: { not: episodeId },
+        tags: { hasSome: tags }
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      include: { guests: true, sponsor: true }
+    });
+  } catch {
+    return getMvpRelatedEpisodes(tags, episodeId);
+  }
 }
 
 export async function getGuestBySlug(slug: string) {
@@ -129,15 +150,20 @@ export async function getGuestBySlug(slug: string) {
     return getMvpGuestBySlug(slug);
   }
 
-  return prisma.guest.findUnique({
-    where: { slug },
-    include: {
-      episodes: {
-        include: { sponsor: true, guests: true },
-        orderBy: { publishedAt: "desc" }
+  try {
+    return await prisma.guest.findFirst({
+      where: { slug, isVisible: true },
+      include: {
+        episodes: {
+          where: { isVisible: true },
+          include: { sponsor: true, guests: true },
+          orderBy: { publishedAt: "desc" }
+        }
       }
-    }
-  });
+    });
+  } catch {
+    return getMvpGuestBySlug(slug);
+  }
 }
 
 export async function getSearchResults(searchParams: {
@@ -152,73 +178,83 @@ export async function getSearchResults(searchParams: {
 
   const term = searchParams.q?.trim();
 
-  const episodes = await prisma.episode.findMany({
-    where: {
-      AND: [
-        term
-          ? {
-              OR: [
-                { title: { contains: term, mode: "insensitive" } },
-                { shortDescription: { contains: term, mode: "insensitive" } },
-                { longDescription: { contains: term, mode: "insensitive" } },
-                { tags: { has: term } },
-                { industries: { has: term } }
-              ]
-            }
-          : {},
-        searchParams.tag ? { tags: { has: searchParams.tag } } : {},
-        searchParams.industry ? { industries: { has: searchParams.industry } } : {},
-        searchParams.guest
-          ? {
-              guests: {
-                some: {
-                  slug: searchParams.guest
+  try {
+    const episodes = await prisma.episode.findMany({
+      where: {
+        AND: [
+          { isVisible: true },
+          term
+            ? {
+                OR: [
+                  { title: { contains: term, mode: "insensitive" } },
+                  { shortDescription: { contains: term, mode: "insensitive" } },
+                  { longDescription: { contains: term, mode: "insensitive" } },
+                  { tags: { has: term } },
+                  { industries: { has: term } }
+                ]
+              }
+            : {},
+          searchParams.tag ? { tags: { has: searchParams.tag } } : {},
+          searchParams.industry ? { industries: { has: searchParams.industry } } : {},
+          searchParams.guest
+            ? {
+                guests: {
+                  some: {
+                    slug: searchParams.guest
+                  }
                 }
               }
-            }
-          : {}
-      ]
-    },
-    include: { guests: true, sponsor: true },
-    orderBy: { publishedAt: "desc" }
-  });
-
-  const [guests, allGuests] = await Promise.all([
-    prisma.guest.findMany({
-      where: term
-        ? {
-            OR: [
-              { name: { contains: term, mode: "insensitive" } },
-              { bio: { contains: term, mode: "insensitive" } },
-              { company: { contains: term, mode: "insensitive" } }
-            ]
-          }
-        : undefined,
-      include: {
-        episodes: {
-          orderBy: { publishedAt: "desc" },
-          take: 3
-        }
+            : {}
+        ]
       },
-      orderBy: { name: "asc" }
-    }),
-    prisma.guest.findMany({
-      orderBy: { name: "asc" }
-    })
-  ]);
+      include: { guests: true, sponsor: true },
+      orderBy: { publishedAt: "desc" }
+    });
 
-  const distinctTags = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.tags))).sort();
-  const distinctIndustries = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.industries))).sort();
+    const [guests, allGuests] = await Promise.all([
+      prisma.guest.findMany({
+        where: {
+          isVisible: true,
+          ...(term
+            ? {
+                OR: [
+                  { name: { contains: term, mode: "insensitive" } },
+                  { bio: { contains: term, mode: "insensitive" } },
+                  { company: { contains: term, mode: "insensitive" } }
+                ]
+              }
+            : {})
+        },
+        include: {
+          episodes: {
+            where: { isVisible: true },
+            orderBy: { publishedAt: "desc" },
+            take: 3
+          }
+        },
+        orderBy: { name: "asc" }
+      }),
+      prisma.guest.findMany({
+        where: { isVisible: true },
+        orderBy: { name: "asc" }
+      })
+    ]);
 
-  return {
-    episodes,
-    guests,
-    filters: {
-      guests: allGuests,
-      tags: distinctTags,
-      industries: distinctIndustries
-    }
-  };
+    const distinctTags = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.tags))).sort();
+    const distinctIndustries = Array.from(new Set(episodes.flatMap((episode: (typeof episodes)[number]) => episode.industries))).sort();
+
+    return {
+      episodes,
+      guests,
+      filters: {
+        guests: allGuests,
+        tags: distinctTags,
+        industries: distinctIndustries
+      }
+    };
+  } catch {
+    return getMvpSearchResults(searchParams);
+  }
 }
 
 export async function getAllEpisodes() {
@@ -226,10 +262,15 @@ export async function getAllEpisodes() {
     return getMvpEpisodes();
   }
 
-  return prisma.episode.findMany({
-    include: { guests: true, sponsor: true },
-    orderBy: { publishedAt: "desc" }
-  });
+  try {
+    return await prisma.episode.findMany({
+      where: { isVisible: true },
+      include: { guests: true, sponsor: true },
+      orderBy: { publishedAt: "desc" }
+    });
+  } catch {
+    return getMvpEpisodes();
+  }
 }
 
 export async function getAllGuests() {
@@ -237,9 +278,14 @@ export async function getAllGuests() {
     return getMvpGuests();
   }
 
-  return prisma.guest.findMany({
-    orderBy: { name: "asc" }
-  });
+  try {
+    return await prisma.guest.findMany({
+      where: { isVisible: true },
+      orderBy: { name: "asc" }
+    });
+  } catch {
+    return getMvpGuests();
+  }
 }
 
 export async function getAllSponsors() {
@@ -247,7 +293,12 @@ export async function getAllSponsors() {
     return getMvpSponsors();
   }
 
-  return prisma.sponsor.findMany({
-    orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
-  });
+  try {
+    return await prisma.sponsor.findMany({
+      where: { isVisible: true },
+      orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+    });
+  } catch {
+    return getMvpSponsors();
+  }
 }

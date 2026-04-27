@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeScript } from "@/components/ui/theme-script";
 import { getSiteConfig } from "@/lib/queries";
 
+export const dynamic = "force-dynamic";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"]

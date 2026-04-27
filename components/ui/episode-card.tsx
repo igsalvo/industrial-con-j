@@ -22,7 +22,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
       <div
         className="h-48 bg-cover bg-center"
         style={{
-          backgroundImage: episode.clipThumbnailUrl ? `url(${episode.clipThumbnailUrl})` : "linear-gradient(135deg, #0f766e, #f97316)"
+          backgroundImage: episode.clipThumbnailUrl ? `url(${episode.clipThumbnailUrl})` : "linear-gradient(135deg, #d70904, #2b2b2b)"
         }}
       />
       <div className="p-6">
@@ -33,7 +33,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             </span>
           ))}
         </div>
-        <h3 className="mt-4 text-2xl font-bold">
+        <h3 className="mt-4 text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
           <Link href={`/episodes/${episode.slug}`}>{episode.title}</Link>
         </h3>
         <p className="mt-3 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>

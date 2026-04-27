@@ -3,33 +3,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f4f1ea;
-  --foreground: #111827;
-  --surface: rgba(255, 255, 255, 0.78);
+  --background: #ffffff;
+  --foreground: #2b2b2b;
+  --surface: rgba(255, 255, 255, 0.96);
   --surface-strong: #ffffff;
-  --muted: #64748b;
-  --line: rgba(15, 23, 42, 0.1);
-  --accent: #0f766e;
-  --accent-strong: #134e4a;
-  --accent-soft: rgba(15, 118, 110, 0.12);
-  --hero: radial-gradient(circle at top left, rgba(15, 118, 110, 0.28), transparent 40%),
-    radial-gradient(circle at top right, rgba(249, 115, 22, 0.22), transparent 35%),
-    linear-gradient(135deg, #f8fafc, #f4f1ea 55%, #ecfccb);
+  --muted: #6d6d6d;
+  --line: rgba(43, 43, 43, 0.14);
+  --accent: #d70904;
+  --accent-strong: #e2211c;
+  --accent-soft: rgba(226, 33, 28, 0.1);
+  --hero: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+  --font-display: "Arista Pro", var(--font-geist-sans), sans-serif;
+  --font-body: "Arista Pro", var(--font-geist-sans), sans-serif;
 }
 
 .dark {
-  --background: #07111f;
-  --foreground: #ecfeff;
-  --surface: rgba(7, 17, 31, 0.78);
-  --surface-strong: #102033;
-  --muted: #94a3b8;
-  --line: rgba(148, 163, 184, 0.18);
-  --accent: #34d399;
-  --accent-strong: #6ee7b7;
-  --accent-soft: rgba(52, 211, 153, 0.14);
-  --hero: radial-gradient(circle at top left, rgba(52, 211, 153, 0.18), transparent 40%),
-    radial-gradient(circle at top right, rgba(251, 146, 60, 0.16), transparent 35%),
-    linear-gradient(135deg, #07111f, #102033 60%, #0f172a);
+  --background: #2b2b2b;
+  --foreground: #ffffff;
+  --surface: rgba(43, 43, 43, 0.96);
+  --surface-strong: #363636;
+  --muted: #b4b4b4;
+  --line: rgba(255, 255, 255, 0.12);
+  --accent: #e2211c;
+  --accent-strong: #d70904;
+  --accent-soft: rgba(226, 33, 28, 0.18);
+  --hero: linear-gradient(180deg, #2b2b2b 0%, #1f1f1f 100%);
 }
 
 html {
@@ -40,7 +38,19 @@ body {
   background: var(--background);
   color: var(--foreground);
   min-height: 100vh;
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-body);
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
+  line-height: 0.98;
 }
 
 .grain {
@@ -51,10 +61,15 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 0.7px, transparent 0.7px);
-  background-size: 18px 18px;
-  opacity: 0.35;
+  background-image: radial-gradient(rgba(43, 43, 43, 0.08) 0.7px, transparent 0.7px);
+  background-size: 22px 22px;
+  opacity: 0.18;
   pointer-events: none;
+}
+
+.dark .grain::before {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 0.7px, transparent 0.7px);
+  opacity: 0.14;
 }
 
 .shell {
@@ -65,8 +80,9 @@ body {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  backdrop-filter: blur(18px);
-  border-radius: 1.5rem;
+  backdrop-filter: blur(12px);
+  border-radius: 1.65rem;
+  box-shadow: 0 14px 40px rgba(43, 43, 43, 0.06);
 }
 
 .pill {
@@ -74,10 +90,13 @@ body {
   align-items: center;
   border-radius: 9999px;
   border: 1px solid var(--line);
-  background: var(--accent-soft);
-  padding: 0.35rem 0.75rem;
+  background: color-mix(in srgb, var(--surface-strong) 84%, var(--accent) 16%);
+  padding: 0.45rem 0.9rem;
   font-size: 0.8rem;
   font-weight: 600;
+  color: var(--foreground);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 .field {
@@ -88,6 +107,7 @@ body {
   padding: 0.8rem 1rem;
   color: var(--foreground);
   outline: none;
+  font-family: var(--font-body);
 }
 
 .field:focus {
@@ -103,7 +123,10 @@ body {
   background: var(--accent);
   color: white;
   padding: 0.85rem 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  box-shadow: 0 10px 26px rgba(215, 9, 4, 0.22);
 }
 
 .btn-secondary {
@@ -114,5 +137,14 @@ body {
   border: 1px solid var(--line);
   background: var(--surface-strong);
   padding: 0.85rem 1.1rem;
-  font-weight: 700;
+  font-weight: 500;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.brand-kicker {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }

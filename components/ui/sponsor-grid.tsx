@@ -22,11 +22,11 @@ export function SponsorGrid({
           <div
             className="h-14 w-14 rounded-2xl bg-cover bg-center"
             style={{
-              backgroundImage: sponsor.logoUrl ? `url(${sponsor.logoUrl})` : "linear-gradient(135deg, #f97316, #0f766e)"
+              backgroundImage: sponsor.logoUrl ? `url(${sponsor.logoUrl})` : "linear-gradient(135deg, #d70904, #2b2b2b)"
             }}
           />
           <div>
-            <p className="text-lg font-semibold">{sponsor.name}</p>
+            <p className="text-lg" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>{sponsor.name}</p>
             <p className="text-sm text-[color:var(--muted)]">{sponsor.tier || "Partner"}</p>
           </div>
         </a>

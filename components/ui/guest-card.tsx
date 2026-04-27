@@ -18,11 +18,11 @@ export function GuestCard({
         <div
           className="h-20 w-20 rounded-2xl bg-cover bg-center"
           style={{
-            backgroundImage: guest.profileImage ? `url(${guest.profileImage})` : "linear-gradient(135deg, #0f766e, #1e293b)"
+            backgroundImage: guest.profileImage ? `url(${guest.profileImage})` : "linear-gradient(135deg, #d70904, #2b2b2b)"
           }}
         />
         <div>
-          <h3 className="text-xl font-bold">
+          <h3 className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
             <Link href={`/guests/${guest.slug}`}>{guest.name}</Link>
           </h3>
           <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>

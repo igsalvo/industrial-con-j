@@ -34,9 +34,9 @@ export const loginSchema = z.object({
 });
 
 export const guestInputSchema = z.object({
-  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
+  name: z.string(),
   slug: z.string().optional(),
-  bio: z.string().min(10, "La biografia debe tener al menos 10 caracteres."),
+  bio: z.string(),
   company: z.string().optional(),
   role: z.string().optional(),
   profileImage: optionalUrl,
@@ -47,7 +47,7 @@ export const guestInputSchema = z.object({
 });
 
 export const sponsorInputSchema = z.object({
-  name: z.string().min(2),
+  name: z.string(),
   slug: z.string().optional(),
   websiteUrl: z.string().url(),
   logoUrl: optionalUrl,
@@ -57,10 +57,10 @@ export const sponsorInputSchema = z.object({
 });
 
 export const episodeInputSchema = z.object({
-  title: z.string().min(4, "El titulo debe tener al menos 4 caracteres."),
+  title: z.string(),
   slug: z.string().optional(),
-  shortDescription: z.string().min(10, "El resumen corto debe tener al menos 10 caracteres."),
-  longDescription: z.string().min(30, "La descripcion larga debe tener al menos 30 caracteres."),
+  shortDescription: z.string(),
+  longDescription: z.string(),
   timestamps: z.string().optional(),
   spotifyUrl: optionalUrl,
   youtubeUrl: optionalUrl,
@@ -87,7 +87,7 @@ export const episodeInputSchema = z.object({
 
 export const surveyQuestionInputSchema = z.object({
   id: z.string().optional(),
-  label: z.string().min(3),
+  label: z.string(),
   type: z.nativeEnum(QuestionType),
   placeholder: z.string().optional(),
   helpText: z.string().optional(),
@@ -99,7 +99,7 @@ export const surveyQuestionInputSchema = z.object({
 });
 
 export const surveyInputSchema = z.object({
-  title: z.string().min(3),
+  title: z.string(),
   slug: z.string().optional(),
   description: z.string().optional(),
   kind: z.nativeEnum(SurveyKind).default(SurveyKind.SURVEY),

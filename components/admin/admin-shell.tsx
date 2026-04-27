@@ -3,6 +3,7 @@ import { clearAdminCookie } from "@/lib/auth";
 
 const links = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/episodes", label: "Episodios" },
   { href: "/admin/episodes/new", label: "Nuevo episodio" },
   { href: "/admin/guests/new", label: "Nuevo invitado" },
   { href: "/admin/sponsors/new", label: "Nuevo sponsor" },

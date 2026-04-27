@@ -136,7 +136,7 @@ export function SurveyForm({
       return;
     }
 
-    router.push("/admin");
+    router.push("/admin/surveys");
     router.refresh();
   }
 
@@ -146,7 +146,7 @@ export function SurveyForm({
     }
 
     await fetch(`/api/admin/surveys/${survey.id}`, { method: "DELETE" });
-    router.push("/admin");
+    router.push("/admin/surveys");
     router.refresh();
   }
 

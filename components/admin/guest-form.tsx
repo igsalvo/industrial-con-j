@@ -53,7 +53,7 @@ export function GuestForm({
       return;
     }
 
-    router.push("/admin");
+    router.push("/admin/guests");
     router.refresh();
   }
 
@@ -63,7 +63,7 @@ export function GuestForm({
     }
 
     await fetch(`/api/admin/guests/${guest.id}`, { method: "DELETE" });
-    router.push("/admin");
+    router.push("/admin/guests");
     router.refresh();
   }
 

@@ -91,7 +91,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       return;
     }
 
-    router.push("/admin");
+    router.push("/admin/episodes");
     router.refresh();
   }
 
@@ -101,7 +101,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
     }
 
     await fetch(`/api/admin/episodes/${episode.id}`, { method: "DELETE" });
-    router.push("/admin");
+    router.push("/admin/episodes");
     router.refresh();
   }
 

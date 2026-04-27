@@ -48,7 +48,7 @@ export function SponsorForm({
       return;
     }
 
-    router.push("/admin");
+    router.push("/admin/sponsors");
     router.refresh();
   }
 
@@ -58,7 +58,7 @@ export function SponsorForm({
     }
 
     await fetch(`/api/admin/sponsors/${sponsor.id}`, { method: "DELETE" });
-    router.push("/admin");
+    router.push("/admin/sponsors");
     router.refresh();
   }
 

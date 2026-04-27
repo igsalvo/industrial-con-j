@@ -20,7 +20,13 @@ export const SurveyStatus = {
   CLOSED: "CLOSED"
 } as const;
 
-const optionalUrl = z.string().trim().url().or(z.literal("")).optional().transform((value) => value || undefined);
+const optionalUrl = z
+  .string()
+  .trim()
+  .url("Ingresa una URL valida.")
+  .or(z.literal(""))
+  .optional()
+  .transform((value) => value || undefined);
 
 export const loginSchema = z.object({
   email: z.string().email("Ingresa un correo valido."),
@@ -28,9 +34,9 @@ export const loginSchema = z.object({
 });
 
 export const guestInputSchema = z.object({
-  name: z.string().min(2),
+  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   slug: z.string().optional(),
-  bio: z.string().min(10),
+  bio: z.string().min(10, "La biografia debe tener al menos 10 caracteres."),
   company: z.string().optional(),
   role: z.string().optional(),
   profileImage: optionalUrl,

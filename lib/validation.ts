@@ -51,10 +51,10 @@ export const sponsorInputSchema = z.object({
 });
 
 export const episodeInputSchema = z.object({
-  title: z.string().min(4),
+  title: z.string().min(4, "El titulo debe tener al menos 4 caracteres."),
   slug: z.string().optional(),
-  shortDescription: z.string().min(10),
-  longDescription: z.string().min(30),
+  shortDescription: z.string().min(10, "El resumen corto debe tener al menos 10 caracteres."),
+  longDescription: z.string().min(30, "La descripcion larga debe tener al menos 30 caracteres."),
   timestamps: z.string().optional(),
   spotifyUrl: optionalUrl,
   youtubeUrl: optionalUrl,

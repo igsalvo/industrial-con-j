@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { ensureAdminApiSession } from "@/lib/auth";
 import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
@@ -30,6 +31,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     return NextResponse.json(episode);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json({ error: error.issues[0]?.message || "Datos invalidos." }, { status: 400 });
+    }
+
     return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid payload." }, { status: 400 });
   }
 }

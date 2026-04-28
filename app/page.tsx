@@ -5,7 +5,6 @@ import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorGrid } from "@/components/ui/sponsor-grid";
-import { SponsorBanner } from "@/components/ui/sponsor-banner";
 import { ShortClipCard } from "@/components/ui/short-clip-card";
 
 export default async function HomePage() {
@@ -118,13 +117,6 @@ export default async function HomePage() {
   return (
     <div className="pb-16">
       <HeroSection config={siteConfig} />
-
-      {siteConfig.showSponsorBanner ? (
-        <SponsorBanner
-          title={siteConfig.sponsorBannerTitle || "Auspiciadores"}
-          sponsors={sponsors.filter((sponsor: (typeof sponsors)[number]) => sponsor.logoUrl)}
-        />
-      ) : null}
 
       {sections.map((section) => (
         <div key={section.key}>{section.node}</div>

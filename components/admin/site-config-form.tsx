@@ -160,8 +160,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showSponsorsSection", label: "Mostrar seccion sponsors", defaultChecked: config.showSponsorsSection },
     { name: "showRecommendedSection", label: "Mostrar recomendados", defaultChecked: config.showRecommendedSection },
     { name: "showGuestsSection", label: "Mostrar seccion invitados", defaultChecked: config.showGuestsSection },
-    { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink },
-    { name: "showSponsorBanner", label: "Mostrar banner de auspiciadores", defaultChecked: config.showSponsorBanner }
+    { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
   ];
 
   return (
@@ -239,11 +238,6 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
           <p className="pill">Home</p>
           <h3 className="mt-3 text-2xl font-black">Orden y textos de secciones</h3>
           <p className="mt-2 text-sm text-[color:var(--muted)]">Puedes cambiar el orden en que aparecen y editar sus titulos y descripciones.</p>
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-semibold">Titulo del banner de auspiciadores</label>
-          <input className="field" name="sponsorBannerTitle" defaultValue={config.sponsorBannerTitle || "Auspiciadores"} />
         </div>
 
         <div className="space-y-5">

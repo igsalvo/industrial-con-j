@@ -19,12 +19,11 @@ type EpisodeCardProps = {
 export function EpisodeCard({ episode }: EpisodeCardProps) {
   return (
     <article className="card overflow-hidden">
-      <div
-        className="h-48 bg-cover bg-center"
-        style={{
-          backgroundImage: episode.clipThumbnailUrl ? `url(${episode.clipThumbnailUrl})` : "linear-gradient(135deg, #d70904, #2b2b2b)"
-        }}
-      />
+      <div className="relative h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64">
+        {episode.clipThumbnailUrl ? (
+          <img src={episode.clipThumbnailUrl} alt={episode.title} className="h-full w-full object-cover" />
+        ) : null}
+      </div>
       <div className="p-6">
         <div className="flex flex-wrap gap-2">
           {episode.tags.slice(0, 3).map((tag: string) => (

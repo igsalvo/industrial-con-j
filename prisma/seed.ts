@@ -27,6 +27,7 @@ async function main() {
     update: {},
     create: {
       id: "default",
+      logoUrl: null,
       showFeaturedClips: true,
       showLatestEpisodes: true,
       showSponsorsSection: true,
@@ -42,7 +43,27 @@ async function main() {
       heroPrimaryCtaLabel: "Explorar episodios",
       heroPrimaryCtaHref: "/episodes",
       heroSecondaryCtaLabel: "Participar en la comunidad",
-      heroSecondaryCtaHref: "/community"
+      heroSecondaryCtaHref: "/community",
+      featuredClipsEyebrow: "Clips destacados",
+      featuredClipsTitle: "Shorts de los capitulos",
+      featuredClipsDescription: "Fragmentos cortos para destacar ideas clave y llevar trafico al episodio completo.",
+      featuredClipsOrder: 1,
+      latestEpisodesEyebrow: "Ultimos episodios",
+      latestEpisodesTitle: "Conversaciones aplicadas a operaciones",
+      latestEpisodesDescription: "Desde mejora continua hasta transformacion digital, con invitados del mundo industrial.",
+      latestEpisodesOrder: 2,
+      sponsorsSectionEyebrow: "Sponsors",
+      sponsorsSectionTitle: "Marcas alineadas con la industria",
+      sponsorsSectionDescription: "Espacio para patrocinadores destacados y oportunidades de partnership por episodio.",
+      sponsorsSectionOrder: 3,
+      recommendedSectionEyebrow: "Recomendados",
+      recommendedSectionTitle: "Episodios que merecen otra escucha",
+      recommendedSectionDescription: "Selecciones editoriales para facilitar descubrimiento y aumentar tiempo de sesion.",
+      recommendedSectionOrder: 4,
+      guestsSectionEyebrow: "Invitados",
+      guestsSectionTitle: "Voces del ecosistema industrial",
+      guestsSectionDescription: "Expertos, operadores y lideres que aterrizan teoria en ejecucion.",
+      guestsSectionOrder: 5
     }
   });
 

@@ -13,17 +13,22 @@ const links = [
   { href: "/community", label: "Comunidad" }
 ];
 
-export function SiteHeader({ showCommunityLink = true }: { showCommunityLink?: boolean }) {
+export function SiteHeader({ showCommunityLink = true, logoUrl }: { showCommunityLink?: boolean; logoUrl?: string | null }) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith("/admin");
   const visibleLinks = showCommunityLink ? links : links.filter((link) => link.href !== "/community");
+  const resolvedLogo = logoUrl || "/logo-podcast.jpg";
 
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--surface)]/90 backdrop-blur-xl">
       <div className="shell flex items-center justify-between gap-4 py-4">
         <Link href={isAdminRoute ? "/admin" : "/"} className="flex items-center gap-3">
-          <div className="relative h-11 w-11 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white">
-            <Image src="/logo-podcast.jpg" alt="Logo Industrial con J" fill className="object-cover" sizes="44px" priority />
+          <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white p-1">
+            {resolvedLogo.startsWith("/") ? (
+              <Image src={resolvedLogo} alt="Logo Industrial con J" fill className="object-contain p-1" sizes="56px" priority />
+            ) : (
+              <img src={resolvedLogo} alt="Logo Industrial con J" className="h-full w-full object-contain" />
+            )}
           </div>
           <div>
             <p className="brand-kicker text-xs text-[color:var(--muted)]">{isAdminRoute ? "Admin" : "Podcast"}</p>
@@ -33,13 +38,15 @@ export function SiteHeader({ showCommunityLink = true }: { showCommunityLink?: b
           </div>
         </Link>
 
-        {!isAdminRoute ? <nav className="hidden items-center gap-6 lg:flex">
-          {visibleLinks.map((link: { href: string; label: string }) => (
-            <Link key={link.href} href={link.href} className="text-base text-[color:var(--muted)] transition hover:text-[color:var(--foreground)]" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
-              {link.label}
-            </Link>
-          ))}
-        </nav> : null}
+        {!isAdminRoute ? (
+          <nav className="hidden items-center gap-6 lg:flex">
+            {visibleLinks.map((link: { href: string; label: string }) => (
+              <Link key={link.href} href={link.href} className="text-base text-[color:var(--muted)] transition hover:text-[color:var(--foreground)]" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         <div className="flex items-center gap-3">
           {!isAdminRoute ? (

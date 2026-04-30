@@ -74,7 +74,29 @@ export async function PATCH(request: Request) {
     guestsSectionEyebrow: toNullableString(payload.guestsSectionEyebrow),
     guestsSectionTitle: toNullableString(payload.guestsSectionTitle),
     guestsSectionDescription: toNullableString(payload.guestsSectionDescription),
-    guestsSectionOrder: toNumber(payload.guestsSectionOrder, 5)
+    guestsSectionOrder: toNumber(payload.guestsSectionOrder, 5),
+    communityPageEyebrow: toNullableString(payload.communityPageEyebrow),
+    communityPageTitle: toNullableString(payload.communityPageTitle),
+    communityPageDescription: toNullableString(payload.communityPageDescription),
+    communityEmptyTitle: toNullableString(payload.communityEmptyTitle),
+    communityEmptyDescription: toNullableString(payload.communityEmptyDescription),
+    communityContactTitle: toNullableString(payload.communityContactTitle),
+    communityContactDescription: toNullableString(payload.communityContactDescription),
+    communityContactSubmitLabel: toNullableString(payload.communityContactSubmitLabel),
+    donationsContactTitle: toNullableString(payload.donationsContactTitle),
+    donationsContactDescription: toNullableString(payload.donationsContactDescription),
+    donationsContactSubmitLabel: toNullableString(payload.donationsContactSubmitLabel),
+    episodesPageEyebrow: toNullableString(payload.episodesPageEyebrow),
+    episodesPageTitle: toNullableString(payload.episodesPageTitle),
+    episodesPageDescription: toNullableString(payload.episodesPageDescription),
+    guestsPageEyebrow: toNullableString(payload.guestsPageEyebrow),
+    guestsPageTitle: toNullableString(payload.guestsPageTitle),
+    guestsPageDescription: toNullableString(payload.guestsPageDescription),
+    sponsorsPageEyebrow: toNullableString(payload.sponsorsPageEyebrow),
+    sponsorsPageTitle: toNullableString(payload.sponsorsPageTitle),
+    sponsorsPageDescription: toNullableString(payload.sponsorsPageDescription),
+    footerTitle: toNullableString(payload.footerTitle),
+    footerDescription: toNullableString(payload.footerDescription)
   };
 
   const config = await prisma.siteConfig.upsert({

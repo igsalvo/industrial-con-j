@@ -1,13 +1,23 @@
 import Link from "next/link";
 
-export function SiteFooter({ showCommunityLink = true, showDonationsLink = true }: { showCommunityLink?: boolean; showDonationsLink?: boolean }) {
+export function SiteFooter({
+  showCommunityLink = true,
+  showDonationsLink = true,
+  footerTitle = "Industrial con J",
+  footerDescription = "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."
+}: {
+  showCommunityLink?: boolean;
+  showDonationsLink?: boolean;
+  footerTitle?: string | null;
+  footerDescription?: string | null;
+}) {
   return (
     <footer className="border-t border-[color:var(--line)] py-10">
       <div className="shell flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>Industrial con J</p>
+          <p className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>{footerTitle || "Industrial con J"}</p>
           <p className="mt-2 max-w-xl text-sm text-[color:var(--muted)]">
-            Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales.
+            {footerDescription || "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."}
           </p>
         </div>
 

@@ -27,9 +27,9 @@ export default async function DonationsPage() {
 
         <ContactForm
           type="DONATION"
-          title="Dejar datos para donar"
-          description="Completa el formulario y quedara en la bandeja del administrador para responderte."
-          submitLabel="Enviar datos"
+          title={config.donationsContactTitle || "Dejar datos para donar"}
+          description={config.donationsContactDescription || "Completa el formulario y quedara en la bandeja del administrador para responderte."}
+          submitLabel={config.donationsContactSubmitLabel || "Enviar datos"}
         />
       </div>
     </section>

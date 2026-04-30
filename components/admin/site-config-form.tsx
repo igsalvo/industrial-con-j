@@ -48,6 +48,28 @@ type SiteConfigShape = {
   guestsSectionTitle: string | null;
   guestsSectionDescription: string | null;
   guestsSectionOrder: number;
+  communityPageEyebrow: string | null;
+  communityPageTitle: string | null;
+  communityPageDescription: string | null;
+  communityEmptyTitle: string | null;
+  communityEmptyDescription: string | null;
+  communityContactTitle: string | null;
+  communityContactDescription: string | null;
+  communityContactSubmitLabel: string | null;
+  donationsContactTitle: string | null;
+  donationsContactDescription: string | null;
+  donationsContactSubmitLabel: string | null;
+  episodesPageEyebrow: string | null;
+  episodesPageTitle: string | null;
+  episodesPageDescription: string | null;
+  guestsPageEyebrow: string | null;
+  guestsPageTitle: string | null;
+  guestsPageDescription: string | null;
+  sponsorsPageEyebrow: string | null;
+  sponsorsPageTitle: string | null;
+  sponsorsPageDescription: string | null;
+  footerTitle: string | null;
+  footerDescription: string | null;
 };
 
 const sectionFields = [
@@ -146,7 +168,29 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         guestsSectionEyebrow: formData.get("guestsSectionEyebrow"),
         guestsSectionTitle: formData.get("guestsSectionTitle"),
         guestsSectionDescription: formData.get("guestsSectionDescription"),
-        guestsSectionOrder: formData.get("guestsSectionOrder")
+        guestsSectionOrder: formData.get("guestsSectionOrder"),
+        communityPageEyebrow: formData.get("communityPageEyebrow"),
+        communityPageTitle: formData.get("communityPageTitle"),
+        communityPageDescription: formData.get("communityPageDescription"),
+        communityEmptyTitle: formData.get("communityEmptyTitle"),
+        communityEmptyDescription: formData.get("communityEmptyDescription"),
+        communityContactTitle: formData.get("communityContactTitle"),
+        communityContactDescription: formData.get("communityContactDescription"),
+        communityContactSubmitLabel: formData.get("communityContactSubmitLabel"),
+        donationsContactTitle: formData.get("donationsContactTitle"),
+        donationsContactDescription: formData.get("donationsContactDescription"),
+        donationsContactSubmitLabel: formData.get("donationsContactSubmitLabel"),
+        episodesPageEyebrow: formData.get("episodesPageEyebrow"),
+        episodesPageTitle: formData.get("episodesPageTitle"),
+        episodesPageDescription: formData.get("episodesPageDescription"),
+        guestsPageEyebrow: formData.get("guestsPageEyebrow"),
+        guestsPageTitle: formData.get("guestsPageTitle"),
+        guestsPageDescription: formData.get("guestsPageDescription"),
+        sponsorsPageEyebrow: formData.get("sponsorsPageEyebrow"),
+        sponsorsPageTitle: formData.get("sponsorsPageTitle"),
+        sponsorsPageDescription: formData.get("sponsorsPageDescription"),
+        footerTitle: formData.get("footerTitle"),
+        footerDescription: formData.get("footerDescription")
       })
     });
 
@@ -276,6 +320,90 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
+        <div>
+          <p className="pill">Paginas publicas</p>
+          <h3 className="mt-3 text-2xl font-black">Textos editables</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">Estos textos controlan comunidad, donaciones, archivo, invitados, sponsors y footer.</p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Episodios eyebrow</label>
+            <input className="field" name="episodesPageEyebrow" defaultValue={config.episodesPageEyebrow || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Episodios titulo</label>
+            <input className="field" name="episodesPageTitle" defaultValue={config.episodesPageTitle || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Episodios descripcion</label>
+            <textarea className="field min-h-24" name="episodesPageDescription" defaultValue={config.episodesPageDescription || ""} />
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Invitados eyebrow</label>
+            <input className="field" name="guestsPageEyebrow" defaultValue={config.guestsPageEyebrow || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Invitados titulo</label>
+            <input className="field" name="guestsPageTitle" defaultValue={config.guestsPageTitle || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Invitados descripcion</label>
+            <textarea className="field min-h-24" name="guestsPageDescription" defaultValue={config.guestsPageDescription || ""} />
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Sponsors eyebrow</label>
+            <input className="field" name="sponsorsPageEyebrow" defaultValue={config.sponsorsPageEyebrow || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Sponsors titulo</label>
+            <input className="field" name="sponsorsPageTitle" defaultValue={config.sponsorsPageTitle || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Sponsors descripcion</label>
+            <textarea className="field min-h-24" name="sponsorsPageDescription" defaultValue={config.sponsorsPageDescription || ""} />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[color:var(--line)] p-4">
+          <h4 className="text-lg font-bold">Comunidad</h4>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <input className="field" name="communityPageEyebrow" defaultValue={config.communityPageEyebrow || ""} placeholder="Eyebrow" />
+            <input className="field" name="communityPageTitle" defaultValue={config.communityPageTitle || ""} placeholder="Titulo" />
+            <textarea className="field min-h-24 md:col-span-2" name="communityPageDescription" defaultValue={config.communityPageDescription || ""} placeholder="Descripcion principal" />
+            <input className="field" name="communityEmptyTitle" defaultValue={config.communityEmptyTitle || ""} placeholder="Titulo sin encuestas" />
+            <input className="field" name="communityEmptyDescription" defaultValue={config.communityEmptyDescription || ""} placeholder="Descripcion sin encuestas" />
+            <input className="field" name="communityContactTitle" defaultValue={config.communityContactTitle || ""} placeholder="Titulo formulario contacto" />
+            <input className="field" name="communityContactSubmitLabel" defaultValue={config.communityContactSubmitLabel || ""} placeholder="Texto boton contacto" />
+            <textarea className="field min-h-24 md:col-span-2" name="communityContactDescription" defaultValue={config.communityContactDescription || ""} placeholder="Descripcion formulario contacto" />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[color:var(--line)] p-4">
+          <h4 className="text-lg font-bold">Donaciones</h4>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <input className="field" name="donationsContactTitle" defaultValue={config.donationsContactTitle || ""} placeholder="Titulo formulario donaciones" />
+            <input className="field" name="donationsContactSubmitLabel" defaultValue={config.donationsContactSubmitLabel || ""} placeholder="Texto boton donaciones" />
+            <textarea className="field min-h-24 md:col-span-2" name="donationsContactDescription" defaultValue={config.donationsContactDescription || ""} placeholder="Descripcion formulario donaciones" />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[color:var(--line)] p-4">
+          <h4 className="text-lg font-bold">Footer</h4>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <input className="field" name="footerTitle" defaultValue={config.footerTitle || ""} placeholder="Titulo footer" />
+            <textarea className="field min-h-24" name="footerDescription" defaultValue={config.footerDescription || ""} placeholder="Descripcion footer" />
+          </div>
         </div>
       </div>
 

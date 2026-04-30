@@ -53,7 +53,29 @@ export const defaultSiteConfig = {
   guestsSectionEyebrow: "Invitados",
   guestsSectionTitle: "Voces del ecosistema industrial",
   guestsSectionDescription: "Expertos, operadores y lideres que aterrizan teoria en ejecucion.",
-  guestsSectionOrder: 6
+  guestsSectionOrder: 6,
+  communityPageEyebrow: "Comunidad",
+  communityPageTitle: "Encuestas, preguntas y contacto",
+  communityPageDescription: "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.",
+  communityEmptyTitle: "No hay encuestas activas",
+  communityEmptyDescription: "Publica una encuesta desde el administrador para mostrarla aqui.",
+  communityContactTitle: "Contactanos",
+  communityContactDescription: "Deja tu comentario e informacion de contacto para responderte despues.",
+  communityContactSubmitLabel: "Enviar comentario",
+  donationsContactTitle: "Dejar datos para donar",
+  donationsContactDescription: "Completa el formulario y quedara en la bandeja del administrador para responderte.",
+  donationsContactSubmitLabel: "Enviar datos",
+  episodesPageEyebrow: "Archivo",
+  episodesPageTitle: "Todos los episodios",
+  episodesPageDescription: "Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias.",
+  guestsPageEyebrow: "Invitados",
+  guestsPageTitle: "Personas que construyen industria",
+  guestsPageDescription: "Perfiles, empresas, enlaces sociales y episodios donde participan.",
+  sponsorsPageEyebrow: "Sponsors",
+  sponsorsPageTitle: "Aliados comerciales del podcast",
+  sponsorsPageDescription: "Grid de logos, links de salida y sponsor destacado por episodio.",
+  footerTitle: "Industrial con J",
+  footerDescription: "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."
 } as const;
 
 export const publicEpisodeInclude = {

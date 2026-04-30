@@ -1,17 +1,17 @@
-import { getAllEpisodes } from "@/lib/queries";
+import { getAllEpisodes, getSiteConfig } from "@/lib/queries";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeading } from "@/components/sections/section-heading";
 
 export default async function EpisodesPage() {
-  const episodes = await getAllEpisodes();
+  const [episodes, config] = await Promise.all([getAllEpisodes(), getSiteConfig()]);
 
   return (
     <section className="shell py-12">
       <SectionHeading
-        eyebrow="Archivo"
-        title="Todos los episodios"
-        description="Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias."
+        eyebrow={config.episodesPageEyebrow || "Archivo"}
+        title={config.episodesPageTitle || "Todos los episodios"}
+        description={config.episodesPageDescription || "Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias."}
       />
       {episodes.length === 0 ? (
         <EmptyState title="Aun no hay episodios publicados" description="Este MVP parte con contenido editorial estatico y puede ampliarse despues." />

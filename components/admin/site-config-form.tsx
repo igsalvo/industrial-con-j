@@ -12,6 +12,7 @@ type SiteConfigShape = {
   showRecommendedSection: boolean;
   showGuestsSection: boolean;
   showCommunityLink: boolean;
+  showDonationsSection: boolean;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
   heroEyebrow: string | null;
@@ -34,6 +35,11 @@ type SiteConfigShape = {
   sponsorsSectionTitle: string | null;
   sponsorsSectionDescription: string | null;
   sponsorsSectionOrder: number;
+  donationsSectionEyebrow: string | null;
+  donationsSectionTitle: string | null;
+  donationsSectionDescription: string | null;
+  donationsSectionOrder: number;
+  donationUrl: string | null;
   recommendedSectionEyebrow: string | null;
   recommendedSectionTitle: string | null;
   recommendedSectionDescription: string | null;
@@ -70,12 +76,12 @@ const sectionFields = [
     descriptionName: "sponsorsSectionDescription"
   },
   {
-    key: "recommendedSection",
-    label: "Recomendados",
-    orderName: "recommendedSectionOrder",
-    eyebrowName: "recommendedSectionEyebrow",
-    titleName: "recommendedSectionTitle",
-    descriptionName: "recommendedSectionDescription"
+    key: "donationsSection",
+    label: "Donaciones",
+    orderName: "donationsSectionOrder",
+    eyebrowName: "donationsSectionEyebrow",
+    titleName: "donationsSectionTitle",
+    descriptionName: "donationsSectionDescription"
   },
   {
     key: "guestsSection",
@@ -106,9 +112,10 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         showFeaturedClips: formData.get("showFeaturedClips") === "on",
         showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
         showSponsorsSection: formData.get("showSponsorsSection") === "on",
-        showRecommendedSection: formData.get("showRecommendedSection") === "on",
+        showRecommendedSection: false,
         showGuestsSection: formData.get("showGuestsSection") === "on",
         showCommunityLink: formData.get("showCommunityLink") === "on",
+        showDonationsSection: formData.get("showDonationsSection") === "on",
         showSponsorBanner: formData.get("showSponsorBanner") === "on",
         sponsorBannerTitle: formData.get("sponsorBannerTitle"),
         heroEyebrow: formData.get("heroEyebrow"),
@@ -131,10 +138,11 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         sponsorsSectionTitle: formData.get("sponsorsSectionTitle"),
         sponsorsSectionDescription: formData.get("sponsorsSectionDescription"),
         sponsorsSectionOrder: formData.get("sponsorsSectionOrder"),
-        recommendedSectionEyebrow: formData.get("recommendedSectionEyebrow"),
-        recommendedSectionTitle: formData.get("recommendedSectionTitle"),
-        recommendedSectionDescription: formData.get("recommendedSectionDescription"),
-        recommendedSectionOrder: formData.get("recommendedSectionOrder"),
+        donationsSectionEyebrow: formData.get("donationsSectionEyebrow"),
+        donationsSectionTitle: formData.get("donationsSectionTitle"),
+        donationsSectionDescription: formData.get("donationsSectionDescription"),
+        donationsSectionOrder: formData.get("donationsSectionOrder"),
+        donationUrl: formData.get("donationUrl"),
         guestsSectionEyebrow: formData.get("guestsSectionEyebrow"),
         guestsSectionTitle: formData.get("guestsSectionTitle"),
         guestsSectionDescription: formData.get("guestsSectionDescription"),
@@ -158,7 +166,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showFeaturedClips", label: "Mostrar shorts destacados", defaultChecked: config.showFeaturedClips },
     { name: "showLatestEpisodes", label: "Mostrar ultimos episodios", defaultChecked: config.showLatestEpisodes },
     { name: "showSponsorsSection", label: "Mostrar seccion sponsors", defaultChecked: config.showSponsorsSection },
-    { name: "showRecommendedSection", label: "Mostrar recomendados", defaultChecked: config.showRecommendedSection },
+    { name: "showDonationsSection", label: "Mostrar seccion donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar seccion invitados", defaultChecked: config.showGuestsSection },
     { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
   ];
@@ -241,6 +249,11 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         </div>
 
         <div className="space-y-5">
+          <div className="rounded-2xl border border-[color:var(--line)] p-4">
+            <label className="mb-2 block text-sm font-semibold">URL externa para donaciones (opcional)</label>
+            <input className="field" name="donationUrl" defaultValue={config.donationUrl || ""} placeholder="https://..." />
+          </div>
+
           {sectionFields.map((section) => (
             <div key={section.key} className="rounded-2xl border border-[color:var(--line)] p-4">
               <div className="grid gap-4 md:grid-cols-[120px_1fr_1fr]">

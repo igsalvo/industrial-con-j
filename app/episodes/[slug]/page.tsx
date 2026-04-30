@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
+import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { EpisodeCard } from "@/components/ui/episode-card";
 
 type ResourceLink = {
@@ -139,16 +140,24 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          <div className="card p-8">
-            <p className="pill">MVP</p>
-            <h2 className="mt-4 text-2xl font-bold">Comunidad proximamente</h2>
-            <p className="mt-3 text-sm text-[color:var(--muted)]">
-              Las encuestas y concursos quedaron fuera de este primer release para priorizar una experiencia estable.
-            </p>
-            <Link href="/community" className="btn-secondary mt-5 !px-4 !py-2 text-sm">
-              Ver roadmap
-            </Link>
-          </div>
+          {episode.surveys.length > 0 ? (
+            <div className="space-y-4">
+              {episode.surveys.map((survey: (typeof episode.surveys)[number]) => (
+                <PublicSurveyForm key={survey.id} survey={survey} />
+              ))}
+            </div>
+          ) : (
+            <div className="card p-8">
+              <p className="pill">Comunidad</p>
+              <h2 className="mt-4 text-2xl font-bold">Participa en la conversacion</h2>
+              <p className="mt-3 text-sm text-[color:var(--muted)]">
+                Cuando este capitulo tenga una encuesta publicada, aparecera directamente aqui.
+              </p>
+              <Link href="/community" className="btn-secondary mt-5 !px-4 !py-2 text-sm">
+                Ir a comunidad
+              </Link>
+            </div>
+          )}
         </aside>
       </div>
 

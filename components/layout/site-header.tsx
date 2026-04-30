@@ -10,13 +10,32 @@ const links = [
   { href: "/episodes", label: "Episodios" },
   { href: "/guests", label: "Invitados" },
   { href: "/sponsors", label: "Sponsors" },
-  { href: "/community", label: "Comunidad" }
+  { href: "/community", label: "Comunidad" },
+  { href: "/donations", label: "Donaciones" }
 ];
 
-export function SiteHeader({ showCommunityLink = true, logoUrl }: { showCommunityLink?: boolean; logoUrl?: string | null }) {
+export function SiteHeader({
+  showCommunityLink = true,
+  showDonationsLink = true,
+  logoUrl
+}: {
+  showCommunityLink?: boolean;
+  showDonationsLink?: boolean;
+  logoUrl?: string | null;
+}) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith("/admin");
-  const visibleLinks = showCommunityLink ? links : links.filter((link) => link.href !== "/community");
+  const visibleLinks = links.filter((link) => {
+    if (link.href === "/community") {
+      return showCommunityLink;
+    }
+
+    if (link.href === "/donations") {
+      return showDonationsLink;
+    }
+
+    return true;
+  });
   const resolvedLogo = logoUrl || "/logo-podcast.jpg";
 
   return (

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getHomepageData, getSiteConfig } from "@/lib/queries";
+import { ContactForm } from "@/components/forms/contact-form";
 import { HeroSection } from "@/components/sections/hero-section";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";
@@ -8,7 +9,7 @@ import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { ShortClipCard } from "@/components/ui/short-clip-card";
 
 export default async function HomePage() {
-  const [{ featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests }, siteConfig] = await Promise.all([
+  const [{ featuredClips, latestEpisodes, sponsors, guests }, siteConfig] = await Promise.all([
     getHomepageData(),
     getSiteConfig()
   ]);
@@ -70,21 +71,36 @@ export default async function HomePage() {
           )
         }
       : null,
-    siteConfig.showRecommendedSection
+    siteConfig.showDonationsSection
       ? {
-          key: "recommended",
-          order: siteConfig.recommendedSectionOrder,
+          key: "donations",
+          order: siteConfig.donationsSectionOrder,
           node: (
             <section className="shell py-8">
-              <SectionHeading
-                eyebrow={siteConfig.recommendedSectionEyebrow || "Recomendados"}
-                title={siteConfig.recommendedSectionTitle || "Episodios que merecen otra escucha"}
-                description={siteConfig.recommendedSectionDescription || "Selecciones editoriales para facilitar descubrimiento y aumentar tiempo de sesion."}
-              />
-              <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
-                {recommendedEpisodes.map((episode: (typeof recommendedEpisodes)[number]) => (
-                  <EpisodeCard key={episode.slug} episode={episode} />
-                ))}
+              <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+                <div>
+                  <SectionHeading
+                    eyebrow={siteConfig.donationsSectionEyebrow || "Donaciones"}
+                    title={siteConfig.donationsSectionTitle || "Apoya nuevas conversaciones industriales"}
+                    description={siteConfig.donationsSectionDescription || "Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto."}
+                  />
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {siteConfig.donationUrl ? (
+                      <a className="btn-primary" href={siteConfig.donationUrl} target="_blank" rel="noreferrer">
+                        Ir a donar
+                      </a>
+                    ) : null}
+                    <Link className="btn-secondary" href="/donations">
+                      Dejar contacto
+                    </Link>
+                  </div>
+                </div>
+                <ContactForm
+                  type="DONATION"
+                  title="Quiero apoyar el podcast"
+                  description="Completa tus datos y quedaran disponibles para responder desde el administrador."
+                  submitLabel="Enviar datos"
+                />
               </div>
             </section>
           )

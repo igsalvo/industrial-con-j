@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
-  const [episodes, guests, sponsors, surveys, siteConfig] = databaseReady
+  const [episodes, guests, sponsors, surveys, messages, siteConfig] = databaseReady
     ? await Promise.all([
         prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
@@ -24,11 +24,15 @@ export default async function AdminDashboardPage() {
           orderBy: { updatedAt: "desc" },
           take: 5
         }),
+        prisma.contactMessage.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 5
+        }),
         prisma.siteConfig.findUnique({
           where: { id: "default" }
         })
       ])
-    : [[], [], [], [], null];
+    : [[], [], [], [], [], null];
 
   return (
     <div className="space-y-6">
@@ -61,6 +65,11 @@ export default async function AdminDashboardPage() {
             title: "Encuestas",
             text: "Crear, editar y eliminar encuestas.",
             href: "/admin/surveys"
+          },
+          {
+            title: "Bandeja",
+            text: "Ver contactos, donaciones y respuestas.",
+            href: "/admin/messages"
           }
         ].map((item) => (
           <Link key={item.title} href={item.href} className="rounded-2xl border border-[color:var(--line)] p-5 transition hover:border-[color:var(--accent)]">
@@ -156,6 +165,10 @@ export default async function AdminDashboardPage() {
                 <Link href="/admin/surveys" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Encuestas</span>
                   <span className="text-xs text-[color:var(--muted)]">{surveys.length} registros</span>
+                </Link>
+                <Link href="/admin/messages" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Bandeja</span>
+                  <span className="text-xs text-[color:var(--muted)]">{messages.length} mensajes recientes</span>
                 </Link>
               </div>
             </div>

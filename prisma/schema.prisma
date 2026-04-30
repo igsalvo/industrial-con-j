@@ -152,6 +152,19 @@ model SurveyAnswer {
   value       String
 }
 
+model ContactMessage {
+  id        String   @id @default(cuid())
+  type      String   @default("CONTACT")
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -170,6 +183,7 @@ model SiteConfig {
   showRecommendedSection      Boolean  @default(true)
   showGuestsSection           Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
+  showDonationsSection        Boolean  @default(true)
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Auspiciadores")
   heroEyebrow                 String?  @default("Ingenieria industrial para equipos que ejecutan")
@@ -192,6 +206,11 @@ model SiteConfig {
   sponsorsSectionTitle        String?  @default("Marcas alineadas con la industria")
   sponsorsSectionDescription  String?  @default("Espacio para patrocinadores destacados y oportunidades de partnership por episodio.")
   sponsorsSectionOrder        Int      @default(3)
+  donationsSectionEyebrow     String?  @default("Donaciones")
+  donationsSectionTitle       String?  @default("Apoya nuevas conversaciones industriales")
+  donationsSectionDescription String?  @default("Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto.")
+  donationsSectionOrder       Int      @default(4)
+  donationUrl                 String?
   recommendedSectionEyebrow   String?  @default("Recomendados")
   recommendedSectionTitle     String?  @default("Episodios que merecen otra escucha")
   recommendedSectionDescription String? @default("Selecciones editoriales para facilitar descubrimiento y aumentar tiempo de sesion.")

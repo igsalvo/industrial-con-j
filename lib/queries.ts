@@ -15,9 +15,10 @@ export const defaultSiteConfig = {
   showFeaturedClips: true,
   showLatestEpisodes: true,
   showSponsorsSection: true,
-  showRecommendedSection: true,
+  showRecommendedSection: false,
   showGuestsSection: true,
   showCommunityLink: true,
+  showDonationsSection: true,
   showSponsorBanner: true,
   sponsorBannerTitle: "Auspiciadores",
   heroEyebrow: "Ingenieria industrial para equipos que ejecutan",
@@ -40,6 +41,11 @@ export const defaultSiteConfig = {
   sponsorsSectionTitle: "Marcas alineadas con la industria",
   sponsorsSectionDescription: "Espacio para patrocinadores destacados y oportunidades de partnership por episodio.",
   sponsorsSectionOrder: 3,
+  donationsSectionEyebrow: "Donaciones",
+  donationsSectionTitle: "Apoya nuevas conversaciones industriales",
+  donationsSectionDescription: "Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto.",
+  donationsSectionOrder: 4,
+  donationUrl: null,
   recommendedSectionEyebrow: "Recomendados",
   recommendedSectionTitle: "Episodios que merecen otra escucha",
   recommendedSectionDescription: "Selecciones editoriales para facilitar descubrimiento y aumentar tiempo de sesion.",
@@ -47,7 +53,7 @@ export const defaultSiteConfig = {
   guestsSectionEyebrow: "Invitados",
   guestsSectionTitle: "Voces del ecosistema industrial",
   guestsSectionDescription: "Expertos, operadores y lideres que aterrizan teoria en ejecucion.",
-  guestsSectionOrder: 5
+  guestsSectionOrder: 6
 } as const;
 
 export const publicEpisodeInclude = {

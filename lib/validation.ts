@@ -125,6 +125,15 @@ export const surveyResponseSchema = z.object({
   )
 });
 
+export const contactMessageSchema = z.object({
+  type: z.enum(["CONTACT", "DONATION"]).default("CONTACT"),
+  name: z.string().trim().min(1, "Ingresa tu nombre."),
+  email: z.string().trim().email("Ingresa un correo valido."),
+  phone: z.string().trim().optional().or(z.literal("")),
+  company: z.string().trim().optional().or(z.literal("")),
+  message: z.string().trim().min(1, "Ingresa un mensaje.")
+});
+
 export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
   return {
     name: input.name,

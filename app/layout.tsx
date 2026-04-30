@@ -31,9 +31,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeScript />
         <div className="grain min-h-screen">
-          <SiteHeader showCommunityLink={siteConfig.showCommunityLink} logoUrl={siteConfig.logoUrl} />
+          <SiteHeader showCommunityLink={siteConfig.showCommunityLink} showDonationsLink={siteConfig.showDonationsSection} logoUrl={siteConfig.logoUrl} />
           <main>{children}</main>
-          <SiteFooter showCommunityLink={siteConfig.showCommunityLink} />
+          <SiteFooter showCommunityLink={siteConfig.showCommunityLink} showDonationsLink={siteConfig.showDonationsSection} />
         </div>
       </body>
     </html>

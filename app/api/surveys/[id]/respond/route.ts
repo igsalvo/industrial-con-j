@@ -13,9 +13,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return NextResponse.json({ error: "Survey id mismatch." }, { status: 400 });
     }
 
+    const survey = await prisma.survey.findUnique({
+      where: { id },
+      select: { episodeId: true }
+    });
+
     const created = await prisma.surveyResponse.create({
       data: {
         surveyId: payload.surveyId,
+        episodeId: survey?.episodeId || undefined,
         name: payload.name || undefined,
         email: payload.email || undefined,
         fingerprint: payload.fingerprint,

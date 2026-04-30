@@ -6,7 +6,8 @@ const links = [
   { href: "/admin/episodes", label: "Episodios" },
   { href: "/admin/guests", label: "Invitados" },
   { href: "/admin/sponsors", label: "Sponsors" },
-  { href: "/admin/surveys", label: "Encuestas" }
+  { href: "/admin/surveys", label: "Encuestas" },
+  { href: "/admin/messages", label: "Bandeja" }
 ];
 
 export function AdminShell({

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function SiteFooter({ showCommunityLink = true }: { showCommunityLink?: boolean }) {
+export function SiteFooter({ showCommunityLink = true, showDonationsLink = true }: { showCommunityLink?: boolean; showDonationsLink?: boolean }) {
   return (
     <footer className="border-t border-[color:var(--line)] py-10">
       <div className="shell flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -16,7 +16,8 @@ export function SiteFooter({ showCommunityLink = true }: { showCommunityLink?: b
           <Link href="/guests">Invitados</Link>
           <Link href="/sponsors">Sponsors</Link>
           {showCommunityLink ? <Link href="/community">Comunidad</Link> : null}
-          <a href="https://instagram.com" target="_blank" rel="noreferrer">
+          {showDonationsLink ? <Link href="/donations">Donaciones</Link> : null}
+          <a href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">
             Instagram
           </a>
           <a href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all" target="_blank" rel="noreferrer">

@@ -10,10 +10,9 @@
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "prisma db seed"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "prisma:migrate:deploy": "node scripts/prisma-migrate-deploy.mjs",
+    "prisma:seed": "prisma db seed",
+    "db:check": "node scripts/db-check.mjs"
   },
   "dependencies": {
     "@vercel/blob": "1.1.1",

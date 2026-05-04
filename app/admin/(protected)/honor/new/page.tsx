@@ -13,5 +13,5 @@ const fields = [
 ] as const;
 
 export default function AdminHonorNewPage() {
-  return <div className="space-y-6"><div className="card p-8"><p className="pill">Honor</p><h1 className="mt-4 text-4xl font-black">Crear persona</h1><Link href="/admin/honor" className="btn-secondary mt-5 !px-4 !py-2 text-sm">Volver</Link></div><div className="card p-8"><ContentRecordForm mode="create" endpoint="/api/admin/honor" backHref="/admin/honor" submitLabel="Crear persona" fields={[...fields]} /></div></div>;
+  return <div className="space-y-6"><div className="card p-8"><p className="pill">Alumni</p><h1 className="mt-4 text-4xl font-black">Crear persona</h1><Link href="/admin/honor" className="btn-secondary mt-5 !px-4 !py-2 text-sm">Volver</Link></div><div className="card p-8"><ContentRecordForm mode="create" endpoint="/api/admin/honor" backHref="/admin/honor" submitLabel="Crear persona" fields={[...fields]} /></div></div>;
 }

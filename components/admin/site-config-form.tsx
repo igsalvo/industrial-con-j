@@ -149,7 +149,7 @@ const sectionFields = [
   },
   {
     key: "honorSection",
-    label: "Circulo de Honor",
+    label: "Alumni",
     orderName: "honorSectionOrder",
     eyebrowName: "honorSectionEyebrow",
     titleName: "honorSectionTitle",
@@ -298,7 +298,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showDonationsSection", label: "Mostrar seccion donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar seccion invitados", defaultChecked: config.showGuestsSection },
     { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },
-    { name: "showHonorSection", label: "Mostrar Circulo de Honor", defaultChecked: config.showHonorSection },
+    { name: "showHonorSection", label: "Mostrar Alumni", defaultChecked: config.showHonorSection },
     { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
     { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }

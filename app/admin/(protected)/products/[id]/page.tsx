@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentRecordForm } from "@/components/admin/content-record-form";
+import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminProductEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [record, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
-    prisma.productCategory.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] })
+    prisma.product.findUnique({ where: { id } }).catch(() => null),
+    prisma.productCategory.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] }).catch(() => null)
   ]);
+  if (!categories) return <MvpPlaceholder eyebrow="Productos" title="Seccion pendiente de migracion" description="Aplica la migracion de Prisma antes de editar productos." />;
   if (!record) notFound();
   const fields = [
     { name: "name", label: "Nombre", required: true },

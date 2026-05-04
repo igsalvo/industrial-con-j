@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ContentRecordForm } from "@/components/admin/content-record-form";
+import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminProductNewPage() {
-  const categories = await prisma.productCategory.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] });
+  const categories = await prisma.productCategory.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] }).catch(() => null);
+  if (!categories) return <MvpPlaceholder eyebrow="Productos" title="Seccion pendiente de migracion" description="Aplica la migracion de Prisma antes de crear productos." />;
   const fields = [
     { name: "name", label: "Nombre", required: true },
     { name: "slug", label: "Slug opcional" },

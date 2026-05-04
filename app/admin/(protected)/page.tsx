@@ -90,7 +90,7 @@ export default async function AdminDashboardPage() {
             href: "/admin/identity"
           },
           {
-            title: "Circulo de Honor",
+            title: "Alumni",
             text: "Gestionar personas destacadas.",
             href: "/admin/honor"
           },
@@ -208,7 +208,7 @@ export default async function AdminDashboardPage() {
                   <span className="text-xs text-[color:var(--muted)]">{identityItems.length} registros</span>
                 </Link>
                 <Link href="/admin/honor" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
-                  <span className="font-semibold">Circulo de Honor</span>
+                  <span className="font-semibold">Alumni</span>
                   <span className="text-xs text-[color:var(--muted)]">{honorMembers.length} registros</span>
                 </Link>
                 <Link href="/admin/products" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">

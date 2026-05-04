@@ -22,13 +22,11 @@ export function SiteFooter({
         </div>
 
         <div className="flex flex-wrap gap-4 text-sm text-[color:var(--muted)]">
-          <Link href="/episodes">Episodios</Link>
           <Link href="/guests">Invitados</Link>
           <Link href="/sponsors">Sponsors</Link>
           <Link href="/identity">Identidad</Link>
-          <Link href="/honor">Honor</Link>
+          <Link href="/honor">Alumni</Link>
           <Link href="/tiendiita">TienDIIta</Link>
-          {showCommunityLink ? <Link href="/community">Comunidad</Link> : null}
           {showDonationsLink ? <Link href="/donations">Donaciones</Link> : null}
           <Link href="/contact">Contacto</Link>
           <a href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">

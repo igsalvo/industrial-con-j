@@ -4,38 +4,46 @@ import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 
+async function safeQuery<T>(query: Promise<T>, fallback: T) {
+  try {
+    return await query;
+  } catch {
+    return fallback;
+  }
+}
+
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
   const [episodes, guests, sponsors, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, participationItems] = databaseReady
     ? await Promise.all([
-        prisma.episode.findMany({
+        safeQuery(prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
-        }),
-        prisma.guest.findMany({
+        }), []),
+        safeQuery(prisma.guest.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
-        }),
-        prisma.sponsor.findMany({
+        }), []),
+        safeQuery(prisma.sponsor.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
-        }),
-        prisma.survey.findMany({
+        }), []),
+        safeQuery(prisma.survey.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
-        }),
-        prisma.contactMessage.findMany({
+        }), []),
+        safeQuery(prisma.contactMessage.findMany({
           orderBy: { createdAt: "desc" },
           take: 5
-        }),
-        prisma.siteConfig.findUnique({
+        }), []),
+        safeQuery(prisma.siteConfig.findUnique({
           where: { id: "default" }
-        }),
-        prisma.identityItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
-        prisma.honorMember.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
-        prisma.product.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
-        prisma.productCategory.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
-        prisma.participationItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 })
+        }), null),
+        safeQuery(prisma.identityItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
+        safeQuery(prisma.honorMember.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
+        safeQuery(prisma.product.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
+        safeQuery(prisma.productCategory.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
+        safeQuery(prisma.participationItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), [])
       ])
     : [[], [], [], [], [], null, [], [], [], [], []];
 

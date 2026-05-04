@@ -2,15 +2,23 @@ import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 
+async function safeQuery<T>(query: Promise<T>, fallback: T) {
+  try {
+    return await query;
+  } catch {
+    return fallback;
+  }
+}
+
 export default async function AdminMessagesPage() {
   const databaseReady = hasDatabase();
   const [messages, surveyResponses] = databaseReady
     ? await Promise.all([
-        prisma.contactMessage.findMany({
+        safeQuery(prisma.contactMessage.findMany({
           orderBy: { createdAt: "desc" },
           take: 100
-        }),
-        prisma.surveyResponse.findMany({
+        }), []),
+        safeQuery(prisma.surveyResponse.findMany({
           orderBy: { createdAt: "desc" },
           take: 100,
           include: {
@@ -25,7 +33,7 @@ export default async function AdminMessagesPage() {
               }
             }
           }
-        })
+        }), [])
       ])
     : [[], []];
 

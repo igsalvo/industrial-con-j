@@ -7,11 +7,13 @@ import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const links = [
+  { href: "/podcast", label: "Podcast" },
   { href: "/episodes", label: "Episodios" },
-  { href: "/guests", label: "Invitados" },
-  { href: "/sponsors", label: "Sponsors" },
+  { href: "/identity", label: "Identidad" },
+  { href: "/honor", label: "Honor" },
+  { href: "/tiendiita", label: "TienDIIta" },
   { href: "/community", label: "Comunidad" },
-  { href: "/donations", label: "Donaciones" }
+  { href: "/contact", label: "Contacto" }
 ];
 
 export function SiteHeader({

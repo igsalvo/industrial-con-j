@@ -12,6 +12,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "node scripts/prisma-migrate-deploy.mjs",
     "prisma:seed": "prisma db seed",
+    "db:seed": "prisma db seed",
     "db:check": "node scripts/db-check.mjs"
   },
   "dependencies": {

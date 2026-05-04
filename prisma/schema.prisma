@@ -157,6 +157,8 @@ model ContactMessage {
   type      String   @default("CONTACT")
   name      String
   email     String
+  subject   String?
+  motive    String?
   phone     String?
   company   String?
   message   String
@@ -177,11 +179,16 @@ model AdminUser {
 model SiteConfig {
   id                          String   @id @default("default")
   logoUrl                     String?
+  showHeroSection             Boolean  @default(true)
   showFeaturedClips           Boolean  @default(true)
   showLatestEpisodes          Boolean  @default(true)
   showSponsorsSection         Boolean  @default(true)
   showRecommendedSection      Boolean  @default(true)
   showGuestsSection           Boolean  @default(true)
+  showIdentitySection         Boolean  @default(true)
+  showHonorSection            Boolean  @default(true)
+  showProductsSection         Boolean  @default(true)
+  showParticipationSection    Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
   showDonationsSection        Boolean  @default(true)
   showSponsorBanner           Boolean  @default(true)
@@ -194,6 +201,8 @@ model SiteConfig {
   heroPrimaryCtaHref          String?  @default("/episodes")
   heroSecondaryCtaLabel       String?  @default("Participar en la comunidad")
   heroSecondaryCtaHref        String?  @default("/community")
+  heroImageUrl                String?
+  heroOrder                   Int      @default(0)
   featuredClipsEyebrow        String?  @default("Clips destacados")
   featuredClipsTitle          String?  @default("Shorts de los capitulos")
   featuredClipsDescription    String?  @default("Fragmentos cortos para destacar ideas clave y llevar trafico al episodio completo.")
@@ -219,6 +228,25 @@ model SiteConfig {
   guestsSectionTitle          String?  @default("Voces del ecosistema industrial")
   guestsSectionDescription    String?  @default("Expertos, operadores y lideres que aterrizan teoria en ejecucion.")
   guestsSectionOrder          Int      @default(5)
+  identitySectionEyebrow      String?  @default("Identidad")
+  identitySectionTitle        String?  @default("Lo que mueve Industrial con J")
+  identitySectionDescription  String?  @default("Proposito, vision, mision y valores editables desde el administrador.")
+  identitySectionOrder        Int      @default(6)
+  honorSectionEyebrow         String?  @default("Circulo de Honor")
+  honorSectionTitle           String?  @default("Personas que abren camino")
+  honorSectionDescription     String?  @default("Reconocimientos y perfiles destacados del ecosistema industrial.")
+  honorSectionOrder           Int      @default(7)
+  productsSectionEyebrow      String?  @default("TienDIIta CEIN")
+  productsSectionTitle        String?  @default("Catalogo simple")
+  productsSectionDescription  String?  @default("Productos administrables para consultar o reservar sin carrito ni pagos.")
+  productsSectionOrder        Int      @default(8)
+  participationSectionEyebrow String?  @default("Participa")
+  participationSectionTitle   String?  @default("Donaciones, auspicios y comunidad")
+  participationSectionDescription String? @default("Formas concretas de apoyar, auspiciar o participar.")
+  participationSectionOrder   Int      @default(9)
+  contactPageEyebrow          String?  @default("Contacto")
+  contactPageTitle            String?  @default("Contactanos")
+  contactPageDescription      String?  @default("Escribenos y revisaremos tu mensaje desde el panel administrador.")
   communityPageEyebrow        String?  @default("Comunidad")
   communityPageTitle          String?  @default("Encuestas, preguntas y contacto")
   communityPageDescription    String?  @default("Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.")
@@ -243,4 +271,89 @@ model SiteConfig {
   footerDescription           String?  @default("Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales.")
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
+}
+
+model IdentityItem {
+  id        String   @id @default(cuid())
+  kind      String
+  title     String
+  text      String
+  icon      String?
+  imageUrl  String?
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind, order])
+  @@index([isVisible, order])
+}
+
+model HonorMember {
+  id            String   @id @default(cuid())
+  name          String
+  photoUrl      String?
+  description   String
+  role          String?
+  generation    String?
+  externalLinks Json?
+  order         Int      @default(0)
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isVisible, order])
+}
+
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  order       Int       @default(0)
+  isVisible   Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([isVisible, order])
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String           @unique
+  photoUrl    String?
+  description String
+  price       Decimal          @db.Decimal(10, 2)
+  stock       Int?
+  ctaText     String?
+  ctaLink     String?
+  order       Int              @default(0)
+  isVisible   Boolean          @default(true)
+  categoryId  String
+  category    ProductCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([isVisible, order])
+}
+
+model ParticipationItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  icon        String?
+  type        String
+  ctaText     String?
+  ctaLink     String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type, order])
+  @@index([isVisible, order])
 }

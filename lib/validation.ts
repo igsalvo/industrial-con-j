@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { normalizeList, slugify } from "@/lib/utils";
 
 export const QuestionType = {
@@ -126,12 +127,69 @@ export const surveyResponseSchema = z.object({
 });
 
 export const contactMessageSchema = z.object({
-  type: z.enum(["CONTACT", "DONATION"]).default("CONTACT"),
+  type: z.enum(["CONTACT", "DONATION", "SPONSORSHIP", "PARTICIPATION"]).default("CONTACT"),
   name: z.string().trim().min(1, "Ingresa tu nombre."),
   email: z.string().trim().email("Ingresa un correo valido."),
+  subject: z.string().trim().optional().or(z.literal("")),
+  motive: z.string().trim().optional().or(z.literal("")),
   phone: z.string().trim().optional().or(z.literal("")),
   company: z.string().trim().optional().or(z.literal("")),
   message: z.string().trim().min(1, "Ingresa un mensaje.")
+});
+
+export const identityItemInputSchema = z.object({
+  kind: z.string().trim().min(1),
+  title: z.string().trim().min(1),
+  text: z.string().trim().min(1),
+  icon: z.string().trim().optional().or(z.literal("")),
+  imageUrl: optionalUrl,
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
+export const honorMemberInputSchema = z.object({
+  name: z.string().trim().min(1),
+  photoUrl: optionalUrl,
+  description: z.string().trim().min(1),
+  role: z.string().trim().optional().or(z.literal("")),
+  generation: z.string().trim().optional().or(z.literal("")),
+  externalLinks: z.array(z.object({ label: z.string().min(1), url: z.string().url() })).default([]),
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
+export const productCategoryInputSchema = z.object({
+  name: z.string().trim().min(1),
+  slug: z.string().trim().optional().or(z.literal("")),
+  description: z.string().trim().optional().or(z.literal("")),
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
+export const productInputSchema = z.object({
+  name: z.string().trim().min(1),
+  slug: z.string().trim().optional().or(z.literal("")),
+  photoUrl: optionalUrl,
+  description: z.string().trim().min(1),
+  price: z.coerce.number().min(0),
+  stock: z.coerce.number().int().optional().or(z.literal("")),
+  categoryId: z.string().trim().min(1),
+  ctaText: z.string().trim().optional().or(z.literal("")),
+  ctaLink: optionalUrl,
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
+export const participationItemInputSchema = z.object({
+  title: z.string().trim().min(1),
+  description: z.string().trim().min(1),
+  imageUrl: optionalUrl,
+  icon: z.string().trim().optional().or(z.literal("")),
+  type: z.enum(["DONATION", "SPONSORSHIP", "PARTICIPATION"]),
+  ctaText: z.string().trim().optional().or(z.literal("")),
+  ctaLink: optionalUrl,
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
 });
 
 export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
@@ -166,6 +224,8 @@ export function toSponsorPayload(input: z.infer<typeof sponsorInputSchema>) {
 }
 
 export function toEpisodePayload(input: z.infer<typeof episodeInputSchema>) {
+  const resolvedVideoEmbedUrl = input.videoEmbedUrl || getYouTubeEmbedUrl(input.youtubeUrl) || undefined;
+
   return {
     title: input.title,
     slug: input.slug?.trim() || slugify(input.title),
@@ -175,7 +235,7 @@ export function toEpisodePayload(input: z.infer<typeof episodeInputSchema>) {
     spotifyUrl: input.spotifyUrl,
     youtubeUrl: input.youtubeUrl,
     applePodcastsUrl: input.applePodcastsUrl,
-    videoEmbedUrl: input.videoEmbedUrl,
+    videoEmbedUrl: resolvedVideoEmbedUrl,
     audioEmbedUrl: input.audioEmbedUrl,
     clipThumbnailUrl: input.clipThumbnailUrl,
     clipVideoUrl: input.clipVideoUrl,
@@ -187,6 +247,71 @@ export function toEpisodePayload(input: z.infer<typeof episodeInputSchema>) {
     isVisible: input.isVisible,
     publishedAt: input.publishedAt ? new Date(input.publishedAt) : new Date(),
     guestIds: input.guestIds
+  };
+}
+
+export function toIdentityItemPayload(input: z.infer<typeof identityItemInputSchema>) {
+  return {
+    kind: input.kind,
+    title: input.title,
+    text: input.text,
+    icon: input.icon || undefined,
+    imageUrl: input.imageUrl,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toHonorMemberPayload(input: z.infer<typeof honorMemberInputSchema>) {
+  return {
+    name: input.name,
+    photoUrl: input.photoUrl,
+    description: input.description,
+    role: input.role || undefined,
+    generation: input.generation || undefined,
+    externalLinks: input.externalLinks,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toProductCategoryPayload(input: z.infer<typeof productCategoryInputSchema>) {
+  return {
+    name: input.name,
+    slug: input.slug?.trim() || slugify(input.name),
+    description: input.description || undefined,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toProductPayload(input: z.infer<typeof productInputSchema>) {
+  return {
+    name: input.name,
+    slug: input.slug?.trim() || slugify(input.name),
+    photoUrl: input.photoUrl,
+    description: input.description,
+    price: input.price,
+    stock: input.stock === "" || input.stock === undefined ? undefined : input.stock,
+    categoryId: input.categoryId,
+    ctaText: input.ctaText || undefined,
+    ctaLink: input.ctaLink,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toParticipationItemPayload(input: z.infer<typeof participationItemInputSchema>) {
+  return {
+    title: input.title,
+    description: input.description,
+    imageUrl: input.imageUrl,
+    icon: input.icon || undefined,
+    type: input.type,
+    ctaText: input.ctaText || undefined,
+    ctaLink: input.ctaLink,
+    order: input.order,
+    isVisible: input.isVisible
   };
 }
 

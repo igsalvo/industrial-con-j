@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
-  const [episodes, guests, sponsors, surveys, messages, siteConfig] = databaseReady
+  const [episodes, guests, sponsors, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, participationItems] = databaseReady
     ? await Promise.all([
         prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
@@ -30,9 +30,14 @@ export default async function AdminDashboardPage() {
         }),
         prisma.siteConfig.findUnique({
           where: { id: "default" }
-        })
+        }),
+        prisma.identityItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
+        prisma.honorMember.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
+        prisma.product.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
+        prisma.productCategory.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }),
+        prisma.participationItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 })
       ])
-    : [[], [], [], [], [], null];
+    : [[], [], [], [], [], null, [], [], [], [], []];
 
   return (
     <div className="space-y-6">
@@ -70,6 +75,26 @@ export default async function AdminDashboardPage() {
             title: "Bandeja",
             text: "Ver contactos, donaciones y respuestas.",
             href: "/admin/messages"
+          },
+          {
+            title: "Identidad",
+            text: "Editar proposito, vision, mision y valores.",
+            href: "/admin/identity"
+          },
+          {
+            title: "Circulo de Honor",
+            text: "Gestionar personas destacadas.",
+            href: "/admin/honor"
+          },
+          {
+            title: "TienDIIta",
+            text: "Gestionar productos y categorias.",
+            href: "/admin/products"
+          },
+          {
+            title: "Participa",
+            text: "Editar donaciones, auspicios y participacion.",
+            href: "/admin/participation"
           }
         ].map((item) => (
           <Link key={item.title} href={item.href} className="rounded-2xl border border-[color:var(--line)] p-5 transition hover:border-[color:var(--accent)]">
@@ -169,6 +194,26 @@ export default async function AdminDashboardPage() {
                 <Link href="/admin/messages" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Bandeja</span>
                   <span className="text-xs text-[color:var(--muted)]">{messages.length} mensajes recientes</span>
+                </Link>
+                <Link href="/admin/identity" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Identidad</span>
+                  <span className="text-xs text-[color:var(--muted)]">{identityItems.length} registros</span>
+                </Link>
+                <Link href="/admin/honor" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Circulo de Honor</span>
+                  <span className="text-xs text-[color:var(--muted)]">{honorMembers.length} registros</span>
+                </Link>
+                <Link href="/admin/products" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Productos</span>
+                  <span className="text-xs text-[color:var(--muted)]">{products.length} productos</span>
+                </Link>
+                <Link href="/admin/product-categories" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Categorias</span>
+                  <span className="text-xs text-[color:var(--muted)]">{categories.length} categorias</span>
+                </Link>
+                <Link href="/admin/participation" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Participa</span>
+                  <span className="text-xs text-[color:var(--muted)]">{participationItems.length} registros</span>
                 </Link>
               </div>
             </div>

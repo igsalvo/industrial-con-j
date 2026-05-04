@@ -16,6 +16,8 @@ export async function POST(request: Request) {
         type: payload.type,
         name: payload.name,
         email: payload.email,
+        subject: payload.subject || undefined,
+        motive: payload.motive || undefined,
         phone: payload.phone || undefined,
         company: payload.company || undefined,
         message: payload.message

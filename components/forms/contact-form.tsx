@@ -3,17 +3,21 @@
 import { useState } from "react";
 
 type ContactFormProps = {
-  type?: "CONTACT" | "DONATION";
+  type?: "CONTACT" | "DONATION" | "SPONSORSHIP" | "PARTICIPATION";
   title?: string;
   description?: string;
   submitLabel?: string;
+  showSubject?: boolean;
+  showMotive?: boolean;
 };
 
 export function ContactForm({
   type = "CONTACT",
   title = "Contactanos",
   description = "Deja tus datos y un comentario. El equipo lo revisara desde el panel administrador.",
-  submitLabel = "Enviar"
+  submitLabel = "Enviar",
+  showSubject = false,
+  showMotive = false
 }: ContactFormProps) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -31,6 +35,8 @@ export function ContactForm({
         type,
         name: formData.get("name"),
         email: formData.get("email"),
+        subject: formData.get("subject"),
+        motive: formData.get("motive"),
         phone: formData.get("phone"),
         company: formData.get("company"),
         message: formData.get("message")
@@ -61,6 +67,17 @@ export function ContactForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <input className="field" name="name" placeholder="Nombre" required />
         <input className="field" name="email" type="email" placeholder="Correo" required />
+        {showSubject ? <input className="field" name="subject" placeholder="Asunto" required /> : null}
+        {showMotive ? (
+          <select className="field" name="motive" defaultValue="">
+            <option value="">Motivo opcional</option>
+            <option value="Consulta general">Consulta general</option>
+            <option value="Invitados">Invitados</option>
+            <option value="Sponsors">Sponsors</option>
+            <option value="TienDIIta CEIN">TienDIIta CEIN</option>
+            <option value="Donaciones">Donaciones</option>
+          </select>
+        ) : null}
         <input className="field" name="phone" placeholder="Telefono opcional" />
         <input className="field" name="company" placeholder="Empresa / institucion opcional" />
       </div>

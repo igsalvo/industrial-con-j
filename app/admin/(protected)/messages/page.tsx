@@ -57,6 +57,11 @@ export default async function AdminMessagesPage() {
                     </div>
                     <h3 className="mt-3 text-lg font-bold">{message.name}</h3>
                     <p className="text-sm text-[color:var(--muted)]">{message.email}</p>
+                    {message.subject || message.motive ? (
+                      <p className="mt-1 text-sm text-[color:var(--muted)]">
+                        {[message.subject, message.motive].filter(Boolean).join(" · ")}
+                      </p>
+                    ) : null}
                     {message.phone || message.company ? (
                       <p className="mt-1 text-sm text-[color:var(--muted)]">
                         {[message.phone, message.company].filter(Boolean).join(" · ")}

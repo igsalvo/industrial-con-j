@@ -6,11 +6,16 @@ import { UploadField } from "@/components/admin/upload-field";
 
 type SiteConfigShape = {
   logoUrl: string | null;
+  showHeroSection: boolean;
   showFeaturedClips: boolean;
   showLatestEpisodes: boolean;
   showSponsorsSection: boolean;
   showRecommendedSection: boolean;
   showGuestsSection: boolean;
+  showIdentitySection: boolean;
+  showHonorSection: boolean;
+  showProductsSection: boolean;
+  showParticipationSection: boolean;
   showCommunityLink: boolean;
   showDonationsSection: boolean;
   showSponsorBanner: boolean;
@@ -23,6 +28,8 @@ type SiteConfigShape = {
   heroPrimaryCtaHref: string | null;
   heroSecondaryCtaLabel: string | null;
   heroSecondaryCtaHref: string | null;
+  heroImageUrl: string | null;
+  heroOrder: number;
   featuredClipsEyebrow: string | null;
   featuredClipsTitle: string | null;
   featuredClipsDescription: string | null;
@@ -48,6 +55,25 @@ type SiteConfigShape = {
   guestsSectionTitle: string | null;
   guestsSectionDescription: string | null;
   guestsSectionOrder: number;
+  identitySectionEyebrow: string | null;
+  identitySectionTitle: string | null;
+  identitySectionDescription: string | null;
+  identitySectionOrder: number;
+  honorSectionEyebrow: string | null;
+  honorSectionTitle: string | null;
+  honorSectionDescription: string | null;
+  honorSectionOrder: number;
+  productsSectionEyebrow: string | null;
+  productsSectionTitle: string | null;
+  productsSectionDescription: string | null;
+  productsSectionOrder: number;
+  participationSectionEyebrow: string | null;
+  participationSectionTitle: string | null;
+  participationSectionDescription: string | null;
+  participationSectionOrder: number;
+  contactPageEyebrow: string | null;
+  contactPageTitle: string | null;
+  contactPageDescription: string | null;
   communityPageEyebrow: string | null;
   communityPageTitle: string | null;
   communityPageDescription: string | null;
@@ -112,6 +138,38 @@ const sectionFields = [
     eyebrowName: "guestsSectionEyebrow",
     titleName: "guestsSectionTitle",
     descriptionName: "guestsSectionDescription"
+  },
+  {
+    key: "identitySection",
+    label: "Identidad",
+    orderName: "identitySectionOrder",
+    eyebrowName: "identitySectionEyebrow",
+    titleName: "identitySectionTitle",
+    descriptionName: "identitySectionDescription"
+  },
+  {
+    key: "honorSection",
+    label: "Circulo de Honor",
+    orderName: "honorSectionOrder",
+    eyebrowName: "honorSectionEyebrow",
+    titleName: "honorSectionTitle",
+    descriptionName: "honorSectionDescription"
+  },
+  {
+    key: "productsSection",
+    label: "TienDIIta",
+    orderName: "productsSectionOrder",
+    eyebrowName: "productsSectionEyebrow",
+    titleName: "productsSectionTitle",
+    descriptionName: "productsSectionDescription"
+  },
+  {
+    key: "participationSection",
+    label: "Participa",
+    orderName: "participationSectionOrder",
+    eyebrowName: "participationSectionEyebrow",
+    titleName: "participationSectionTitle",
+    descriptionName: "participationSectionDescription"
   }
 ] as const;
 
@@ -131,11 +189,16 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         logoUrl: formData.get("logoUrl"),
+        showHeroSection: formData.get("showHeroSection") === "on",
         showFeaturedClips: formData.get("showFeaturedClips") === "on",
         showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
         showSponsorsSection: formData.get("showSponsorsSection") === "on",
         showRecommendedSection: false,
         showGuestsSection: formData.get("showGuestsSection") === "on",
+        showIdentitySection: formData.get("showIdentitySection") === "on",
+        showHonorSection: formData.get("showHonorSection") === "on",
+        showProductsSection: formData.get("showProductsSection") === "on",
+        showParticipationSection: formData.get("showParticipationSection") === "on",
         showCommunityLink: formData.get("showCommunityLink") === "on",
         showDonationsSection: formData.get("showDonationsSection") === "on",
         showSponsorBanner: formData.get("showSponsorBanner") === "on",
@@ -148,6 +211,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         heroPrimaryCtaHref: formData.get("heroPrimaryCtaHref"),
         heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
         heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
+        heroImageUrl: formData.get("heroImageUrl"),
+        heroOrder: formData.get("heroOrder"),
         featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
         featuredClipsTitle: formData.get("featuredClipsTitle"),
         featuredClipsDescription: formData.get("featuredClipsDescription"),
@@ -169,6 +234,25 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         guestsSectionTitle: formData.get("guestsSectionTitle"),
         guestsSectionDescription: formData.get("guestsSectionDescription"),
         guestsSectionOrder: formData.get("guestsSectionOrder"),
+        identitySectionEyebrow: formData.get("identitySectionEyebrow"),
+        identitySectionTitle: formData.get("identitySectionTitle"),
+        identitySectionDescription: formData.get("identitySectionDescription"),
+        identitySectionOrder: formData.get("identitySectionOrder"),
+        honorSectionEyebrow: formData.get("honorSectionEyebrow"),
+        honorSectionTitle: formData.get("honorSectionTitle"),
+        honorSectionDescription: formData.get("honorSectionDescription"),
+        honorSectionOrder: formData.get("honorSectionOrder"),
+        productsSectionEyebrow: formData.get("productsSectionEyebrow"),
+        productsSectionTitle: formData.get("productsSectionTitle"),
+        productsSectionDescription: formData.get("productsSectionDescription"),
+        productsSectionOrder: formData.get("productsSectionOrder"),
+        participationSectionEyebrow: formData.get("participationSectionEyebrow"),
+        participationSectionTitle: formData.get("participationSectionTitle"),
+        participationSectionDescription: formData.get("participationSectionDescription"),
+        participationSectionOrder: formData.get("participationSectionOrder"),
+        contactPageEyebrow: formData.get("contactPageEyebrow"),
+        contactPageTitle: formData.get("contactPageTitle"),
+        contactPageDescription: formData.get("contactPageDescription"),
         communityPageEyebrow: formData.get("communityPageEyebrow"),
         communityPageTitle: formData.get("communityPageTitle"),
         communityPageDescription: formData.get("communityPageDescription"),
@@ -207,11 +291,16 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
   }
 
   const toggles = [
+    { name: "showHeroSection", label: "Mostrar bienvenida", defaultChecked: config.showHeroSection },
     { name: "showFeaturedClips", label: "Mostrar shorts destacados", defaultChecked: config.showFeaturedClips },
     { name: "showLatestEpisodes", label: "Mostrar ultimos episodios", defaultChecked: config.showLatestEpisodes },
     { name: "showSponsorsSection", label: "Mostrar seccion sponsors", defaultChecked: config.showSponsorsSection },
     { name: "showDonationsSection", label: "Mostrar seccion donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar seccion invitados", defaultChecked: config.showGuestsSection },
+    { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },
+    { name: "showHonorSection", label: "Mostrar Circulo de Honor", defaultChecked: config.showHonorSection },
+    { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
+    { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
     { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
   ];
 
@@ -244,6 +333,21 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         <div>
           <label className="mb-2 block text-sm font-semibold">Eyebrow del panel principal</label>
           <input className="field" name="heroEyebrow" defaultValue={config.heroEyebrow || ""} />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[120px_1fr]">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Orden</label>
+            <input className="field" name="heroOrder" type="number" defaultValue={config.heroOrder} />
+          </div>
+          <UploadField
+            name="heroImageUrl"
+            label="Imagen o fondo de bienvenida"
+            defaultValue={config.heroImageUrl || ""}
+            accept="image/*"
+            uploadLabel="Subir imagen"
+            urlPlaceholder="https://... o URL de imagen subida"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -372,6 +476,21 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
           <div>
             <label className="mb-2 block text-sm font-semibold">Sponsors descripcion</label>
             <textarea className="field min-h-24" name="sponsorsPageDescription" defaultValue={config.sponsorsPageDescription || ""} />
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Contacto eyebrow</label>
+            <input className="field" name="contactPageEyebrow" defaultValue={config.contactPageEyebrow || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Contacto titulo</label>
+            <input className="field" name="contactPageTitle" defaultValue={config.contactPageTitle || ""} />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Contacto descripcion</label>
+            <textarea className="field min-h-24" name="contactPageDescription" defaultValue={config.contactPageDescription || ""} />
           </div>
         </div>
 

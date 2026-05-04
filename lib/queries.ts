@@ -12,11 +12,16 @@ import {
 
 export const defaultSiteConfig = {
   logoUrl: null,
+  showHeroSection: true,
   showFeaturedClips: true,
   showLatestEpisodes: true,
   showSponsorsSection: true,
   showRecommendedSection: false,
   showGuestsSection: true,
+  showIdentitySection: true,
+  showHonorSection: true,
+  showProductsSection: true,
+  showParticipationSection: true,
   showCommunityLink: true,
   showDonationsSection: true,
   showSponsorBanner: true,
@@ -29,6 +34,8 @@ export const defaultSiteConfig = {
   heroPrimaryCtaHref: "/episodes",
   heroSecondaryCtaLabel: "Participar en la comunidad",
   heroSecondaryCtaHref: "/community",
+  heroImageUrl: null,
+  heroOrder: 0,
   featuredClipsEyebrow: "Clips destacados",
   featuredClipsTitle: "Shorts de los capitulos",
   featuredClipsDescription: "Fragmentos cortos para destacar ideas clave y llevar trafico al episodio completo.",
@@ -54,6 +61,25 @@ export const defaultSiteConfig = {
   guestsSectionTitle: "Voces del ecosistema industrial",
   guestsSectionDescription: "Expertos, operadores y lideres que aterrizan teoria en ejecucion.",
   guestsSectionOrder: 6,
+  identitySectionEyebrow: "Identidad",
+  identitySectionTitle: "Lo que mueve Industrial con J",
+  identitySectionDescription: "Proposito, vision, mision y valores editables desde el administrador.",
+  identitySectionOrder: 6,
+  honorSectionEyebrow: "Circulo de Honor",
+  honorSectionTitle: "Personas que abren camino",
+  honorSectionDescription: "Reconocimientos y perfiles destacados del ecosistema industrial.",
+  honorSectionOrder: 7,
+  productsSectionEyebrow: "TienDIIta CEIN",
+  productsSectionTitle: "Catalogo simple",
+  productsSectionDescription: "Productos administrables para consultar o reservar sin carrito ni pagos.",
+  productsSectionOrder: 8,
+  participationSectionEyebrow: "Participa",
+  participationSectionTitle: "Donaciones, auspicios y comunidad",
+  participationSectionDescription: "Formas concretas de apoyar, auspiciar o participar.",
+  participationSectionOrder: 9,
+  contactPageEyebrow: "Contacto",
+  contactPageTitle: "Contactanos",
+  contactPageDescription: "Escribenos y revisaremos tu mensaje desde el panel administrador.",
   communityPageEyebrow: "Comunidad",
   communityPageTitle: "Encuestas, preguntas y contacto",
   communityPageDescription: "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.",
@@ -119,11 +145,11 @@ export async function getSiteConfig() {
 
 export async function getHomepageData() {
   if (!hasDatabase()) {
-    return getMvpHomepageData();
+    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], participationItems: [] };
   }
 
   try {
-    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests] = await Promise.all([
+    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems] = await Promise.all([
       prisma.episode.findMany({
         where: {
           isVisible: true,
@@ -153,12 +179,69 @@ export async function getHomepageData() {
         where: { isVisible: true },
         orderBy: { createdAt: "desc" },
         take: 4
+      }),
+      prisma.identityItem.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
+        take: 4
+      }),
+      prisma.honorMember.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
+        take: 4
+      }),
+      prisma.product.findMany({
+        where: { isVisible: true, category: { isVisible: true } },
+        include: { category: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
+        take: 4
+      }),
+      prisma.participationItem.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
+        take: 3
       })
     ]);
 
-    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests };
+    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems };
   } catch {
-    return getMvpHomepageData();
+    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], participationItems: [] };
+  }
+}
+
+export async function getPublicSectionsData() {
+  if (!hasDatabase()) {
+    return { identityItems: [], honorMembers: [], products: [], categories: [], participationItems: [] };
+  }
+
+  try {
+    const [identityItems, honorMembers, products, categories, participationItems] = await Promise.all([
+      prisma.identityItem.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+      }),
+      prisma.honorMember.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+      }),
+      prisma.product.findMany({
+        where: { isVisible: true, category: { isVisible: true } },
+        include: { category: true },
+        orderBy: [{ order: "asc" }, { name: "asc" }]
+      }),
+      prisma.productCategory.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { name: "asc" }]
+      }),
+      prisma.participationItem.findMany({
+        where: { isVisible: true },
+        orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+      })
+    ]);
+
+    return { identityItems, honorMembers, products, categories, participationItems };
+  } catch {
+    return { identityItems: [], honorMembers: [], products: [], categories: [], participationItems: [] };
   }
 }
 

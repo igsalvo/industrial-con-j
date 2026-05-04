@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getHomepageData, getSiteConfig } from "@/lib/queries";
 import { ContactForm } from "@/components/forms/contact-form";
 import { HeroSection } from "@/components/sections/hero-section";
+import { HonorGrid, IdentityGrid, ParticipationGrid, ProductGrid } from "@/components/sections/public-section-cards";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
@@ -9,7 +10,7 @@ import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { ShortClipCard } from "@/components/ui/short-clip-card";
 
 export default async function HomePage() {
-  const [{ featuredClips, latestEpisodes, sponsors, guests }, siteConfig] = await Promise.all([
+  const [{ featuredClips, latestEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems }, siteConfig] = await Promise.all([
     getHomepageData(),
     getSiteConfig()
   ]);
@@ -125,6 +126,75 @@ export default async function HomePage() {
             </section>
           )
         }
+      : null,
+    siteConfig.showIdentitySection
+      ? {
+          key: "identity",
+          order: siteConfig.identitySectionOrder,
+          node: (
+            <section className="shell py-8">
+              <SectionHeading
+                eyebrow={siteConfig.identitySectionEyebrow || "Identidad"}
+                title={siteConfig.identitySectionTitle || "Lo que mueve Industrial con J"}
+                description={siteConfig.identitySectionDescription || "Proposito, vision, mision y valores editables desde el administrador."}
+              />
+              <IdentityGrid items={identityItems} />
+            </section>
+          )
+        }
+      : null,
+    siteConfig.showHonorSection
+      ? {
+          key: "honor",
+          order: siteConfig.honorSectionOrder,
+          node: (
+            <section className="shell py-8">
+              <SectionHeading
+                eyebrow={siteConfig.honorSectionEyebrow || "Circulo de Honor"}
+                title={siteConfig.honorSectionTitle || "Personas que abren camino"}
+                description={siteConfig.honorSectionDescription || "Reconocimientos y perfiles destacados del ecosistema industrial."}
+              />
+              <HonorGrid members={honorMembers} />
+            </section>
+          )
+        }
+      : null,
+    siteConfig.showProductsSection
+      ? {
+          key: "products",
+          order: siteConfig.productsSectionOrder,
+          node: (
+            <section className="shell py-8">
+              <SectionHeading
+                eyebrow={siteConfig.productsSectionEyebrow || "TienDIIta CEIN"}
+                title={siteConfig.productsSectionTitle || "Catalogo simple"}
+                description={siteConfig.productsSectionDescription || "Productos administrables para consultar o reservar sin carrito ni pagos."}
+              />
+              <ProductGrid products={products} />
+              <div className="mt-6">
+                <Link className="btn-secondary" href="/tiendiita">
+                  Ver catalogo completo
+                </Link>
+              </div>
+            </section>
+          )
+        }
+      : null,
+    siteConfig.showParticipationSection
+      ? {
+          key: "participation",
+          order: siteConfig.participationSectionOrder,
+          node: (
+            <section className="shell py-8">
+              <SectionHeading
+                eyebrow={siteConfig.participationSectionEyebrow || "Participa"}
+                title={siteConfig.participationSectionTitle || "Donaciones, auspicios y comunidad"}
+                description={siteConfig.participationSectionDescription || "Formas concretas de apoyar, auspiciar o participar."}
+              />
+              <ParticipationGrid items={participationItems} />
+            </section>
+          )
+        }
       : null
   ]
     .filter((section): section is NonNullable<typeof section> => section !== null)
@@ -132,7 +202,7 @@ export default async function HomePage() {
 
   return (
     <div className="pb-16">
-      <HeroSection config={siteConfig} />
+      {siteConfig.showHeroSection ? <HeroSection config={siteConfig} /> : null}
 
       {sections.map((section) => (
         <div key={section.key}>{section.node}</div>

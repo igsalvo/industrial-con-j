@@ -14,6 +14,7 @@ export function HeroSection({
     heroPrimaryCtaHref?: string | null;
     heroSecondaryCtaLabel?: string | null;
     heroSecondaryCtaHref?: string | null;
+    heroImageUrl?: string | null;
   };
 }) {
   return (
@@ -46,16 +47,23 @@ export function HeroSection({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="card p-6">
-              <Podcast className="text-[color:var(--accent)]" />
-              <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Contenido</p>
-              <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Clips, episodios y recursos</p>
-            </div>
-            <div className="card p-6">
-              <Users className="text-[color:var(--accent)]" />
-              <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Comunidad</p>
-              <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Encuestas, concursos y feedback</p>
+          <div>
+            {config.heroImageUrl ? (
+              <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--surface-strong)]">
+                <img src={config.heroImageUrl} alt="Industrial con J" className="aspect-[4/3] h-full w-full object-cover" />
+              </div>
+            ) : null}
+            <div className={`grid gap-4 ${config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
+              <div className="card p-6">
+                <Podcast className="text-[color:var(--accent)]" />
+                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Contenido</p>
+                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Clips, episodios y recursos</p>
+              </div>
+              <div className="card p-6">
+                <Users className="text-[color:var(--accent)]" />
+                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Comunidad</p>
+                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Encuestas, concursos y feedback</p>
+              </div>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search } from "lucide-react";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const links = [
@@ -75,6 +76,7 @@ export function SiteHeader({
               Buscar
             </Link>
           ) : null}
+          {!isAdminRoute ? <LanguageToggle /> : null}
           <div className="hidden sm:block">
             <ThemeToggle />
           </div>

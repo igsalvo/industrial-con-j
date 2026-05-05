@@ -54,26 +54,26 @@ export function HeroSection({
               </div>
             ) : null}
             <div className={`grid gap-4 ${config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
-              <div className="card p-6">
+              <Link href="/podcast" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                 <Podcast className="text-[color:var(--accent)]" />
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Podcast</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Episodios e invitados</p>
-              </div>
-              <div className="card p-6">
+              </Link>
+              <Link href="/events" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                 <CalendarDays className="text-[color:var(--accent)]" />
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Eventos</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Calendario y actividades</p>
-              </div>
-              <div className="card p-6">
+              </Link>
+              <Link href="/honor" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                 <GraduationCap className="text-[color:var(--accent)]" />
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Alumni</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Red y trayectorias</p>
-              </div>
-              <div className="card p-6">
+              </Link>
+              <Link href="/tiendiita" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                 <Store className="text-[color:var(--accent)]" />
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">TienDIIta</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Productos e iniciativas</p>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

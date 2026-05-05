@@ -40,6 +40,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   letter-spacing: -0.01em;
+  top: 0 !important;
 }
 
 h1,
@@ -147,4 +148,16 @@ h6 {
   font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.google-translate-host,
+.goog-te-banner-frame,
+.goog-te-gadget,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+  display: none !important;
 }

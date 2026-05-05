@@ -17,13 +17,40 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
+  const headings = {
+    episodes: {
+      eyebrow: siteConfig.episodesPageEyebrow || "Archivo",
+      title: siteConfig.episodesPageTitle || "Todos los episodios",
+      description:
+        siteConfig.episodesPageDescription ||
+        "Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias."
+    },
+    guests: {
+      eyebrow: siteConfig.guestsPageEyebrow || "Invitados",
+      title: siteConfig.guestsPageTitle || "Personas que construyen industria",
+      description: siteConfig.guestsPageDescription || "Perfiles, empresas, enlaces sociales y episodios donde participan."
+    },
+    community: {
+      eyebrow: siteConfig.communityPageEyebrow || "Comunidad",
+      title: siteConfig.communityPageTitle || "Encuestas, preguntas y contacto",
+      description:
+        siteConfig.communityPageDescription ||
+        "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador."
+    },
+    sponsors: {
+      eyebrow: siteConfig.sponsorsPageEyebrow || "Sponsors",
+      title: siteConfig.sponsorsPageTitle || "Aliados comerciales del podcast",
+      description: siteConfig.sponsorsPageDescription || "Grid de logos, links de salida y sponsor destacado por episodio."
+    }
+  } as const;
+  const heading = headings[activeTab as keyof typeof headings];
 
   return (
     <main className="shell space-y-8 py-10">
       <SectionHeading
-        eyebrow="Podcast"
-        title={siteConfig.episodesPageTitle || "Industrial con J"}
-        description={siteConfig.episodesPageDescription || "Episodios, invitados, comunidad y sponsors en una sola seccion."}
+        eyebrow={heading.eyebrow}
+        title={heading.title}
+        description={heading.description}
       />
 
       <nav className="flex flex-wrap gap-2 rounded-2xl border border-[color:var(--line)] p-2">

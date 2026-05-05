@@ -29,7 +29,7 @@ export function IdentityGrid({
   items: Array<{ id: string; kind: string; title: string; text: string; icon: string | null; imageUrl: string | null }>;
 }) {
   if (items.length === 0) {
-    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aun no hay elementos de identidad publicados.</p>;
+    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay elementos de identidad publicados.</p>;
   }
 
   return (
@@ -53,7 +53,7 @@ export function HonorGrid({
   members: Array<{ id: string; name: string; photoUrl: string | null; description: string; role: string | null; generation: string | null; externalLinks: unknown }>;
 }) {
   if (members.length === 0) {
-    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aun no hay personas publicadas.</p>;
+    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay personas publicadas.</p>;
   }
 
   return (
@@ -94,7 +94,7 @@ export function ProductGrid({
   products: Array<{ id: string; name: string; photoUrl: string | null; description: string; price: unknown; stock: number | null; ctaText: string | null; ctaLink: string | null; category: { name: string } }>;
 }) {
   if (products.length === 0) {
-    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">No hay productos que coincidan con la busqueda.</p>;
+    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">No hay productos que coincidan con la búsqueda.</p>;
   }
 
   return (
@@ -131,7 +131,7 @@ export function ParticipationGrid({
   items: Array<{ id: string; title: string; description: string; imageUrl: string | null; icon: string | null; type: string; ctaText: string | null; ctaLink: string | null }>;
 }) {
   if (items.length === 0) {
-    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aun no hay opciones publicadas.</p>;
+    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay opciones publicadas.</p>;
   }
 
   return (

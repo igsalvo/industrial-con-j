@@ -10,7 +10,7 @@ export default async function IdentityPage() {
       <SectionHeading
         eyebrow={siteConfig.identitySectionEyebrow || "Identidad"}
         title={siteConfig.identitySectionTitle || "Lo que mueve Industrial con J"}
-        description={siteConfig.identitySectionDescription || "Proposito, vision, mision y valores editables desde el administrador."}
+        description={siteConfig.identitySectionDescription || "Propósito, visión, misión y valores editables desde el administrador."}
       />
       <IdentityGrid items={identityItems} />
     </main>

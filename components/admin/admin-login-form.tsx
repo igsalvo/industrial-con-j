@@ -26,7 +26,7 @@ export function AdminLoginForm() {
     const payload = await response.json();
 
     if (!response.ok) {
-      setError(payload.error || "No se pudo iniciar sesion.");
+      setError(payload.error || "No se pudo iniciar sesión.");
       setLoading(false);
       return;
     }

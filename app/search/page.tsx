@@ -23,7 +23,7 @@ export default async function SearchPage({
         <p className="pill">Busqueda global</p>
         <h1 className="mt-4 text-4xl font-black">Encuentra episodios, invitados y temas</h1>
         <form className="mt-6 grid gap-4 lg:grid-cols-4">
-          <input className="field lg:col-span-2" defaultValue={resolvedSearchParams.q} name="q" placeholder="Lean, mantenimiento, mineria..." />
+          <input className="field lg:col-span-2" defaultValue={resolvedSearchParams.q} name="q" placeholder="Lean, mantenimiento, minería..." />
           <select className="field" defaultValue={resolvedSearchParams.guest || ""} name="guest">
             <option value="">Todos los invitados</option>
             {guestFilters.map((guest) => (
@@ -58,7 +58,7 @@ export default async function SearchPage({
         <h2 className="text-3xl font-black">Episodios</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {episodes.length === 0 ? (
-            <EmptyState title="Sin coincidencias" description="Prueba otra combinacion de filtros o crea mas contenido desde admin." />
+            <EmptyState title="Sin coincidencias" description="Prueba otra combinación de filtros o crea más contenido desde admin." />
           ) : (
             episodes.map((episode) => <EpisodeCard key={episode.slug} episode={episode} />)
           )}
@@ -69,7 +69,7 @@ export default async function SearchPage({
         <h2 className="text-3xl font-black">Invitados</h2>
         <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {guests.length === 0 ? (
-            <EmptyState title="No encontramos invitados" description="La busqueda tambien cubre biografias y empresas." />
+            <EmptyState title="No encontramos invitados" description="La búsqueda también cubre biografías y empresas." />
           ) : (
             guests.map((guest) => <GuestCard key={guest.slug} guest={guest} />)
           )}

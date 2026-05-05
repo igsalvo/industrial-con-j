@@ -13,7 +13,7 @@ type ContactFormProps = {
 
 export function ContactForm({
   type = "CONTACT",
-  title = "Contactanos",
+  title = "Contáctanos",
   description = "Deja tus datos y un comentario. El equipo lo revisara desde el panel administrador.",
   submitLabel = "Enviar",
   showSubject = false,
@@ -78,7 +78,7 @@ export function ContactForm({
             <option value="Donaciones">Donaciones</option>
           </select>
         ) : null}
-        <input className="field" name="phone" placeholder="Telefono opcional" />
+        <input className="field" name="phone" placeholder="Teléfono opcional" />
         <input className="field" name="company" placeholder="Empresa / institucion opcional" />
       </div>
 

@@ -9,7 +9,7 @@ const links = [
   { href: "/admin/identity", label: "Identidad" },
   { href: "/admin/honor", label: "Alumni" },
   { href: "/admin/products", label: "Productos" },
-  { href: "/admin/product-categories", label: "Categorias" },
+  { href: "/admin/product-categories", label: "Categorías" },
   { href: "/admin/participation", label: "Participa" },
   { href: "/admin/surveys", label: "Encuestas" },
   { href: "/admin/messages", label: "Bandeja" }
@@ -32,7 +32,7 @@ export function AdminShell({
       <div className="mb-8 flex flex-col gap-4 rounded-[2rem] border border-[color:var(--line)] p-6 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="pill">Admin</p>
-          <h1 className="mt-4 text-3xl font-black">Panel de gestion</h1>
+          <h1 className="mt-4 text-3xl font-black">Panel de gestión</h1>
           <p className="mt-2 text-sm text-[color:var(--muted)]">{email}</p>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -43,7 +43,7 @@ export function AdminShell({
           ))}
           <form action={logout}>
             <button className="btn-primary !px-4 !py-2 text-sm" type="submit">
-              Cerrar sesion
+              Cerrar sesión
             </button>
           </form>
         </div>

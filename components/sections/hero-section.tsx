@@ -22,14 +22,14 @@ export function HeroSection({
       <div className="overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
-            <span className="pill">{config.heroEyebrow || "Ingenieria industrial para equipos que ejecutan"}</span>
+            <span className="pill">{config.heroEyebrow || "Ingeniería industrial para equipos que ejecutan"}</span>
             <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 600 }}>
               {config.heroTitle || "El hub de contenido, comunidad y patrocinio de"}{" "}
               <span className="text-[color:var(--accent)]">{config.heroTitleAccent || "Industrial con J"}</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
               {config.heroDescription ||
-                "Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a lideres de operaciones."}
+                "Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a líderes de operaciónes."}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href={config.heroPrimaryCtaHref || "/episodes"} className="btn-primary gap-2">

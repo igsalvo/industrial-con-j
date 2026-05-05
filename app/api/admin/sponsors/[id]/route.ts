@@ -24,7 +24,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json(sponsor);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json({ error: error.issues[0]?.message || "Datos invalidos." }, { status: 400 });
+      return NextResponse.json({ error: error.issues[0]?.message || "Datos inválidos." }, { status: 400 });
     }
 
     return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid payload." }, { status: 400 });

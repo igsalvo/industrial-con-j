@@ -12,7 +12,7 @@ export default async function DonationsPage() {
           <p className="pill">{config.donationsSectionEyebrow || "Donaciones"}</p>
           <h1 className="mt-4 text-4xl font-black">{config.donationsSectionTitle || "Apoya nuevas conversaciones industriales"}</h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-            {config.donationsSectionDescription || "Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto."}
+            {config.donationsSectionDescription || "Deja tus datos para coordinar una donación, alianza o apoyo al proyecto."}
           </p>
           {config.donationUrl ? (
             <a href={config.donationUrl} target="_blank" rel="noreferrer" className="btn-primary mt-6">
@@ -28,7 +28,7 @@ export default async function DonationsPage() {
         <ContactForm
           type="DONATION"
           title={config.donationsContactTitle || "Dejar datos para donar"}
-          description={config.donationsContactDescription || "Completa el formulario y quedara en la bandeja del administrador para responderte."}
+          description={config.donationsContactDescription || "Completa el formulario y quedará en la bandeja del administrador para responderte."}
           submitLabel={config.donationsContactSubmitLabel || "Enviar datos"}
         />
       </div>

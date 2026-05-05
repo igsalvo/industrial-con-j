@@ -51,9 +51,9 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6">
       <div className="card p-8">
         <p className="pill">Admin</p>
-        <h1 className="mt-4 text-4xl font-black">Panel de gestion</h1>
+        <h1 className="mt-4 text-4xl font-black">Panel de gestión</h1>
         <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-          El acceso administrativo ya esta activo. Ahora puedes gestionar episodios, invitados, sponsors y encuestas desde el mismo panel.
+          El acceso administrativo ya está activo. Ahora puedes gestionar episodios, invitados, sponsors y encuestas desde el mismo panel.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default async function AdminDashboardPage() {
           },
           {
             title: "Identidad",
-            text: "Editar proposito, vision, mision y valores.",
+            text: "Editar propósito, visión, misión y valores.",
             href: "/admin/identity"
           },
           {
@@ -96,12 +96,12 @@ export default async function AdminDashboardPage() {
           },
           {
             title: "TienDIIta",
-            text: "Gestionar productos y categorias.",
+            text: "Gestionar productos y categorías.",
             href: "/admin/products"
           },
           {
             title: "Participa",
-            text: "Editar donaciones, auspicios y participacion.",
+            text: "Editar donaciones, auspicios y participación.",
             href: "/admin/participation"
           }
         ].map((item) => (
@@ -131,7 +131,7 @@ export default async function AdminDashboardPage() {
               </Link>
             </div>
             {episodes.length === 0 ? (
-              <p className="mt-4 text-sm text-[color:var(--muted)]">Todavia no hay episodios creados en la base.</p>
+              <p className="mt-4 text-sm text-[color:var(--muted)]">Todavía no hay episodios creados en la base.</p>
             ) : (
               <div className="mt-6 space-y-3">
                 {episodes.map((episode) => (
@@ -156,14 +156,14 @@ export default async function AdminDashboardPage() {
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <p className="pill">Invitados</p>
-                  <h2 className="mt-4 text-2xl font-black">Ultimos invitados</h2>
+                  <h2 className="mt-4 text-2xl font-black">Últimos invitados</h2>
                 </div>
                 <Link href="/admin/guests/new" className="btn-secondary !px-4 !py-2 text-sm">
                   Nuevo invitado
                 </Link>
               </div>
               {guests.length === 0 ? (
-                <p className="mt-4 text-sm text-[color:var(--muted)]">Todavia no hay invitados creados en la base.</p>
+                <p className="mt-4 text-sm text-[color:var(--muted)]">Todavía no hay invitados creados en la base.</p>
               ) : (
                 <div className="mt-6 space-y-3">
                   {guests.map((guest) => (
@@ -216,8 +216,8 @@ export default async function AdminDashboardPage() {
                   <span className="text-xs text-[color:var(--muted)]">{products.length} productos</span>
                 </Link>
                 <Link href="/admin/product-categories" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
-                  <span className="font-semibold">Categorias</span>
-                  <span className="text-xs text-[color:var(--muted)]">{categories.length} categorias</span>
+                  <span className="font-semibold">Categorías</span>
+                  <span className="text-xs text-[color:var(--muted)]">{categories.length} categorías</span>
                 </Link>
                 <Link href="/admin/participation" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Participa</span>
@@ -235,7 +235,7 @@ export default async function AdminDashboardPage() {
             <p className="pill">Home</p>
             <h2 className="mt-4 text-3xl font-black">Visibilidad de secciones</h2>
             <p className="mt-2 text-sm text-[color:var(--muted)]">
-              Controla que modulos se muestran en la portada y si comunidad aparece en la navegacion publica.
+              Controla que módulos se muestran en la portada y si comunidad aparece en la navegación pública.
             </p>
           </div>
           <SiteConfigForm config={siteConfig} />

@@ -42,7 +42,7 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
         try {
           payload[field.name] = JSON.parse(String(formData.get(field.name) || "[]"));
         } catch {
-          setError(`El JSON de ${field.label} no es valido.`);
+          setError(`El JSON de ${field.label} no es válido.`);
           setLoading(false);
           return;
         }

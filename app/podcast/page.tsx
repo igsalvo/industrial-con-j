@@ -23,7 +23,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       title: siteConfig.episodesPageTitle || "Todos los episodios",
       description:
         siteConfig.episodesPageDescription ||
-        "Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias."
+        "Explora el catálogo completo con lecturas limpias, links externos y relación entre invitados, tags e industrias."
     },
     guests: {
       eyebrow: siteConfig.guestsPageEyebrow || "Invitados",
@@ -35,7 +35,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       title: siteConfig.communityPageTitle || "Encuestas, preguntas y contacto",
       description:
         siteConfig.communityPageDescription ||
-        "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador."
+        "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador."
     },
     sponsors: {
       eyebrow: siteConfig.sponsorsPageEyebrow || "Sponsors",
@@ -64,7 +64,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       {activeTab === "episodes" ? (
         <section className="space-y-6">
           {episodes.length === 0 ? (
-            <p className="card p-6 text-sm text-[color:var(--muted)]">Aun no hay episodios publicados.</p>
+            <p className="card p-6 text-sm text-[color:var(--muted)]">Aún no hay episodios publicados.</p>
           ) : (
             <div className="space-y-8">
               {episodes.map((episode) => {

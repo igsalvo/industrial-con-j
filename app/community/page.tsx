@@ -27,7 +27,7 @@ export default async function CommunityPage() {
         <p className="pill">{config.communityPageEyebrow || "Comunidad"}</p>
         <h1 className="mt-4 text-4xl font-black">{config.communityPageTitle || "Encuestas, preguntas y contacto"}</h1>
         <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-          {config.communityPageDescription || "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador."}
+          {config.communityPageDescription || "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador."}
         </p>
       </div>
 
@@ -36,7 +36,7 @@ export default async function CommunityPage() {
           {surveys.length === 0 ? (
             <div className="card p-8">
               <h2 className="text-2xl font-bold">{config.communityEmptyTitle || "No hay encuestas activas"}</h2>
-              <p className="mt-3 text-sm text-[color:var(--muted)]">{config.communityEmptyDescription || "Publica una encuesta desde el administrador para mostrarla aqui."}</p>
+              <p className="mt-3 text-sm text-[color:var(--muted)]">{config.communityEmptyDescription || "Publica una encuesta desde el administrador para mostrarla aquí."}</p>
               <Link href="/episodes" className="btn-secondary mt-5">
                 Ver episodios
               </Link>
@@ -60,8 +60,8 @@ export default async function CommunityPage() {
 
         <ContactForm
           type="CONTACT"
-          title={config.communityContactTitle || "Contactanos"}
-          description={config.communityContactDescription || "Deja tu comentario e informacion de contacto para responderte despues."}
+          title={config.communityContactTitle || "Contáctanos"}
+          description={config.communityContactDescription || "Deja tu comentario e información de contacto para responderte después."}
           submitLabel={config.communityContactSubmitLabel || "Enviar comentario"}
         />
       </div>

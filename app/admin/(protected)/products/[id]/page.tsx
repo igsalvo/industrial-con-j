@@ -10,15 +10,15 @@ export default async function AdminProductEditPage({ params }: { params: Promise
     prisma.product.findUnique({ where: { id } }).catch(() => null),
     prisma.productCategory.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] }).catch(() => null)
   ]);
-  if (!categories) return <MvpPlaceholder eyebrow="Productos" title="Seccion pendiente de migracion" description="Aplica la migracion de Prisma antes de editar productos." />;
+  if (!categories) return <MvpPlaceholder eyebrow="Productos" title="Sección pendiente de migración" description="Aplica la migración de Prisma antes de editar productos." />;
   if (!record) notFound();
   const fields = [
     { name: "name", label: "Nombre", required: true },
     { name: "slug", label: "Slug opcional" },
     { name: "photoUrl", label: "Foto", type: "image" },
-    { name: "description", label: "Descripcion", type: "textarea", required: true },
+    { name: "description", label: "Descripción", type: "textarea", required: true },
     { name: "price", label: "Precio", type: "number", required: true },
-    { name: "categoryId", label: "Categoria", type: "select", required: true, options: categories.map((item) => ({ label: item.name, value: item.id })) },
+    { name: "categoryId", label: "Categoría", type: "select", required: true, options: categories.map((item) => ({ label: item.name, value: item.id })) },
     { name: "stock", label: "Stock opcional", type: "number" },
     { name: "ctaText", label: "Texto CTA" },
     { name: "ctaLink", label: "Link CTA", type: "url" },

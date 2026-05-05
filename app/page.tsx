@@ -24,8 +24,8 @@ export default async function HomePage() {
             <section className="shell py-8">
               <SectionHeading
                 eyebrow={siteConfig.featuredClipsEyebrow || "Clips destacados"}
-                title={siteConfig.featuredClipsTitle || "Shorts de los capitulos"}
-                description={siteConfig.featuredClipsDescription || "Fragmentos cortos para destacar ideas clave y llevar trafico al episodio completo."}
+                title={siteConfig.featuredClipsTitle || "Shorts de los capítulos"}
+                description={siteConfig.featuredClipsDescription || "Fragmentos cortos para destacar ideas clave y llevar tráfico al episodio completo."}
               />
               <div className="grid gap-6 lg:grid-cols-3">
                 {featuredClips.map((episode: (typeof featuredClips)[number]) => (
@@ -43,9 +43,9 @@ export default async function HomePage() {
           node: (
             <section className="shell py-8">
               <SectionHeading
-                eyebrow={siteConfig.latestEpisodesEyebrow || "Ultimos episodios"}
-                title={siteConfig.latestEpisodesTitle || "Conversaciones aplicadas a operaciones"}
-                description={siteConfig.latestEpisodesDescription || "Desde mejora continua hasta transformacion digital, con invitados del mundo industrial."}
+                eyebrow={siteConfig.latestEpisodesEyebrow || "Últimos episodios"}
+                title={siteConfig.latestEpisodesTitle || "Conversaciónes aplicadas a operaciónes"}
+                description={siteConfig.latestEpisodesDescription || "Desde mejora continua hasta transformación digital, con invitados del mundo industrial."}
               />
               <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
                 {latestEpisodes.map((episode: (typeof latestEpisodes)[number]) => (
@@ -83,7 +83,7 @@ export default async function HomePage() {
                   <SectionHeading
                     eyebrow={siteConfig.donationsSectionEyebrow || "Donaciones"}
                     title={siteConfig.donationsSectionTitle || "Apoya nuevas conversaciones industriales"}
-                    description={siteConfig.donationsSectionDescription || "Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto."}
+                    description={siteConfig.donationsSectionDescription || "Deja tus datos para coordinar una donación, alianza o apoyo al proyecto."}
                   />
                   <div className="mt-6 flex flex-wrap gap-3">
                     {siteConfig.donationUrl ? (
@@ -99,7 +99,7 @@ export default async function HomePage() {
                 <ContactForm
                   type="DONATION"
                   title="Quiero apoyar el podcast"
-                  description="Completa tus datos y quedaran disponibles para responder desde el administrador."
+                  description="Completa tus datos y quedarán disponibles para responder desde el administrador."
                   submitLabel="Enviar datos"
                 />
               </div>
@@ -116,7 +116,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow={siteConfig.guestsSectionEyebrow || "Invitados"}
                 title={siteConfig.guestsSectionTitle || "Voces del ecosistema industrial"}
-                description={siteConfig.guestsSectionDescription || "Expertos, operadores y lideres que aterrizan teoria en ejecucion."}
+                description={siteConfig.guestsSectionDescription || "Expertos, operadores y líderes que aterrizan teoría en ejecución."}
               />
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                 {guests.map((guest: (typeof guests)[number]) => (
@@ -136,7 +136,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow={siteConfig.identitySectionEyebrow || "Identidad"}
                 title={siteConfig.identitySectionTitle || "Lo que mueve Industrial con J"}
-                description={siteConfig.identitySectionDescription || "Proposito, vision, mision y valores editables desde el administrador."}
+                description={siteConfig.identitySectionDescription || "Propósito, visión, misión y valores editables desde el administrador."}
               />
               <IdentityGrid items={identityItems} />
             </section>
@@ -167,13 +167,13 @@ export default async function HomePage() {
             <section className="shell py-8">
               <SectionHeading
                 eyebrow={siteConfig.productsSectionEyebrow || "TienDIIta CEIN"}
-                title={siteConfig.productsSectionTitle || "Catalogo simple"}
+                title={siteConfig.productsSectionTitle || "Catálogo simple"}
                 description={siteConfig.productsSectionDescription || "Productos administrables para consultar o reservar sin carrito ni pagos."}
               />
               <ProductGrid products={products} />
               <div className="mt-6">
                 <Link className="btn-secondary" href="/tiendiita">
-                  Ver catalogo completo
+                  Ver catálogo completo
                 </Link>
               </div>
             </section>

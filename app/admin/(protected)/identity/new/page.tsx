@@ -3,12 +3,12 @@ import { ContentRecordForm } from "@/components/admin/content-record-form";
 
 const fields = [
   { name: "kind", label: "Tipo", type: "select", required: true, options: [
-    { label: "Proposito", value: "Proposito" },
-    { label: "Vision", value: "Vision" },
-    { label: "Mision", value: "Mision" },
+    { label: "Propósito", value: "Proposito" },
+    { label: "Visión", value: "Vision" },
+    { label: "Misión", value: "Mision" },
     { label: "Valores", value: "Valores" }
   ] },
-  { name: "title", label: "Titulo", required: true },
+  { name: "title", label: "Título", required: true },
   { name: "text", label: "Texto", type: "textarea", required: true },
   { name: "icon", label: "Icono opcional" },
   { name: "imageUrl", label: "Imagen opcional", type: "image" },

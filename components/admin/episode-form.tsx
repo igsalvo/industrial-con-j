@@ -51,7 +51,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
     try {
       resourceLinks = JSON.parse(String(formData.get("resourceLinks") || "[]"));
     } catch {
-      setError("El JSON de recursos no es valido.");
+      setError("El JSON de recursos no es válido.");
       setLoading(false);
       return;
     }
@@ -110,11 +110,11 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <input className="field" name="title" placeholder="Titulo" defaultValue={episode?.title} required />
+        <input className="field" name="title" placeholder="Título" defaultValue={episode?.title} required />
         <input className="field" name="slug" placeholder="slug-opcional" defaultValue={episode?.slug} />
       </div>
       <textarea className="field min-h-24" name="shortDescription" placeholder="Resumen corto" defaultValue={episode?.shortDescription} required />
-      <textarea className="field min-h-40" name="longDescription" placeholder="Descripcion larga" defaultValue={episode?.longDescription} required />
+      <textarea className="field min-h-40" name="longDescription" placeholder="Descripción larga" defaultValue={episode?.longDescription} required />
       <textarea className="field min-h-32" name="timestamps" placeholder="00:00 Intro" defaultValue={episode?.timestamps.join("\n")} />
       <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="spotifyUrl" placeholder="Spotify URL" defaultValue={episode?.spotifyUrl || ""} />
@@ -160,7 +160,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         </label>
         <label className="card flex items-center gap-3 p-4 text-sm font-medium">
           <input defaultChecked={episode?.isVisible ?? true} name="isVisible" type="checkbox" />
-          Mostrar en la pagina
+          Mostrar en la página
         </label>
       </div>
 

@@ -153,10 +153,10 @@ export function SurveyForm({
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid gap-4 lg:grid-cols-2">
-        <input className="field" name="title" placeholder="Titulo" defaultValue={survey?.title} required />
+        <input className="field" name="title" placeholder="Título" defaultValue={survey?.title} required />
         <input className="field" name="slug" placeholder="slug-opcional" defaultValue={survey?.slug} />
       </div>
-      <textarea className="field min-h-28" name="description" placeholder="Descripcion" defaultValue={survey?.description || ""} />
+      <textarea className="field min-h-28" name="description" placeholder="Descripción" defaultValue={survey?.description || ""} />
       <div className="grid gap-4 lg:grid-cols-4">
         <select className="field" defaultValue={survey?.kind || "SURVEY"} name="kind">
           {SURVEY_KINDS.map((kind: SurveyKind) => (
@@ -180,7 +180,7 @@ export function SurveyForm({
             </option>
           ))}
         </select>
-        <input className="field" name="successCopy" placeholder="Mensaje de exito" defaultValue={survey?.successCopy || ""} />
+        <input className="field" name="successCopy" placeholder="Mensaje de éxito" defaultValue={survey?.successCopy || ""} />
       </div>
 
       <div className="card p-6">
@@ -257,7 +257,7 @@ export function SurveyForm({
                   value={question.conditionQuestionId}
                   onChange={(event) => updateQuestion(index, "conditionQuestionId", event.target.value)}
                 >
-                  <option value="">Sin condicion</option>
+                  <option value="">Sin condición</option>
                   {questions
                     .filter((_, candidateIndex) => candidateIndex < index)
                     .map((candidate: DraftQuestion, candidateIndex: number) => (

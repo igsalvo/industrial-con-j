@@ -89,7 +89,7 @@ export function GuestForm({
       </div>
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={guest?.isVisible ?? true} name="isVisible" type="checkbox" />
-        Mostrar en la pagina
+        Mostrar en la página
       </label>
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">

@@ -14,7 +14,7 @@ export default async function SponsorsPage() {
         description={config.sponsorsPageDescription || "Grid de logos, links de salida y sponsor destacado por episodio."}
       />
       {sponsors.length === 0 ? (
-        <EmptyState title="Aun no hay sponsors" description="El MVP deja este espacio listo para sumar aliados mas adelante." />
+        <EmptyState title="Aún no hay sponsors" description="El MVP deja este espacio listo para sumar aliados más adelante." />
       ) : (
         <SponsorGrid sponsors={sponsors} />
       )}

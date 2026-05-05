@@ -33,7 +33,7 @@ export function ContentList({
       </div>
       <div className="card p-8">
         {records.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavia no hay registros.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay registros.</p>
         ) : (
           <div className="space-y-3">
             {records.map((record) => (

@@ -43,7 +43,7 @@ export default async function AdminMessagesPage() {
         <p className="pill">Bandeja</p>
         <h1 className="mt-4 text-4xl font-black">Mensajes y respuestas</h1>
         <p className="mt-3 text-sm text-[color:var(--muted)]">
-          Aqui quedan los formularios de contacto, donaciones y las respuestas de encuestas publicas.
+          Aquí quedan los formularios de contacto, donaciones y las respuestas de encuestas públicas.
         </p>
       </div>
 
@@ -55,12 +55,12 @@ export default async function AdminMessagesPage() {
             <h2 className="text-2xl font-black">Contacto y donaciones</h2>
             <div className="mt-6 space-y-4">
               {messages.length === 0 ? (
-                <p className="text-sm text-[color:var(--muted)]">Aun no hay mensajes.</p>
+                <p className="text-sm text-[color:var(--muted)]">Aún no hay mensajes.</p>
               ) : (
                 messages.map((message) => (
                   <div key={message.id} className="rounded-2xl border border-[color:var(--line)] p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="pill">{message.type === "DONATION" ? "Donacion" : "Contacto"}</p>
+                      <p className="pill">{message.type === "DONATION" ? "Donación" : "Contacto"}</p>
                       <p className="text-xs text-[color:var(--muted)]">{formatDate(message.createdAt)}</p>
                     </div>
                     <h3 className="mt-3 text-lg font-bold">{message.name}</h3>
@@ -86,7 +86,7 @@ export default async function AdminMessagesPage() {
             <h2 className="text-2xl font-black">Respuestas de encuestas</h2>
             <div className="mt-6 space-y-4">
               {surveyResponses.length === 0 ? (
-                <p className="text-sm text-[color:var(--muted)]">Aun no hay respuestas.</p>
+                <p className="text-sm text-[color:var(--muted)]">Aún no hay respuestas.</p>
               ) : (
                 surveyResponses.map((response) => (
                   <div key={response.id} className="rounded-2xl border border-[color:var(--line)] p-4">
@@ -97,7 +97,7 @@ export default async function AdminMessagesPage() {
                     <h3 className="mt-3 text-lg font-bold">{response.survey.title}</h3>
                     {response.survey.episode ? <p className="text-sm text-[color:var(--muted)]">{response.survey.episode.title}</p> : null}
                     <p className="mt-2 text-sm text-[color:var(--muted)]">
-                      {[response.name, response.email].filter(Boolean).join(" · ") || "Respuesta anonima"}
+                      {[response.name, response.email].filter(Boolean).join(" · ") || "Respuesta anónima"}
                     </p>
                     <div className="mt-4 space-y-3">
                       {response.answers.map((answer) => (

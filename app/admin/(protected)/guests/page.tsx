@@ -35,7 +35,7 @@ export default async function AdminGuestsPage() {
 
       <div className="card p-8">
         {guests.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavia no hay invitados en la base.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay invitados en la base.</p>
         ) : (
           <div className="space-y-3">
             {guests.map((guest) => (

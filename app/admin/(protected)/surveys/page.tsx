@@ -42,7 +42,7 @@ export default async function AdminSurveysPage() {
 
       <div className="card p-8">
         {surveys.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavia no hay encuestas en la base.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay encuestas en la base.</p>
         ) : (
           <div className="space-y-3">
             {surveys.map((survey) => (

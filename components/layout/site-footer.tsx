@@ -4,7 +4,7 @@ export function SiteFooter({
   showCommunityLink = true,
   showDonationsLink = true,
   footerTitle = "Industrial con J",
-  footerDescription = "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."
+  footerDescription = "Contenido para líderes de operaciónes, ingeniería industrial y equipos que quieren escalar sistemas reales."
 }: {
   showCommunityLink?: boolean;
   showDonationsLink?: boolean;
@@ -17,7 +17,7 @@ export function SiteFooter({
         <div>
           <p className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>{footerTitle || "Industrial con J"}</p>
           <p className="mt-2 max-w-xl text-sm text-[color:var(--muted)]">
-            {footerDescription || "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."}
+            {footerDescription || "Contenido para líderes de operaciónes, ingeniería industrial y equipos que quieren escalar sistemas reales."}
           </p>
         </div>
 

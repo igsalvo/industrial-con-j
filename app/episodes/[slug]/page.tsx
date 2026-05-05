@@ -66,7 +66,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <div className="card p-8">
-            <h2 className="text-2xl font-bold">Descripcion</h2>
+            <h2 className="text-2xl font-bold">Descripción</h2>
             <p className="mt-4 whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
           </div>
 
@@ -135,7 +135,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-[color:var(--muted)]">Este episodio todavia no tiene invitados asociados.</p>
+                <p className="text-sm text-[color:var(--muted)]">Este episodio todavía no tiene invitados asociados.</p>
               )}
             </div>
           </div>
@@ -151,7 +151,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
               <p className="pill">Comunidad</p>
               <h2 className="mt-4 text-2xl font-bold">Participa en la conversacion</h2>
               <p className="mt-3 text-sm text-[color:var(--muted)]">
-                Cuando este capitulo tenga una encuesta publicada, aparecera directamente aqui.
+                Cuando este capítulo tenga una encuesta publicada, aparecerá directamente aquí.
               </p>
               <Link href="/community" className="btn-secondary mt-5 !px-4 !py-2 text-sm">
                 Ir a comunidad

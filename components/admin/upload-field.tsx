@@ -108,7 +108,7 @@ export function UploadField({
           {uploading ? "Subiendo..." : uploadLabel || "Subir archivo"}
         </label>
         <input id={inputId} type="file" accept={accept} className="hidden" onChange={onFileChange} />
-        <span className="text-xs text-[color:var(--muted)]">Tambien puedes pegar una URL publica manualmente.</span>
+        <span className="text-xs text-[color:var(--muted)]">También puedes pegar una URL pública manualmente.</span>
       </div>
 
       {value ? (

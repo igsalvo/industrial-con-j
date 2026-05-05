@@ -35,7 +35,7 @@ export default async function AdminEpisodesPage() {
 
       <div className="card p-8">
         {episodes.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavia no hay episodios en la base.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay episodios en la base.</p>
         ) : (
           <div className="space-y-3">
             {episodes.map((episode) => (

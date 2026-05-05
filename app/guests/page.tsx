@@ -14,7 +14,7 @@ export default async function GuestsPage() {
         description={config.guestsPageDescription || "Perfiles, empresas, enlaces sociales y episodios donde participan."}
       />
       {guests.length === 0 ? (
-        <EmptyState title="Todavia no hay invitados" description="El MVP parte con perfiles curados y despues puede crecer con mas fichas." />
+        <EmptyState title="Todavía no hay invitados" description="El MVP parte con perfiles curados y después puede crecer con más fichas." />
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {guests.map((guest) => (

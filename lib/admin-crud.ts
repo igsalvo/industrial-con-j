@@ -46,7 +46,7 @@ export function createAdminCollectionHandlers<TInput, TPayload>({
         return NextResponse.json(record, { status: 201 });
       } catch (error) {
         if (error instanceof ZodError) {
-          return NextResponse.json({ error: error.issues[0]?.message || "Datos invalidos." }, { status: 400 });
+          return NextResponse.json({ error: error.issues[0]?.message || "Datos inválidos." }, { status: 400 });
         }
 
         return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid payload." }, { status: 400 });
@@ -81,7 +81,7 @@ export function createAdminItemHandlers<TInput, TPayload>({
         return NextResponse.json(record);
       } catch (error) {
         if (error instanceof ZodError) {
-          return NextResponse.json({ error: error.issues[0]?.message || "Datos invalidos." }, { status: 400 });
+          return NextResponse.json({ error: error.issues[0]?.message || "Datos inválidos." }, { status: 400 });
         }
 
         return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid payload." }, { status: 400 });

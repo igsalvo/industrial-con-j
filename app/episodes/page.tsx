@@ -11,10 +11,10 @@ export default async function EpisodesPage() {
       <SectionHeading
         eyebrow={config.episodesPageEyebrow || "Archivo"}
         title={config.episodesPageTitle || "Todos los episodios"}
-        description={config.episodesPageDescription || "Explora el catalogo completo con lecturas limpias, links externos y relacion entre invitados, tags e industrias."}
+        description={config.episodesPageDescription || "Explora el catálogo completo con lecturas limpias, links externos y relación entre invitados, tags e industrias."}
       />
       {episodes.length === 0 ? (
-        <EmptyState title="Aun no hay episodios publicados" description="Este MVP parte con contenido editorial estatico y puede ampliarse despues." />
+        <EmptyState title="Aún no hay episodios publicados" description="Este MVP parte con contenido editorial estático y puede ampliarse después." />
       ) : (
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {episodes.map((episode) => (

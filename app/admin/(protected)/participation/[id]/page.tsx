@@ -4,12 +4,12 @@ import { ContentRecordForm } from "@/components/admin/content-record-form";
 import { prisma } from "@/lib/prisma";
 
 const fields = [
-  { name: "title", label: "Titulo", required: true },
-  { name: "description", label: "Descripcion", type: "textarea", required: true },
+  { name: "title", label: "Título", required: true },
+  { name: "description", label: "Descripción", type: "textarea", required: true },
   { name: "type", label: "Tipo", type: "select", required: true, options: [
-    { label: "Donacion", value: "DONATION" },
+    { label: "Donación", value: "DONATION" },
     { label: "Auspicio", value: "SPONSORSHIP" },
-    { label: "Participacion", value: "PARTICIPATION" }
+    { label: "Participación", value: "PARTICIPATION" }
   ] },
   { name: "imageUrl", label: "Imagen opcional", type: "image" },
   { name: "icon", label: "Icono opcional" },

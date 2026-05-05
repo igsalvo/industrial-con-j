@@ -30,7 +30,7 @@ const optionalUrl = z
   .transform((value) => value || undefined);
 
 export const loginSchema = z.object({
-  email: z.string().email("Ingresa un correo valido."),
+  email: z.string().email("Ingresa un correo válido."),
   password: z.string().min(6, "La clave debe tener al menos 6 caracteres.")
 });
 
@@ -129,7 +129,7 @@ export const surveyResponseSchema = z.object({
 export const contactMessageSchema = z.object({
   type: z.enum(["CONTACT", "DONATION", "SPONSORSHIP", "PARTICIPATION"]).default("CONTACT"),
   name: z.string().trim().min(1, "Ingresa tu nombre."),
-  email: z.string().trim().email("Ingresa un correo valido."),
+  email: z.string().trim().email("Ingresa un correo válido."),
   subject: z.string().trim().optional().or(z.literal("")),
   motive: z.string().trim().optional().or(z.literal("")),
   phone: z.string().trim().optional().or(z.literal("")),

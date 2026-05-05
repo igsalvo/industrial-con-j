@@ -23,11 +23,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json({ error: error.issues[0]?.message || "Datos invalidos." }, { status: 400 });
+      return NextResponse.json({ error: error.issues[0]?.message || "Datos inválidos." }, { status: 400 });
     }
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "No se pudo iniciar sesion." },
+      { error: error instanceof Error ? error.message : "No se pudo iniciar sesión." },
       { status: 400 }
     );
   }

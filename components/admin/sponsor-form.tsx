@@ -75,14 +75,14 @@ export function SponsorForm({
         <UploadField name="logoUrl" label="Logo" defaultValue={sponsor?.logoUrl || ""} />
         <input className="field" name="tier" placeholder="Gold / Silver / Partner" defaultValue={sponsor?.tier || ""} />
       </div>
-      <textarea className="field min-h-32" name="description" placeholder="Descripcion" defaultValue={sponsor?.description || ""} />
+      <textarea className="field min-h-32" name="description" placeholder="Descripción" defaultValue={sponsor?.description || ""} />
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={sponsor?.isFeatured} name="isFeatured" type="checkbox" />
         Sponsor destacado
       </label>
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={sponsor?.isVisible ?? true} name="isVisible" type="checkbox" />
-        Mostrar en la pagina
+        Mostrar en la página
       </label>
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">

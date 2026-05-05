@@ -30,14 +30,14 @@ export default async function TiendiitaPage({
     <main className="shell space-y-8 py-10">
       <SectionHeading
         eyebrow={siteConfig.productsSectionEyebrow || "TienDIIta CEIN"}
-        title={siteConfig.productsSectionTitle || "Catalogo simple"}
+        title={siteConfig.productsSectionTitle || "Catálogo simple"}
         description={siteConfig.productsSectionDescription || "Productos administrables para consultar o reservar sin carrito ni pagos."}
       />
 
       <form className="card grid gap-4 p-5 md:grid-cols-[1fr_220px_180px_auto]">
-        <input className="field" name="q" placeholder="Buscar por nombre o descripcion" defaultValue={params.q || ""} />
+        <input className="field" name="q" placeholder="Buscar por nombre o descripción" defaultValue={params.q || ""} />
         <select className="field" name="category" defaultValue={category}>
-          <option value="">Todas las categorias</option>
+          <option value="">Todas las categorías</option>
           {categories.map((item) => (
             <option key={item.id} value={item.slug}>{item.name}</option>
           ))}

@@ -35,7 +35,7 @@ export default async function AdminSponsorsPage() {
 
       <div className="card p-8">
         {sponsors.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavia no hay sponsors en la base.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay sponsors en la base.</p>
         ) : (
           <div className="space-y-3">
             {sponsors.map((sponsor) => (

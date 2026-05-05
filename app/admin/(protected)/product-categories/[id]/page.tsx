@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 const fields = [
   { name: "name", label: "Nombre", required: true },
   { name: "slug", label: "Slug opcional" },
-  { name: "description", label: "Descripcion", type: "textarea" },
+  { name: "description", label: "Descripción", type: "textarea" },
   { name: "order", label: "Orden", type: "number" },
   { name: "isVisible", label: "Visible", type: "checkbox" }
 ] as const;
@@ -15,5 +15,5 @@ export default async function AdminCategoryEditPage({ params }: { params: Promis
   const { id } = await params;
   const record = await prisma.productCategory.findUnique({ where: { id } });
   if (!record) notFound();
-  return <div className="space-y-6"><div className="card p-8"><p className="pill">Categorias</p><h1 className="mt-4 text-4xl font-black">Editar categoria</h1><Link href="/admin/product-categories" className="btn-secondary mt-5 !px-4 !py-2 text-sm">Volver</Link></div><div className="card p-8"><ContentRecordForm mode="edit" endpoint="/api/admin/product-categories" backHref="/admin/product-categories" submitLabel="Guardar cambios" record={record} fields={[...fields]} /></div></div>;
+  return <div className="space-y-6"><div className="card p-8"><p className="pill">Categorías</p><h1 className="mt-4 text-4xl font-black">Editar categoría</h1><Link href="/admin/product-categories" className="btn-secondary mt-5 !px-4 !py-2 text-sm">Volver</Link></div><div className="card p-8"><ContentRecordForm mode="edit" endpoint="/api/admin/product-categories" backHref="/admin/product-categories" submitLabel="Guardar cambios" record={record} fields={[...fields]} /></div></div>;
 }

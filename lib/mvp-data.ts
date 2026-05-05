@@ -49,7 +49,7 @@ const sponsors: MvpSponsor[] = [
     websiteUrl: "https://example.com/planta-digital",
     logoUrl: null,
     tier: "Gold",
-    description: "Analitica operacional y visibilidad de planta para equipos industriales."
+    description: "Analítica operaciónal y visibilidad de planta para equipos industriales."
   },
   {
     id: "sponsor-maintflow",
@@ -58,7 +58,7 @@ const sponsors: MvpSponsor[] = [
     websiteUrl: "https://example.com/maintflow",
     logoUrl: null,
     tier: "Silver",
-    description: "Software de mantenimiento para operaciones que necesitan trazabilidad."
+    description: "Software de mantenimiento para operaciónes que necesitan trazabilidad."
   },
   {
     id: "sponsor-supply-grid",
@@ -78,7 +78,7 @@ const guests: MvpGuest[] = [
     name: "Camila Rojas",
     company: "Andes Manufacturing",
     role: "Head of Operations",
-    bio: "Ingeniera industrial enfocada en transformacion digital, productividad y liderazgo de operaciones.",
+    bio: "Ingeniera industrial enfocada en transformación digital, productividad y liderazgo de operaciónes.",
     profileImage: null,
     socialLinks: {
       linkedin: "https://linkedin.com"
@@ -102,7 +102,7 @@ const guests: MvpGuest[] = [
     name: "Valentina Ibarra",
     company: "Mineria 4.0",
     role: "Continuous Improvement Lead",
-    bio: "Trabaja en mejora continua aplicada a mineria, seguridad operacional y sistemas de gestion.",
+    bio: "Trabaja en mejora continua aplicada a minería, seguridad operaciónal y sistemas de gestión.",
     profileImage: null,
     socialLinks: {
       linkedin: "https://linkedin.com"
@@ -114,10 +114,10 @@ const episodes: MvpEpisode[] = [
   {
     id: "episode-transformacion-digital",
     slug: "ingenieria-industrial-y-transformacion-digital",
-    title: "Ingenieria Industrial y Transformacion Digital",
-    shortDescription: "Como pasar de eficiencias marginales a una operacion guiada por datos.",
+    title: "Ingeniería Industrial y Transformación Digital",
+    shortDescription: "Cómo pasar de eficiencias marginales a una operación guiada por datos.",
     longDescription:
-      "Conversacion sobre indicadores, decisiones de planta, automatizacion pragmatica y la cultura operativa necesaria para escalar mejoras continuas.",
+      "Conversación sobre indicadores, decisiones de planta, automatizacion pragmatica y la cultura operativa necesaria para escalar mejoras continuas.",
     timestamps: [
       "00:00 Introduccion",
       "06:45 Cuellos de botella invisibles",
@@ -131,7 +131,7 @@ const episodes: MvpEpisode[] = [
     videoEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     audioEmbedUrl: null,
     clipThumbnailUrl: null,
-    tags: ["Transformacion Digital", "KPI", "Lean"],
+    tags: ["Transformación Digital", "KPI", "Lean"],
     industries: ["Manufacturing", "Logistics"],
     publishedAt: new Date("2026-03-10T12:00:00.000Z"),
     resourceLinks: [
@@ -147,7 +147,7 @@ const episodes: MvpEpisode[] = [
     title: "Abastecimiento sin caos",
     shortDescription: "Planificacion, proveedores y visibilidad para evitar urgencias permanentes.",
     longDescription:
-      "Un episodio practico sobre compras, forecast, stocks criticos y como evitar que la operacion viva apagando incendios.",
+      "Un episodio práctico sobre compras, forecast, stocks críticos y cómo evitar que la operación viva apagando incendios.",
     timestamps: ["00:00 Contexto", "12:30 Forecast", "25:10 Proveedores", "39:00 Cierre"],
     spotifyUrl: "https://open.spotify.com",
     youtubeUrl: "https://youtube.com",
@@ -169,7 +169,7 @@ const episodes: MvpEpisode[] = [
     title: "Mejora continua en terreno",
     shortDescription: "Como aterrizar iniciativas de mejora en equipos reales y no en slides.",
     longDescription:
-      "Conversacion sobre liderazgo de turno, seguridad, kaizen y como sostener mejoras con disciplina operacional.",
+      "Conversación sobre liderazgo de turno, seguridad, kaizen y cómo sostener mejoras con disciplina operaciónal.",
     timestamps: ["00:00 Apertura", "10:10 Seguridad", "22:30 Kaizen", "35:00 Cultura"],
     spotifyUrl: "https://open.spotify.com",
     youtubeUrl: null,

@@ -62,7 +62,13 @@ export function SiteHeader({
         {!isAdminRoute ? (
           <nav className="hidden items-center gap-6 lg:flex">
             {visibleLinks.map((link: { href: string; label: string }) => (
-              <Link key={link.href} href={link.href} className="text-base text-[color:var(--muted)] transition hover:text-[color:var(--foreground)]" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-base text-[color:var(--muted)] transition hover:text-[color:var(--foreground)] ${link.label === "TienDIIta" ? "notranslate" : ""}`}
+                translate={link.label === "TienDIIta" ? "no" : undefined}
+                style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+              >
                 {link.label}
               </Link>
             ))}

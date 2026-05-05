@@ -17,6 +17,9 @@ export function HeroSection({
     heroImageUrl?: string | null;
   };
 }) {
+  const secondaryLabel = config.heroSecondaryCtaLabel || "Ver eventos";
+  const secondaryHref = config.heroSecondaryCtaHref || "/events";
+
   return (
     <section className="shell py-10 md:py-16">
       <div className="overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
@@ -36,11 +39,9 @@ export function HeroSection({
                 {config.heroPrimaryCtaLabel || "Explorar plataforma"}
                 <ArrowRight size={16} />
               </Link>
-              {config.heroSecondaryCtaLabel && config.heroSecondaryCtaHref ? (
-                <Link href={config.heroSecondaryCtaHref} className="btn-secondary">
-                  {config.heroSecondaryCtaLabel}
-                </Link>
-              ) : null}
+              <Link href={secondaryHref} className="btn-secondary">
+                {secondaryLabel}
+              </Link>
               <div className="sm:hidden">
                 <ThemeToggle />
               </div>
@@ -59,7 +60,7 @@ export function HeroSection({
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Podcast</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Episodios e invitados</p>
               </Link>
-              <Link href="/events" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
+              <Link href="/events" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]" aria-label="Ver eventos">
                 <CalendarDays className="text-[color:var(--accent)]" />
                 <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Eventos</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Calendario y actividades</p>
@@ -71,7 +72,7 @@ export function HeroSection({
               </Link>
               <Link href="/tiendiita" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                 <Store className="text-[color:var(--accent)]" />
-                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">TienDIIta</p>
+                <p className="brand-kicker notranslate mt-4 text-sm text-[color:var(--muted)]" translate="no">TienDIIta</p>
                 <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Productos e iniciativas</p>
               </Link>
             </div>

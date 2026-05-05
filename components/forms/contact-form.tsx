@@ -74,7 +74,7 @@ export function ContactForm({
             <option value="Consulta general">Consulta general</option>
             <option value="Invitados">Invitados</option>
             <option value="Sponsors">Sponsors</option>
-            <option value="TienDIIta CEIN">TienDIIta CEIN</option>
+            <option className="notranslate" translate="no" value="TienDIIta CEIN">TienDIIta CEIN</option>
             <option value="Donaciones">Donaciones</option>
           </select>
         ) : null}

@@ -7,9 +7,13 @@ export function SectionHeading({
   title: string;
   description: string;
 }) {
+  const keepEyebrowName = eyebrow.includes("TienDIIta");
+
   return (
     <div className="mb-6">
-      <p className="brand-kicker text-xs text-[color:var(--muted)]">{eyebrow}</p>
+      <p className={`brand-kicker text-xs text-[color:var(--muted)] ${keepEyebrowName ? "notranslate" : ""}`} translate={keepEyebrowName ? "no" : undefined}>
+        {eyebrow}
+      </p>
       <h2 className="mt-3 text-3xl md:text-4xl" style={{ fontWeight: 600 }}>{title}</h2>
       <p className="mt-3 max-w-2xl text-sm text-[color:var(--muted)]">{description}</p>
     </div>

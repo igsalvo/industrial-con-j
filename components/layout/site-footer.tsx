@@ -27,7 +27,7 @@ export function SiteFooter({
           <Link href="/events">Eventos</Link>
           <Link href="/identity">Identidad</Link>
           <Link href="/honor">Alumni</Link>
-          <Link href="/tiendiita">TienDIIta</Link>
+          <Link href="/tiendiita" className="notranslate" translate="no">TienDIIta</Link>
           {showDonationsLink ? <Link href="/donations">Donaciones</Link> : null}
           <Link href="/contact">Contacto</Link>
           <a href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">

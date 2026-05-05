@@ -21,19 +21,20 @@ export const defaultSiteConfig = {
   showIdentitySection: true,
   showHonorSection: true,
   showProductsSection: true,
+  showEventsSection: true,
   showParticipationSection: true,
   showCommunityLink: true,
   showDonationsSection: true,
   showSponsorBanner: true,
   sponsorBannerTitle: "Auspiciadores",
-  heroEyebrow: "Ingeniería industrial para equipos que ejecutan",
-  heroTitle: "El hub de contenido, comunidad y patrocinio de",
+  heroEyebrow: "Comunidad industrial en movimiento",
+  heroTitle: "Contenido, eventos y comunidad de",
   heroTitleAccent: "Industrial con J",
-  heroDescription: "Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a líderes de operaciónes.",
-  heroPrimaryCtaLabel: "Explorar episodios",
-  heroPrimaryCtaHref: "/episodes",
-  heroSecondaryCtaLabel: "Participar en la comunidad",
-  heroSecondaryCtaHref: "/community",
+  heroDescription: "Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial.",
+  heroPrimaryCtaLabel: "Explorar plataforma",
+  heroPrimaryCtaHref: "/podcast",
+  heroSecondaryCtaLabel: "Ver eventos",
+  heroSecondaryCtaHref: "/events",
   heroImageUrl: null,
   heroOrder: 0,
   featuredClipsEyebrow: "Clips destacados",
@@ -41,7 +42,7 @@ export const defaultSiteConfig = {
   featuredClipsDescription: "Fragmentos cortos para destacar ideas clave y llevar tráfico al episodio completo.",
   featuredClipsOrder: 1,
   latestEpisodesEyebrow: "Últimos episodios",
-  latestEpisodesTitle: "Conversaciónes aplicadas a operaciónes",
+  latestEpisodesTitle: "Conversaciones aplicadas a operaciones",
   latestEpisodesDescription: "Desde mejora continua hasta transformación digital, con invitados del mundo industrial.",
   latestEpisodesOrder: 2,
   sponsorsSectionEyebrow: "Sponsors",
@@ -65,7 +66,7 @@ export const defaultSiteConfig = {
   identitySectionTitle: "Lo que mueve Industrial con J",
   identitySectionDescription: "Propósito, visión, misión y valores editables desde el administrador.",
   identitySectionOrder: 6,
-  honorSectionEyebrow: "Circulo de Honor",
+  honorSectionEyebrow: "Alumni",
   honorSectionTitle: "Personas que abren camino",
   honorSectionDescription: "Reconocimientos y perfiles destacados del ecosistema industrial.",
   honorSectionOrder: 7,
@@ -73,13 +74,17 @@ export const defaultSiteConfig = {
   productsSectionTitle: "Catálogo simple",
   productsSectionDescription: "Productos administrables para consultar o reservar sin carrito ni pagos.",
   productsSectionOrder: 8,
+  eventsSectionEyebrow: "Eventos",
+  eventsSectionTitle: "Próximas actividades",
+  eventsSectionDescription: "Calendario de encuentros, hitos y actividades abiertas para la comunidad.",
+  eventsSectionOrder: 9,
   participationSectionEyebrow: "Participa",
   participationSectionTitle: "Donaciones, auspicios y comunidad",
   participationSectionDescription: "Formas concretas de apoyar, auspiciar o participar.",
-  participationSectionOrder: 9,
+  participationSectionOrder: 10,
   contactPageEyebrow: "Contacto",
   contactPageTitle: "Contáctanos",
-  contactPageDescription: "Escribenos y revisaremos tu mensaje desde el panel administrador.",
+  contactPageDescription: "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
   communityPageEyebrow: "Comunidad",
   communityPageTitle: "Encuestas, preguntas y contacto",
   communityPageDescription: "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador.",
@@ -101,7 +106,7 @@ export const defaultSiteConfig = {
   sponsorsPageTitle: "Aliados comerciales del podcast",
   sponsorsPageDescription: "Grid de logos, links de salida y sponsor destacado por episodio.",
   footerTitle: "Industrial con J",
-  footerDescription: "Contenido para líderes de operaciónes, ingeniería industrial y equipos que quieren escalar sistemas reales."
+  footerDescription: "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."
 } as const;
 
 export const publicEpisodeInclude = {
@@ -145,11 +150,11 @@ export async function getSiteConfig() {
 
 export async function getHomepageData() {
   if (!hasDatabase()) {
-    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], participationItems: [] };
+    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], events: [], participationItems: [] };
   }
 
   try {
-    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems] = await Promise.all([
+    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems] = await Promise.all([
       prisma.episode.findMany({
         where: {
           isVisible: true,
@@ -196,6 +201,11 @@ export async function getHomepageData() {
         orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
         take: 4
       }),
+      prisma.event.findMany({
+        where: { isVisible: true, startsAt: { gte: new Date() } },
+        orderBy: [{ startsAt: "asc" }, { order: "asc" }],
+        take: 4
+      }),
       prisma.participationItem.findMany({
         where: { isVisible: true },
         orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
@@ -203,19 +213,19 @@ export async function getHomepageData() {
       })
     ]);
 
-    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems };
+    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems };
   } catch {
-    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], participationItems: [] };
+    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], events: [], participationItems: [] };
   }
 }
 
 export async function getPublicSectionsData() {
   if (!hasDatabase()) {
-    return { identityItems: [], honorMembers: [], products: [], categories: [], participationItems: [] };
+    return { identityItems: [], honorMembers: [], products: [], categories: [], events: [], participationItems: [] };
   }
 
   try {
-    const [identityItems, honorMembers, products, categories, participationItems] = await Promise.all([
+    const [identityItems, honorMembers, products, categories, events, participationItems] = await Promise.all([
       prisma.identityItem.findMany({
         where: { isVisible: true },
         orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
@@ -233,15 +243,19 @@ export async function getPublicSectionsData() {
         where: { isVisible: true },
         orderBy: [{ order: "asc" }, { name: "asc" }]
       }),
+      prisma.event.findMany({
+        where: { isVisible: true },
+        orderBy: [{ startsAt: "asc" }, { order: "asc" }]
+      }),
       prisma.participationItem.findMany({
         where: { isVisible: true },
         orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
       })
     ]);
 
-    return { identityItems, honorMembers, products, categories, participationItems };
+    return { identityItems, honorMembers, products, categories, events, participationItems };
   } catch {
-    return { identityItems: [], honorMembers: [], products: [], categories: [], participationItems: [] };
+    return { identityItems: [], honorMembers: [], products: [], categories: [], events: [], participationItems: [] };
   }
 }
 

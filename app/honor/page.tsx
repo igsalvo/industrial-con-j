@@ -8,7 +8,7 @@ export default async function HonorPage() {
   return (
     <main className="shell py-10">
       <SectionHeading
-        eyebrow={siteConfig.honorSectionEyebrow || "Circulo de Honor"}
+        eyebrow={siteConfig.honorSectionEyebrow || "Alumni"}
         title={siteConfig.honorSectionTitle || "Personas que abren camino"}
         description={siteConfig.honorSectionDescription || "Reconocimientos y perfiles destacados del ecosistema industrial."}
       />

@@ -37,19 +37,20 @@ async function main() {
       showIdentitySection: true,
       showHonorSection: true,
       showProductsSection: true,
+      showEventsSection: true,
       showParticipationSection: true,
       showCommunityLink: true,
       showDonationsSection: true,
       showSponsorBanner: true,
       sponsorBannerTitle: "Auspiciadores",
-      heroEyebrow: "Ingenieria industrial para equipos que ejecutan",
-      heroTitle: "El hub de contenido, comunidad y patrocinio de",
+      heroEyebrow: "Comunidad industrial en movimiento",
+      heroTitle: "Contenido, eventos y comunidad de",
       heroTitleAccent: "Industrial con J",
-      heroDescription: "Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a lideres de operaciones.",
-      heroPrimaryCtaLabel: "Explorar episodios",
-      heroPrimaryCtaHref: "/episodes",
-      heroSecondaryCtaLabel: "Participar en la comunidad",
-      heroSecondaryCtaHref: "/community",
+      heroDescription: "Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial.",
+      heroPrimaryCtaLabel: "Explorar plataforma",
+      heroPrimaryCtaHref: "/podcast",
+      heroSecondaryCtaLabel: "Ver eventos",
+      heroSecondaryCtaHref: "/events",
       heroImageUrl: null,
       heroOrder: 0,
       featuredClipsEyebrow: "Clips destacados",
@@ -81,28 +82,32 @@ async function main() {
       identitySectionTitle: "Lo que mueve Industrial con J",
       identitySectionDescription: "Proposito, vision, mision y valores editables desde el administrador.",
       identitySectionOrder: 6,
-      honorSectionEyebrow: "Circulo de Honor",
+      honorSectionEyebrow: "Alumni",
       honorSectionTitle: "Personas que abren camino",
       honorSectionDescription: "Reconocimientos y perfiles destacados del ecosistema industrial.",
       honorSectionOrder: 7,
       productsSectionEyebrow: "TienDIIta CEIN",
-      productsSectionTitle: "Catalogo simple",
+      productsSectionTitle: "Catálogo simple",
       productsSectionDescription: "Productos administrables para consultar o reservar sin carrito ni pagos.",
       productsSectionOrder: 8,
+      eventsSectionEyebrow: "Eventos",
+      eventsSectionTitle: "Próximas actividades",
+      eventsSectionDescription: "Calendario de encuentros, hitos y actividades abiertas para la comunidad.",
+      eventsSectionOrder: 9,
       participationSectionEyebrow: "Participa",
       participationSectionTitle: "Donaciones, auspicios y comunidad",
       participationSectionDescription: "Formas concretas de apoyar, auspiciar o participar.",
-      participationSectionOrder: 9,
+      participationSectionOrder: 10,
       contactPageEyebrow: "Contacto",
-      contactPageTitle: "Contactanos",
-      contactPageDescription: "Escribenos y revisaremos tu mensaje desde el panel administrador.",
+      contactPageTitle: "Contáctanos",
+      contactPageDescription: "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
       communityPageEyebrow: "Comunidad",
       communityPageTitle: "Encuestas, preguntas y contacto",
       communityPageDescription: "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.",
       communityEmptyTitle: "No hay encuestas activas",
       communityEmptyDescription: "Publica una encuesta desde el administrador para mostrarla aqui.",
-      communityContactTitle: "Contactanos",
-      communityContactDescription: "Deja tu comentario e informacion de contacto para responderte despues.",
+      communityContactTitle: "Contáctanos",
+      communityContactDescription: "Deja tu comentario e información de contacto para responderte después.",
       communityContactSubmitLabel: "Enviar comentario",
       donationsContactTitle: "Dejar datos para donar",
       donationsContactDescription: "Completa el formulario y quedara en la bandeja del administrador para responderte.",
@@ -160,6 +165,7 @@ async function main() {
   await Promise.all([
     prisma.identityItem.deleteMany({ where: { title: { in: ["Proposito Industrial con J", "Vision Industrial con J", "Mision Industrial con J", "Valores Industrial con J"] } } }),
     prisma.honorMember.deleteMany({ where: { name: "Comunidad Industrial" } }),
+    prisma.event.deleteMany({ where: { title: { in: ["Encuentro comunidad industrial", "Taller de operaciones"] } } }),
     prisma.participationItem.deleteMany({ where: { title: { in: ["Donar al proyecto", "Auspiciar episodios", "Sumarse a la comunidad"] } } }),
     prisma.product.deleteMany({ where: { slug: { in: ["polera-industrial-con-j", "sticker-pack-cein"] } } })
   ]);
@@ -178,7 +184,7 @@ async function main() {
   await prisma.honorMember.create({
     data: {
       name: "Comunidad Industrial",
-      description: "Perfil inicial para probar el Circulo de Honor desde el administrador.",
+      description: "Perfil inicial para probar Alumni desde el administrador.",
       role: "Reconocimiento",
       generation: "2026",
       externalLinks: [{ label: "LinkedIn", url: "https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all" }],
@@ -215,6 +221,31 @@ async function main() {
         ctaText: "Reservar",
         ctaLink: "https://www.instagram.com/ingenieriaindustrialuchile/",
         categoryId: papeleria.id,
+        order: 2
+      }
+    ]
+  });
+
+  await prisma.event.createMany({
+    data: [
+      {
+        title: "Encuentro comunidad industrial",
+        description: "Actividad abierta para compartir ideas, proyectos y oportunidades de colaboracion.",
+        startsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+        location: "Beauchef",
+        type: "Encuentro",
+        ctaText: "Quiero participar",
+        ctaLink: "/contact",
+        order: 1
+      },
+      {
+        title: "Taller de operaciones",
+        description: "Sesion aplicada para conversar sobre mejora continua, datos y ejecucion.",
+        startsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        location: "Online",
+        type: "Taller",
+        ctaText: "Consultar",
+        ctaLink: "/contact",
         order: 2
       }
     ]

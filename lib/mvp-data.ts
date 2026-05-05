@@ -49,7 +49,7 @@ const sponsors: MvpSponsor[] = [
     websiteUrl: "https://example.com/planta-digital",
     logoUrl: null,
     tier: "Gold",
-    description: "Analítica operaciónal y visibilidad de planta para equipos industriales."
+    description: "Analítica operacional y visibilidad de planta para equipos industriales."
   },
   {
     id: "sponsor-maintflow",
@@ -58,7 +58,7 @@ const sponsors: MvpSponsor[] = [
     websiteUrl: "https://example.com/maintflow",
     logoUrl: null,
     tier: "Silver",
-    description: "Software de mantenimiento para operaciónes que necesitan trazabilidad."
+    description: "Software de mantenimiento para operaciones que necesitan trazabilidad."
   },
   {
     id: "sponsor-supply-grid",
@@ -67,7 +67,7 @@ const sponsors: MvpSponsor[] = [
     websiteUrl: "https://example.com/supply-grid",
     logoUrl: null,
     tier: "Partner",
-    description: "Optimizacion de compras y abastecimiento para equipos industriales."
+    description: "Optimización de compras y abastecimiento para equipos industriales."
   }
 ];
 
@@ -78,7 +78,7 @@ const guests: MvpGuest[] = [
     name: "Camila Rojas",
     company: "Andes Manufacturing",
     role: "Head of Operations",
-    bio: "Ingeniera industrial enfocada en transformación digital, productividad y liderazgo de operaciónes.",
+    bio: "Ingeniera industrial enfocada en transformación digital, productividad y liderazgo de operaciones.",
     profileImage: null,
     socialLinks: {
       linkedin: "https://linkedin.com"
@@ -87,10 +87,10 @@ const guests: MvpGuest[] = [
   {
     id: "guest-matias-perez",
     slug: "matias-perez",
-    name: "Matias Perez",
-    company: "Norte Logistica",
+    name: "Matías Pérez",
+    company: "Norte Logística",
     role: "Supply Chain Manager",
-    bio: "Especialista en abastecimiento, planificacion y reduccion de desperdicios en cadenas operativas.",
+    bio: "Especialista en abastecimiento, planificación y reducción de desperdicios en cadenas operativas.",
     profileImage: null,
     socialLinks: {
       linkedin: "https://linkedin.com"
@@ -102,7 +102,7 @@ const guests: MvpGuest[] = [
     name: "Valentina Ibarra",
     company: "Mineria 4.0",
     role: "Continuous Improvement Lead",
-    bio: "Trabaja en mejora continua aplicada a minería, seguridad operaciónal y sistemas de gestión.",
+    bio: "Trabaja en mejora continua aplicada a minería, seguridad operacional y sistemas de gestión.",
     profileImage: null,
     socialLinks: {
       linkedin: "https://linkedin.com"
@@ -117,9 +117,9 @@ const episodes: MvpEpisode[] = [
     title: "Ingeniería Industrial y Transformación Digital",
     shortDescription: "Cómo pasar de eficiencias marginales a una operación guiada por datos.",
     longDescription:
-      "Conversación sobre indicadores, decisiones de planta, automatizacion pragmatica y la cultura operativa necesaria para escalar mejoras continuas.",
+      "Conversación sobre indicadores, decisiones de planta, automatización pragmática y la cultura operativa necesaria para escalar mejoras continuas.",
     timestamps: [
-      "00:00 Introduccion",
+      "00:00 Introducción",
       "06:45 Cuellos de botella invisibles",
       "18:10 KPI accionables",
       "31:40 Automatizacion bien hecha",
@@ -145,7 +145,7 @@ const episodes: MvpEpisode[] = [
     id: "episode-abastecimiento",
     slug: "abastecimiento-sin-caos",
     title: "Abastecimiento sin caos",
-    shortDescription: "Planificacion, proveedores y visibilidad para evitar urgencias permanentes.",
+    shortDescription: "Planificación, proveedores y visibilidad para evitar urgencias permanentes.",
     longDescription:
       "Un episodio práctico sobre compras, forecast, stocks críticos y cómo evitar que la operación viva apagando incendios.",
     timestamps: ["00:00 Contexto", "12:30 Forecast", "25:10 Proveedores", "39:00 Cierre"],
@@ -155,7 +155,7 @@ const episodes: MvpEpisode[] = [
     videoEmbedUrl: null,
     audioEmbedUrl: null,
     clipThumbnailUrl: null,
-    tags: ["Supply Chain", "Abastecimiento", "Planificacion"],
+    tags: ["Supply Chain", "Abastecimiento", "Planificación"],
     industries: ["Logistics", "Retail"],
     publishedAt: new Date("2026-02-18T12:00:00.000Z"),
     resourceLinks: [],
@@ -167,9 +167,9 @@ const episodes: MvpEpisode[] = [
     id: "episode-mejora-continua",
     slug: "mejora-continua-en-terreno",
     title: "Mejora continua en terreno",
-    shortDescription: "Como aterrizar iniciativas de mejora en equipos reales y no en slides.",
+    shortDescription: "Cómo aterrizar iniciativas de mejora en equipos reales y no en slides.",
     longDescription:
-      "Conversación sobre liderazgo de turno, seguridad, kaizen y cómo sostener mejoras con disciplina operaciónal.",
+      "Conversación sobre liderazgo de turno, seguridad, kaizen y cómo sostener mejoras con disciplina operacional.",
     timestamps: ["00:00 Apertura", "10:10 Seguridad", "22:30 Kaizen", "35:00 Cultura"],
     spotifyUrl: "https://open.spotify.com",
     youtubeUrl: null,

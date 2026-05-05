@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getHomepageData, getSiteConfig } from "@/lib/queries";
 import { ContactForm } from "@/components/forms/contact-form";
 import { HeroSection } from "@/components/sections/hero-section";
-import { HonorGrid, IdentityGrid, ParticipationGrid, ProductGrid } from "@/components/sections/public-section-cards";
+import { EventGrid, HonorGrid, IdentityGrid, ParticipationGrid, ProductGrid } from "@/components/sections/public-section-cards";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
@@ -10,7 +10,7 @@ import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { ShortClipCard } from "@/components/ui/short-clip-card";
 
 export default async function HomePage() {
-  const [{ featuredClips, latestEpisodes, sponsors, guests, identityItems, honorMembers, products, participationItems }, siteConfig] = await Promise.all([
+  const [{ featuredClips, latestEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems }, siteConfig] = await Promise.all([
     getHomepageData(),
     getSiteConfig()
   ]);
@@ -44,7 +44,7 @@ export default async function HomePage() {
             <section className="shell py-8">
               <SectionHeading
                 eyebrow={siteConfig.latestEpisodesEyebrow || "Últimos episodios"}
-                title={siteConfig.latestEpisodesTitle || "Conversaciónes aplicadas a operaciónes"}
+                title={siteConfig.latestEpisodesTitle || "Conversaciones aplicadas a operaciones"}
                 description={siteConfig.latestEpisodesDescription || "Desde mejora continua hasta transformación digital, con invitados del mundo industrial."}
               />
               <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
@@ -150,7 +150,7 @@ export default async function HomePage() {
           node: (
             <section className="shell py-8">
               <SectionHeading
-                eyebrow={siteConfig.honorSectionEyebrow || "Circulo de Honor"}
+                eyebrow={siteConfig.honorSectionEyebrow || "Círculo de Honor"}
                 title={siteConfig.honorSectionTitle || "Personas que abren camino"}
                 description={siteConfig.honorSectionDescription || "Reconocimientos y perfiles destacados del ecosistema industrial."}
               />
@@ -174,6 +174,27 @@ export default async function HomePage() {
               <div className="mt-6">
                 <Link className="btn-secondary" href="/tiendiita">
                   Ver catálogo completo
+                </Link>
+              </div>
+            </section>
+          )
+        }
+      : null,
+    siteConfig.showEventsSection
+      ? {
+          key: "events",
+          order: siteConfig.eventsSectionOrder,
+          node: (
+            <section className="shell py-8">
+              <SectionHeading
+                eyebrow={siteConfig.eventsSectionEyebrow || "Eventos"}
+                title={siteConfig.eventsSectionTitle || "Próximas actividades"}
+                description={siteConfig.eventsSectionDescription || "Calendario de encuentros, hitos y actividades abiertas para la comunidad."}
+              />
+              <EventGrid events={events} />
+              <div className="mt-6">
+                <Link className="btn-secondary" href="/events">
+                  Ver calendario completo
                 </Link>
               </div>
             </section>

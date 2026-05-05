@@ -188,19 +188,20 @@ model SiteConfig {
   showIdentitySection         Boolean  @default(true)
   showHonorSection            Boolean  @default(true)
   showProductsSection         Boolean  @default(true)
+  showEventsSection           Boolean  @default(true)
   showParticipationSection    Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
   showDonationsSection        Boolean  @default(true)
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Auspiciadores")
-  heroEyebrow                 String?  @default("Ingenieria industrial para equipos que ejecutan")
-  heroTitle                   String?  @default("El hub de contenido, comunidad y patrocinio de")
+  heroEyebrow                 String?  @default("Comunidad industrial en movimiento")
+  heroTitle                   String?  @default("Contenido, eventos y comunidad de")
   heroTitleAccent             String?  @default("Industrial con J")
-  heroDescription             String?  @default("Episodios, clips, invitados, encuestas y oportunidades para marcas que quieren hablarle a lideres de operaciones.")
-  heroPrimaryCtaLabel         String?  @default("Explorar episodios")
-  heroPrimaryCtaHref          String?  @default("/episodes")
-  heroSecondaryCtaLabel       String?  @default("Participar en la comunidad")
-  heroSecondaryCtaHref        String?  @default("/community")
+  heroDescription             String?  @default("Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial.")
+  heroPrimaryCtaLabel         String?  @default("Explorar plataforma")
+  heroPrimaryCtaHref          String?  @default("/podcast")
+  heroSecondaryCtaLabel       String?  @default("Ver eventos")
+  heroSecondaryCtaHref        String?  @default("/events")
   heroImageUrl                String?
   heroOrder                   Int      @default(0)
   featuredClipsEyebrow        String?  @default("Clips destacados")
@@ -232,28 +233,32 @@ model SiteConfig {
   identitySectionTitle        String?  @default("Lo que mueve Industrial con J")
   identitySectionDescription  String?  @default("Proposito, vision, mision y valores editables desde el administrador.")
   identitySectionOrder        Int      @default(6)
-  honorSectionEyebrow         String?  @default("Circulo de Honor")
+  honorSectionEyebrow         String?  @default("Alumni")
   honorSectionTitle           String?  @default("Personas que abren camino")
   honorSectionDescription     String?  @default("Reconocimientos y perfiles destacados del ecosistema industrial.")
   honorSectionOrder           Int      @default(7)
   productsSectionEyebrow      String?  @default("TienDIIta CEIN")
-  productsSectionTitle        String?  @default("Catalogo simple")
+  productsSectionTitle        String?  @default("Catálogo simple")
   productsSectionDescription  String?  @default("Productos administrables para consultar o reservar sin carrito ni pagos.")
   productsSectionOrder        Int      @default(8)
+  eventsSectionEyebrow        String?  @default("Eventos")
+  eventsSectionTitle          String?  @default("Próximas actividades")
+  eventsSectionDescription    String?  @default("Calendario de encuentros, hitos y actividades abiertas para la comunidad.")
+  eventsSectionOrder          Int      @default(9)
   participationSectionEyebrow String?  @default("Participa")
   participationSectionTitle   String?  @default("Donaciones, auspicios y comunidad")
   participationSectionDescription String? @default("Formas concretas de apoyar, auspiciar o participar.")
-  participationSectionOrder   Int      @default(9)
+  participationSectionOrder   Int      @default(10)
   contactPageEyebrow          String?  @default("Contacto")
-  contactPageTitle            String?  @default("Contactanos")
-  contactPageDescription      String?  @default("Escribenos y revisaremos tu mensaje desde el panel administrador.")
+  contactPageTitle            String?  @default("Contáctanos")
+  contactPageDescription      String?  @default("¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.")
   communityPageEyebrow        String?  @default("Comunidad")
   communityPageTitle          String?  @default("Encuestas, preguntas y contacto")
   communityPageDescription    String?  @default("Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.")
   communityEmptyTitle         String?  @default("No hay encuestas activas")
   communityEmptyDescription   String?  @default("Publica una encuesta desde el administrador para mostrarla aqui.")
-  communityContactTitle       String?  @default("Contactanos")
-  communityContactDescription String?  @default("Deja tu comentario e informacion de contacto para responderte despues.")
+  communityContactTitle       String?  @default("Contáctanos")
+  communityContactDescription String?  @default("Deja tu comentario e información de contacto para responderte después.")
   communityContactSubmitLabel String?  @default("Enviar comentario")
   donationsContactTitle       String?  @default("Dejar datos para donar")
   donationsContactDescription String?  @default("Completa el formulario y quedara en la bandeja del administrador para responderte.")
@@ -356,4 +361,24 @@ model ParticipationItem {
 
   @@index([type, order])
   @@index([isVisible, order])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  startsAt    DateTime
+  endsAt      DateTime?
+  location    String?
+  imageUrl    String?
+  type        String?
+  ctaText     String?
+  ctaLink     String?
+  order       Int       @default(0)
+  isVisible   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([isVisible, startsAt])
+  @@index([startsAt])
 }

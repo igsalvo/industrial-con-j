@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const links = [
   { href: "/podcast", label: "Podcast" },
+  { href: "/events", label: "Eventos" },
   { href: "/identity", label: "Identidad" },
   { href: "/honor", label: "Alumni" },
   { href: "/tiendiita", label: "TienDIIta" },

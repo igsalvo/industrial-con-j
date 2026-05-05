@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UploadField } from "@/components/admin/upload-field";
 
 type Field =
-  | { name: string; label: string; type?: "text" | "number" | "textarea" | "select" | "url" | "image" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }> };
+  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }> };
 
 type ContentRecordFormProps = {
   mode: "create" | "edit";
@@ -126,7 +126,14 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
           return (
             <label key={field.name} className="space-y-2">
               <span className="block text-sm font-semibold">{field.label}</span>
-              <input className="field" name={field.name} type={field.type === "number" ? "number" : field.type === "url" ? "url" : "text"} defaultValue={defaultValue} required={field.required} step={field.name === "price" ? "0.01" : undefined} />
+              <input
+                className="field"
+                name={field.name}
+                type={field.type === "number" ? "number" : field.type === "url" ? "url" : field.type === "datetime-local" ? "datetime-local" : "text"}
+                defaultValue={defaultValue}
+                required={field.required}
+                step={field.name === "price" ? "0.01" : undefined}
+              />
             </label>
           );
         })}

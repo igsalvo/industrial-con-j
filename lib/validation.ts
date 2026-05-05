@@ -192,6 +192,20 @@ export const participationItemInputSchema = z.object({
   isVisible: z.boolean().default(true)
 });
 
+export const eventInputSchema = z.object({
+  title: z.string().trim().min(1),
+  description: z.string().trim().min(1),
+  startsAt: z.string().trim().min(1),
+  endsAt: z.string().trim().optional().or(z.literal("")),
+  location: z.string().trim().optional().or(z.literal("")),
+  imageUrl: optionalUrl,
+  type: z.string().trim().optional().or(z.literal("")),
+  ctaText: z.string().trim().optional().or(z.literal("")),
+  ctaLink: optionalUrl,
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
 export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
   return {
     name: input.name,
@@ -308,6 +322,22 @@ export function toParticipationItemPayload(input: z.infer<typeof participationIt
     imageUrl: input.imageUrl,
     icon: input.icon || undefined,
     type: input.type,
+    ctaText: input.ctaText || undefined,
+    ctaLink: input.ctaLink,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
+  return {
+    title: input.title,
+    description: input.description,
+    startsAt: new Date(input.startsAt),
+    endsAt: input.endsAt ? new Date(input.endsAt) : undefined,
+    location: input.location || undefined,
+    imageUrl: input.imageUrl,
+    type: input.type || undefined,
     ctaText: input.ctaText || undefined,
     ctaLink: input.ctaLink,
     order: input.order,

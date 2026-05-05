@@ -14,7 +14,7 @@ async function safeQuery<T>(query: Promise<T>, fallback: T) {
 
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
-  const [episodes, guests, sponsors, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, participationItems] = databaseReady
+  const [episodes, guests, sponsors, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, events, participationItems] = databaseReady
     ? await Promise.all([
         safeQuery(prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
@@ -43,9 +43,10 @@ export default async function AdminDashboardPage() {
         safeQuery(prisma.honorMember.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
         safeQuery(prisma.product.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
         safeQuery(prisma.productCategory.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
+        safeQuery(prisma.event.findMany({ orderBy: { startsAt: "asc" }, take: 5 }), []),
         safeQuery(prisma.participationItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), [])
       ])
-    : [[], [], [], [], [], null, [], [], [], [], []];
+    : [[], [], [], [], [], null, [], [], [], [], [], []];
 
   return (
     <div className="space-y-6">
@@ -98,6 +99,11 @@ export default async function AdminDashboardPage() {
             title: "TienDIIta",
             text: "Gestionar productos y categorías.",
             href: "/admin/products"
+          },
+          {
+            title: "Eventos",
+            text: "Gestionar calendario y próximas actividades.",
+            href: "/admin/events"
           },
           {
             title: "Participa",
@@ -218,6 +224,10 @@ export default async function AdminDashboardPage() {
                 <Link href="/admin/product-categories" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Categorías</span>
                   <span className="text-xs text-[color:var(--muted)]">{categories.length} categorías</span>
+                </Link>
+                <Link href="/admin/events" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Eventos</span>
+                  <span className="text-xs text-[color:var(--muted)]">{events.length} eventos</span>
                 </Link>
                 <Link href="/admin/participation" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Participa</span>

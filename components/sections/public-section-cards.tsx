@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, BadgeDollarSign, Gift, Handshake, HeartHandshake, Landmark, Package, Sparkles, Target, Users } from "lucide-react";
+import { ArrowUpRight, BadgeDollarSign, CalendarDays, Gift, Handshake, HeartHandshake, Landmark, MapPin, Package, Sparkles, Target, Users } from "lucide-react";
 
 const icons = {
   purpose: Target,
@@ -121,6 +121,74 @@ export function ProductGrid({
           </div>
         </article>
       ))}
+    </div>
+  );
+}
+
+function formatEventDate(date: Date) {
+  return new Intl.DateTimeFormat("es-CL", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
+export function EventGrid({
+  events
+}: {
+  events: Array<{ id: string; title: string; description: string; startsAt: Date; endsAt: Date | null; location: string | null; imageUrl: string | null; type: string | null; ctaText: string | null; ctaLink: string | null }>;
+}) {
+  if (events.length === 0) {
+    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay eventos publicados.</p>;
+  }
+
+  return (
+    <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+      <div className="card p-5">
+        <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-[color:var(--muted)]">
+          {["L", "M", "M", "J", "V", "S", "D"].map((day, index) => (
+            <span key={`${day}-${index}`}>{day}</span>
+          ))}
+          {Array.from({ length: 35 }, (_, index) => {
+            const day = index + 1;
+            const hasEvent = events.some((event) => event.startsAt.getDate() === day);
+            return (
+              <div key={day} className={`aspect-square rounded-xl border border-[color:var(--line)] p-2 ${hasEvent ? "bg-[color:var(--accent-soft)] text-[color:var(--accent)]" : ""}`}>
+                {day <= 31 ? day : ""}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {events.map((event) => (
+          <article key={event.id} className="card grid gap-4 overflow-hidden p-5 md:grid-cols-[160px_1fr]">
+            <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
+              <CalendarDays className="text-[color:var(--accent)]" />
+              <p className="mt-4 text-lg font-black">{formatEventDate(event.startsAt)}</p>
+              {event.type ? <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{event.type}</p> : null}
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold">{event.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">{event.description}</p>
+              {event.location ? (
+                <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]">
+                  <MapPin size={16} />
+                  {event.location}
+                </p>
+              ) : null}
+              {event.ctaText && event.ctaLink ? (
+                <Link className="btn-secondary mt-5 gap-2" href={event.ctaLink}>
+                  {event.ctaText}
+                  <ArrowUpRight size={15} />
+                </Link>
+              ) : null}
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }

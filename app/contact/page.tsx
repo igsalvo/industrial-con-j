@@ -10,7 +10,7 @@ export default async function ContactPage() {
       <SectionHeading
         eyebrow={siteConfig.contactPageEyebrow || "Contacto"}
         title={siteConfig.contactPageTitle || "Contáctanos"}
-        description={siteConfig.contactPageDescription || "Escribenos y revisaremos tu mensaje desde el panel administrador."}
+        description={siteConfig.contactPageDescription || "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos."}
       />
       <ContactForm showSubject showMotive />
     </main>

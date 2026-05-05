@@ -14,7 +14,7 @@ type ContactFormProps = {
 export function ContactForm({
   type = "CONTACT",
   title = "Contáctanos",
-  description = "Deja tus datos y un comentario. El equipo lo revisara desde el panel administrador.",
+  description = "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
   submitLabel = "Enviar",
   showSubject = false,
   showMotive = false

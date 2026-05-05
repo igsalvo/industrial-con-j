@@ -10,6 +10,7 @@ const links = [
   { href: "/admin/honor", label: "Alumni" },
   { href: "/admin/products", label: "Productos" },
   { href: "/admin/product-categories", label: "Categorías" },
+  { href: "/admin/events", label: "Eventos" },
   { href: "/admin/participation", label: "Participa" },
   { href: "/admin/surveys", label: "Encuestas" },
   { href: "/admin/messages", label: "Bandeja" }

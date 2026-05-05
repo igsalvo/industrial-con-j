@@ -15,6 +15,7 @@ type SiteConfigShape = {
   showIdentitySection: boolean;
   showHonorSection: boolean;
   showProductsSection: boolean;
+  showEventsSection: boolean;
   showParticipationSection: boolean;
   showCommunityLink: boolean;
   showDonationsSection: boolean;
@@ -67,6 +68,10 @@ type SiteConfigShape = {
   productsSectionTitle: string | null;
   productsSectionDescription: string | null;
   productsSectionOrder: number;
+  eventsSectionEyebrow: string | null;
+  eventsSectionTitle: string | null;
+  eventsSectionDescription: string | null;
+  eventsSectionOrder: number;
   participationSectionEyebrow: string | null;
   participationSectionTitle: string | null;
   participationSectionDescription: string | null;
@@ -164,6 +169,14 @@ const sectionFields = [
     descriptionName: "productsSectionDescription"
   },
   {
+    key: "eventsSection",
+    label: "Eventos",
+    orderName: "eventsSectionOrder",
+    eyebrowName: "eventsSectionEyebrow",
+    titleName: "eventsSectionTitle",
+    descriptionName: "eventsSectionDescription"
+  },
+  {
     key: "participationSection",
     label: "Participa",
     orderName: "participationSectionOrder",
@@ -198,6 +211,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         showIdentitySection: formData.get("showIdentitySection") === "on",
         showHonorSection: formData.get("showHonorSection") === "on",
         showProductsSection: formData.get("showProductsSection") === "on",
+        showEventsSection: formData.get("showEventsSection") === "on",
         showParticipationSection: formData.get("showParticipationSection") === "on",
         showCommunityLink: formData.get("showCommunityLink") === "on",
         showDonationsSection: formData.get("showDonationsSection") === "on",
@@ -246,6 +260,10 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         productsSectionTitle: formData.get("productsSectionTitle"),
         productsSectionDescription: formData.get("productsSectionDescription"),
         productsSectionOrder: formData.get("productsSectionOrder"),
+        eventsSectionEyebrow: formData.get("eventsSectionEyebrow"),
+        eventsSectionTitle: formData.get("eventsSectionTitle"),
+        eventsSectionDescription: formData.get("eventsSectionDescription"),
+        eventsSectionOrder: formData.get("eventsSectionOrder"),
         participationSectionEyebrow: formData.get("participationSectionEyebrow"),
         participationSectionTitle: formData.get("participationSectionTitle"),
         participationSectionDescription: formData.get("participationSectionDescription"),
@@ -300,6 +318,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },
     { name: "showHonorSection", label: "Mostrar Alumni", defaultChecked: config.showHonorSection },
     { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
+    { name: "showEventsSection", label: "Mostrar eventos", defaultChecked: config.showEventsSection },
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
     { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
   ];

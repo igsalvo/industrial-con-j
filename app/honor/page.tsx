@@ -1,9 +1,13 @@
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { HonorGrid } from "@/components/sections/public-section-cards";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { notFound } from "next/navigation";
 
 export default async function HonorPage() {
   const [{ honorMembers }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
+  if (!siteConfig.showHonorSection) {
+    notFound();
+  }
 
   return (
     <main className="shell py-10">

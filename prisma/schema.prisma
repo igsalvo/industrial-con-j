@@ -38,6 +38,7 @@ model Episode {
   applePodcastsUrl   String?
   videoEmbedUrl      String?
   audioEmbedUrl      String?
+  thumbnailUrl       String?
   clipThumbnailUrl   String?
   clipVideoUrl       String?
   resourceLinks      Json?
@@ -179,6 +180,7 @@ model AdminUser {
 model SiteConfig {
   id                          String   @id @default("default")
   logoUrl                     String?
+  showPodcastSection          Boolean  @default(true)
   showHeroSection             Boolean  @default(true)
   showFeaturedClips           Boolean  @default(true)
   showLatestEpisodes          Boolean  @default(true)

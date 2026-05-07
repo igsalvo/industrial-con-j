@@ -15,6 +15,10 @@ export function HeroSection({
     heroSecondaryCtaLabel?: string | null;
     heroSecondaryCtaHref?: string | null;
     heroImageUrl?: string | null;
+    showPodcastSection?: boolean;
+    showEventsSection?: boolean;
+    showHonorSection?: boolean;
+    showProductsSection?: boolean;
   };
 }) {
   const secondaryLabel = config.heroSecondaryCtaLabel || "Ver eventos";
@@ -55,26 +59,34 @@ export function HeroSection({
               </div>
             ) : null}
             <div className={`grid gap-4 ${config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
-              <Link href="/podcast" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
-                <Podcast className="text-[color:var(--accent)]" />
-                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Podcast</p>
-                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Episodios e invitados</p>
-              </Link>
-              <Link href="/events" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]" aria-label="Ver eventos">
-                <CalendarDays className="text-[color:var(--accent)]" />
-                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Eventos</p>
-                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Calendario y actividades</p>
-              </Link>
-              <Link href="/honor" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
-                <GraduationCap className="text-[color:var(--accent)]" />
-                <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Alumni</p>
-                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Red y trayectorias</p>
-              </Link>
-              <Link href="/tiendiita" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
-                <Store className="text-[color:var(--accent)]" />
-                <p className="brand-kicker notranslate mt-4 text-sm text-[color:var(--muted)]" translate="no">TienDIIta</p>
-                <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Productos e iniciativas</p>
-              </Link>
+              {config.showPodcastSection !== false ? (
+                <Link href="/podcast" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
+                  <Podcast className="text-[color:var(--accent)]" />
+                  <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Podcast</p>
+                  <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Episodios e invitados</p>
+                </Link>
+              ) : null}
+              {config.showEventsSection !== false ? (
+                <Link href="/events" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]" aria-label="Ver eventos">
+                  <CalendarDays className="text-[color:var(--accent)]" />
+                  <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Eventos</p>
+                  <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Calendario y actividades</p>
+                </Link>
+              ) : null}
+              {config.showHonorSection !== false ? (
+                <Link href="/honor" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
+                  <GraduationCap className="text-[color:var(--accent)]" />
+                  <p className="brand-kicker mt-4 text-sm text-[color:var(--muted)]">Alumni</p>
+                  <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Red y trayectorias</p>
+                </Link>
+              ) : null}
+              {config.showProductsSection !== false ? (
+                <Link href="/tiendiita" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
+                  <Store className="text-[color:var(--accent)]" />
+                  <p className="brand-kicker notranslate mt-4 text-sm text-[color:var(--muted)]" translate="no">TienDIIta</p>
+                  <p className="mt-3 text-3xl" style={{ fontWeight: 600 }}>Productos e iniciativas</p>
+                </Link>
+              ) : null}
             </div>
           </div>
         </div>

@@ -1,9 +1,13 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ContactForm } from "@/components/forms/contact-form";
 import { getSiteConfig } from "@/lib/queries";
 
 export default async function DonationsPage() {
   const config = await getSiteConfig();
+  if (!config.showDonationsSection) {
+    notFound();
+  }
 
   return (
     <section className="shell py-12">

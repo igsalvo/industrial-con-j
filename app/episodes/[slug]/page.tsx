@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getEpisodeBySlug, getRelatedEpisodes } from "@/lib/queries";
+import { getEpisodeBySlug, getRelatedEpisodes, getSiteConfig } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { EpisodeCard } from "@/components/ui/episode-card";
@@ -12,28 +13,24 @@ type ResourceLink = {
 
 export default async function EpisodeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const episode = await getEpisodeBySlug(slug);
+  const [episode, siteConfig] = await Promise.all([getEpisodeBySlug(slug), getSiteConfig()]);
 
-  if (!episode) {
+  if (!episode || !siteConfig.showPodcastSection) {
     notFound();
   }
 
   const relatedEpisodes = await getRelatedEpisodes(episode.tags, episode.id);
   const resourceLinks = Array.isArray(episode.resourceLinks) ? (episode.resourceLinks as ResourceLink[]) : [];
+  const thumbnailUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || "/logo-podcast.jpg";
 
   return (
     <section className="shell py-12">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="space-y-8">
           <div className="card overflow-hidden">
-            <div
-              className="h-72 bg-cover bg-center"
-              style={{
-                backgroundImage: episode.clipThumbnailUrl
-                  ? `url(${episode.clipThumbnailUrl})`
-                  : "linear-gradient(135deg, #0f766e, #0f172a)"
-              }}
-            />
+            <div className="relative h-72 bg-[color:var(--surface-strong)]">
+              <Image src={thumbnailUrl} alt={episode.title} fill className="object-cover" sizes="(min-width: 1024px) 55vw, 100vw" priority />
+            </div>
             <div className="p-8">
               <div className="flex flex-wrap gap-2">
                 {episode.tags.map((tag: string) => (

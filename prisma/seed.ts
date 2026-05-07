@@ -28,6 +28,7 @@ async function main() {
     create: {
       id: "default",
       logoUrl: null,
+      showPodcastSection: true,
       showHeroSection: true,
       showFeaturedClips: true,
       showLatestEpisodes: true,

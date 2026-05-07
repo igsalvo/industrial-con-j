@@ -18,6 +18,7 @@ type EpisodeFormProps = {
     applePodcastsUrl: string | null;
     videoEmbedUrl: string | null;
     audioEmbedUrl: string | null;
+    thumbnailUrl: string | null;
     clipThumbnailUrl: string | null;
     clipVideoUrl: string | null;
     tags: string[];
@@ -67,6 +68,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       applePodcastsUrl: formData.get("applePodcastsUrl"),
       videoEmbedUrl: formData.get("videoEmbedUrl"),
       audioEmbedUrl: formData.get("audioEmbedUrl"),
+      thumbnailUrl: formData.get("thumbnailUrl"),
       clipThumbnailUrl: formData.get("clipThumbnailUrl"),
       clipVideoUrl: formData.get("clipVideoUrl"),
       tags: formData.get("tags"),
@@ -134,8 +136,11 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         />
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
+        <UploadField name="thumbnailUrl" label="Thumbnail del episodio" defaultValue={episode?.thumbnailUrl || ""} />
         <UploadField name="clipThumbnailUrl" label="Thumbnail del clip" defaultValue={episode?.clipThumbnailUrl || ""} />
         <input className="field" name="tags" placeholder="Lean, KPI, Operaciones" defaultValue={episode?.tags.join(", ")} />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="industries" placeholder="Manufacturing, Mining" defaultValue={episode?.industries.join(", ")} />
       </div>
       <textarea className="field min-h-40 font-mono text-sm" name="resourceLinks" defaultValue={defaultResources} />

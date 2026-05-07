@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { EpisodeCard } from "@/components/ui/episode-card";
@@ -17,6 +18,9 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
+  if (!siteConfig.showPodcastSection) {
+    notFound();
+  }
   const headings = {
     episodes: {
       eyebrow: siteConfig.episodesPageEyebrow || "Archivo",

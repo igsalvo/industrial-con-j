@@ -31,6 +31,7 @@ export type MvpEpisode = {
   applePodcastsUrl: string | null;
   videoEmbedUrl: string | null;
   audioEmbedUrl: string | null;
+  thumbnailUrl: string | null;
   clipThumbnailUrl: string | null;
   tags: string[];
   industries: string[];
@@ -130,6 +131,7 @@ const episodes: MvpEpisode[] = [
     applePodcastsUrl: "https://podcasts.apple.com",
     videoEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     audioEmbedUrl: null,
+    thumbnailUrl: null,
     clipThumbnailUrl: null,
     tags: ["Transformación Digital", "KPI", "Lean"],
     industries: ["Manufacturing", "Logistics"],
@@ -154,6 +156,7 @@ const episodes: MvpEpisode[] = [
     applePodcastsUrl: null,
     videoEmbedUrl: null,
     audioEmbedUrl: null,
+    thumbnailUrl: null,
     clipThumbnailUrl: null,
     tags: ["Supply Chain", "Abastecimiento", "Planificación"],
     industries: ["Logistics", "Retail"],
@@ -176,6 +179,7 @@ const episodes: MvpEpisode[] = [
     applePodcastsUrl: null,
     videoEmbedUrl: null,
     audioEmbedUrl: null,
+    thumbnailUrl: null,
     clipThumbnailUrl: null,
     tags: ["Mejora Continua", "Kaizen", "Seguridad"],
     industries: ["Mining", "Manufacturing"],

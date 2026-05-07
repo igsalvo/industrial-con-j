@@ -12,6 +12,7 @@ import {
 
 export const defaultSiteConfig = {
   logoUrl: null,
+  showPodcastSection: true,
   showHeroSection: true,
   showFeaturedClips: true,
   showLatestEpisodes: true,

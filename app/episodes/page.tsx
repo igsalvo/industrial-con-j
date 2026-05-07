@@ -2,9 +2,13 @@ import { getAllEpisodes, getSiteConfig } from "@/lib/queries";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { notFound } from "next/navigation";
 
 export default async function EpisodesPage() {
   const [episodes, config] = await Promise.all([getAllEpisodes(), getSiteConfig()]);
+  if (!config.showPodcastSection) {
+    notFound();
+  }
 
   return (
     <section className="shell py-12">

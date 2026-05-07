@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { ProductGrid } from "@/components/sections/public-section-cards";
 import { SectionHeading } from "@/components/sections/section-heading";
@@ -10,6 +11,9 @@ export default async function TiendiitaPage({
 }) {
   const params = await searchParams;
   const [{ products, categories }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
+  if (!siteConfig.showProductsSection) {
+    notFound();
+  }
   const q = params.q?.trim().toLowerCase() || "";
   const category = params.category || "";
   const sort = params.sort || "name";

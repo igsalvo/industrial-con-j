@@ -1,6 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+
+const episodePlaceholder = "/logo-podcast.jpg";
 
 type EpisodeCardProps = {
   episode: {
@@ -10,6 +13,7 @@ type EpisodeCardProps = {
     shortDescription: string;
     tags: string[];
     publishedAt: Date;
+    thumbnailUrl?: string | null;
     clipThumbnailUrl: string | null;
     guests: Array<{ id: string; name: string }>;
     sponsor: { name: string } | null;
@@ -17,12 +21,12 @@ type EpisodeCardProps = {
 };
 
 export function EpisodeCard({ episode }: EpisodeCardProps) {
+  const imageUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || episodePlaceholder;
+
   return (
     <article className="card overflow-hidden">
       <div className="relative h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64">
-        {episode.clipThumbnailUrl ? (
-          <img src={episode.clipThumbnailUrl} alt={episode.title} className="h-full w-full object-cover" />
-        ) : null}
+        <Image src={imageUrl} alt={episode.title} fill className="object-cover" sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
       </div>
       <div className="p-6">
         <div className="flex flex-wrap gap-2">

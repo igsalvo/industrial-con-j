@@ -6,6 +6,7 @@ import { UploadField } from "@/components/admin/upload-field";
 
 type SiteConfigShape = {
   logoUrl: string | null;
+  showPodcastSection: boolean;
   showHeroSection: boolean;
   showFeaturedClips: boolean;
   showLatestEpisodes: boolean;
@@ -202,6 +203,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         logoUrl: formData.get("logoUrl"),
+        showPodcastSection: formData.get("showPodcastSection") === "on",
         showHeroSection: formData.get("showHeroSection") === "on",
         showFeaturedClips: formData.get("showFeaturedClips") === "on",
         showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
@@ -309,16 +311,17 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
   }
 
   const toggles = [
+    { name: "showPodcastSection", label: "Mostrar Podcast", defaultChecked: config.showPodcastSection },
     { name: "showHeroSection", label: "Mostrar bienvenida", defaultChecked: config.showHeroSection },
     { name: "showFeaturedClips", label: "Mostrar shorts destacados", defaultChecked: config.showFeaturedClips },
     { name: "showLatestEpisodes", label: "Mostrar últimos episodios", defaultChecked: config.showLatestEpisodes },
     { name: "showSponsorsSection", label: "Mostrar sección sponsors", defaultChecked: config.showSponsorsSection },
-    { name: "showDonationsSection", label: "Mostrar sección donaciones", defaultChecked: config.showDonationsSection },
+    { name: "showDonationsSection", label: "Mostrar Donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar sección invitados", defaultChecked: config.showGuestsSection },
     { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },
     { name: "showHonorSection", label: "Mostrar Alumni", defaultChecked: config.showHonorSection },
     { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
-    { name: "showEventsSection", label: "Mostrar eventos", defaultChecked: config.showEventsSection },
+    { name: "showEventsSection", label: "Mostrar Eventos", defaultChecked: config.showEventsSection },
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
     { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
   ];

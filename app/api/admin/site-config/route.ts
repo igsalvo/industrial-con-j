@@ -37,6 +37,7 @@ export async function PATCH(request: Request) {
 
   const siteConfigData = {
     logoUrl: toNullableString(payload.logoUrl),
+    showPodcastSection: payload.showPodcastSection === true,
     showHeroSection: payload.showHeroSection === true,
     showFeaturedClips: payload.showFeaturedClips === true,
     showLatestEpisodes: payload.showLatestEpisodes === true,

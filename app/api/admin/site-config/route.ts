@@ -73,6 +73,7 @@ export async function PATCH(request: Request) {
     showEventsSection: payload.showEventsSection === true,
     showParticipationSection: payload.showParticipationSection === true,
     showCommunityLink: payload.showCommunityLink === true,
+    showContactLink: payload.showContactLink === true,
     showDonationsSection: payload.showDonationsSection === true,
     showSponsorBanner: payload.showSponsorBanner === true,
     sponsorBannerTitle: toNullableString(payload.sponsorBannerTitle) || "Auspiciadores",

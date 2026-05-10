@@ -45,14 +45,6 @@ export function HeroSection({
   return (
     <section className="shell py-10 md:py-16">
       <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
-        {showVideo && videoUrl ? (
-          <>
-            <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
-              <source src={videoUrl} type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-black/58" />
-          </>
-        ) : null}
         <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
@@ -60,7 +52,7 @@ export function HeroSection({
               {config.heroTitle || "Contenido, eventos y comunidad de"}{" "}
               <span className="text-[color:var(--accent)]">{config.heroTitleAccent || "Industrial con J"}</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
+            <p className="text-content mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
               {config.heroDescription ||
                 "Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial."}
             </p>
@@ -79,12 +71,18 @@ export function HeroSection({
           </div>
 
           <div>
-            {config.heroImageUrl ? (
+            {showVideo && videoUrl ? (
+              <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
+                <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
+                  <source src={videoUrl} type="video/mp4" />
+                </video>
+              </div>
+            ) : config.heroImageUrl ? (
               <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--surface-strong)]">
                 <img src={config.heroImageUrl} alt="Industrial con J" className="aspect-[4/3] h-full w-full object-cover" />
               </div>
             ) : null}
-            <div className={`grid gap-4 ${config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
+            <div className={`grid gap-4 ${showVideo && videoUrl ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
               {config.showPodcastSection !== false ? (
                 <Link href="/podcast" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                   <Podcast className="text-[color:var(--accent)]" />

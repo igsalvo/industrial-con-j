@@ -19,6 +19,7 @@ type SiteConfigShape = {
   showEventsSection: boolean;
   showParticipationSection: boolean;
   showCommunityLink: boolean;
+  showContactLink: boolean;
   showDonationsSection: boolean;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
@@ -245,6 +246,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         showEventsSection: formData.get("showEventsSection") === "on",
         showParticipationSection: formData.get("showParticipationSection") === "on",
         showCommunityLink: formData.get("showCommunityLink") === "on",
+        showContactLink: formData.get("showContactLink") === "on",
         showDonationsSection: formData.get("showDonationsSection") === "on",
         showSponsorBanner: formData.get("showSponsorBanner") === "on",
         sponsorBannerTitle: formData.get("sponsorBannerTitle"),
@@ -354,7 +356,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
     { name: "showEventsSection", label: "Mostrar Eventos", defaultChecked: config.showEventsSection },
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
-    { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink }
+    { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink },
+    { name: "showContactLink", label: "Mostrar Contacto en barra superior", defaultChecked: config.showContactLink }
   ];
 
   return (
@@ -406,16 +409,17 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         <div className="grid gap-4 md:grid-cols-[220px_1fr]">
           <label className="card flex items-center gap-3 p-4 text-sm font-medium">
             <input checked={heroVideoEnabled} name="heroVideoEnabled" type="checkbox" onChange={(event) => setHeroVideoEnabled(event.target.checked)} />
-            Activar video de fondo
+            Mostrar video en inicio
           </label>
           <UploadField
             name="heroVideoUrl"
-            label="Video de fondo del hero"
+            label="Video del inicio"
             value={heroVideoUrl}
             onValueChange={setHeroVideoUrl}
             accept="video/mp4"
             uploadLabel="Subir video .mp4"
             urlPlaceholder="URL del video (.mp4)"
+            hint="Se muestra como video dentro del panel principal, no como fondo. Desactiva el checkbox para ocultarlo."
           />
         </div>
 

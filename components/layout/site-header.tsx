@@ -22,16 +22,20 @@ export function SiteHeader({
   showEventsLink = true,
   showHonorLink = true,
   showProductsLink = true,
+  showIdentityLink = true,
   showCommunityLink = true,
   showDonationsLink = true,
+  showContactLink = true,
   logoUrl
 }: {
   showPodcastLink?: boolean;
   showEventsLink?: boolean;
   showHonorLink?: boolean;
   showProductsLink?: boolean;
+  showIdentityLink?: boolean;
   showCommunityLink?: boolean;
   showDonationsLink?: boolean;
+  showContactLink?: boolean;
   logoUrl?: string | null;
 }) {
   const pathname = usePathname();
@@ -49,6 +53,10 @@ export function SiteHeader({
       return showHonorLink;
     }
 
+    if (link.href === "/identity") {
+      return showIdentityLink;
+    }
+
     if (link.href === "/tiendiita") {
       return showProductsLink;
     }
@@ -59,6 +67,10 @@ export function SiteHeader({
 
     if (link.href === "/donations") {
       return showDonationsLink;
+    }
+
+    if (link.href === "/contact") {
+      return showContactLink;
     }
 
     return true;

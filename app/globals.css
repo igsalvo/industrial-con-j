@@ -54,9 +54,8 @@ h6 {
   line-height: 0.98;
 }
 
-/* Mantiene el contenido editorial alineado como bloque sin afectar botones ni navegación. */
-p,
-li {
+/* Mantiene el contenido editorial alineado como bloque sin deformar textos cortos de tarjetas o navegación. */
+.text-content {
   text-align: justify;
 }
 

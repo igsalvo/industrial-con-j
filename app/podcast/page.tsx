@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
+import { notFound } from "next/navigation";
+import { ContactForm } from "@/components/forms/contact-form";
+import { PublicSurveyForm } from "@/components/forms/public-survey-form";
+import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig, hasDatabase } from "@/lib/queries";
+import { prisma } from "@/lib/prisma";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
@@ -16,12 +19,21 @@ const tabs = [
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const params = await searchParams;
-  // Comunidad vive en su propia ruta; evitamos mostrar una pantalla intermedia duplicada.
-  if (params.tab === "community") {
-    redirect("/community");
-  }
-  const activeTab = tabs.some((tab) => tab.id === params.tab && tab.id !== "community") ? params.tab : "episodes";
+  const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
+  const surveys =
+    activeTab === "community" && hasDatabase()
+      ? await prisma.survey.findMany({
+          where: { status: "PUBLISHED" },
+          include: {
+            episode: true,
+            questions: {
+              orderBy: { position: "asc" }
+            }
+          },
+          orderBy: { updatedAt: "desc" }
+        })
+      : [];
   if (!siteConfig.showPodcastSection) {
     notFound();
   }
@@ -65,7 +77,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
         {tabs.map((tab) => (
           <Link
             key={tab.id}
-            href={tab.id === "community" ? "/community" : `/podcast?tab=${tab.id}`}
+            href={`/podcast?tab=${tab.id}`}
             className={activeTab === tab.id ? "btn-primary !px-4 !py-2 text-sm" : "btn-secondary !px-4 !py-2 text-sm"}
           >
             {tab.label}
@@ -114,15 +126,41 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       ) : null}
 
       {activeTab === "community" ? (
-        <section className="card p-8">
-          <h2 className="text-3xl font-black">{siteConfig.communityPageTitle || "Comunidad"}</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[color:var(--muted)]">
-            {siteConfig.communityPageDescription || "Participa en preguntas, encuestas y contacto con el equipo."}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/community" className="btn-primary">Ir a comunidad</Link>
-            <Link href="/contact" className="btn-secondary">Contactar</Link>
+        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-6">
+            {surveys.length === 0 ? (
+              <div className="card p-8">
+                <h2 className="text-2xl font-bold">{siteConfig.communityEmptyTitle || "No hay encuestas activas"}</h2>
+                <p className="text-content mt-3 text-sm text-[color:var(--muted)]">
+                  {siteConfig.communityEmptyDescription || "Publica una encuesta desde el administrador para mostrarla aquí."}
+                </p>
+                <Link href="/podcast?tab=episodes" className="btn-secondary mt-5">
+                  Ver episodios
+                </Link>
+              </div>
+            ) : (
+              surveys.map((survey) => (
+                <div key={survey.id} className="space-y-3">
+                  {survey.episode ? (
+                    <p className="text-sm text-[color:var(--muted)]">
+                      Capitulo:{" "}
+                      <Link href={`/episodes/${survey.episode.slug}`} className="font-semibold text-[color:var(--foreground)]">
+                        {survey.episode.title}
+                      </Link>
+                    </p>
+                  ) : null}
+                  <PublicSurveyForm survey={survey} />
+                </div>
+              ))
+            )}
           </div>
+
+          <ContactForm
+            type="CONTACT"
+            title={siteConfig.communityContactTitle || "Contáctanos"}
+            description={siteConfig.communityContactDescription || "Deja tu comentario e información de contacto para responderte después."}
+            submitLabel={siteConfig.communityContactSubmitLabel || "Enviar comentario"}
+          />
         </section>
       ) : null}
 

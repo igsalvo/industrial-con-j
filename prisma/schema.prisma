@@ -193,6 +193,7 @@ model SiteConfig {
   showEventsSection           Boolean  @default(true)
   showParticipationSection    Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
+  showContactLink             Boolean  @default(true)
   showDonationsSection        Boolean  @default(true)
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Auspiciadores")

@@ -34,10 +34,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <SiteHeader
               showPodcastLink={siteConfig.showPodcastSection}
               showEventsLink={siteConfig.showEventsSection}
+              showIdentityLink={siteConfig.showIdentitySection}
               showHonorLink={siteConfig.showHonorSection}
               showProductsLink={siteConfig.showProductsSection}
               showCommunityLink={siteConfig.showCommunityLink}
               showDonationsLink={siteConfig.showDonationsSection}
+              showContactLink={siteConfig.showContactLink}
               logoUrl={siteConfig.logoUrl}
             />
             <main>{children}</main>

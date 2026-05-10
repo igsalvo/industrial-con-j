@@ -15,6 +15,7 @@ export const defaultSiteConfig = {
   showEventsSection: true,
   showParticipationSection: true,
   showCommunityLink: true,
+  showContactLink: true,
   showDonationsSection: true,
   showSponsorBanner: true,
   sponsorBannerTitle: "Auspiciadores",

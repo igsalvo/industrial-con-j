@@ -26,7 +26,7 @@ export default async function CommunityPage() {
       <div className="max-w-3xl">
         <p className="pill">{config.communityPageEyebrow || "Comunidad"}</p>
         <h1 className="mt-4 text-4xl font-black">{config.communityPageTitle || "Encuestas, preguntas y contacto"}</h1>
-        <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
+        <p className="text-content mt-4 text-sm leading-7 text-[color:var(--muted)]">
           {config.communityPageDescription || "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador."}
         </p>
       </div>

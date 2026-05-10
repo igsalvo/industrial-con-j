@@ -23,6 +23,23 @@ function toNumber(value: unknown, fallback: number) {
   return fallback;
 }
 
+function isValidHeroVideoUrl(value: string | null) {
+  if (!value) {
+    return true;
+  }
+
+  if (value.startsWith("/")) {
+    return /\.mp4(?:\?.*)?$/i.test(value);
+  }
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
 export async function PATCH(request: Request) {
   const session = await ensureAdminApiSession();
   if (!session) {
@@ -34,6 +51,12 @@ export async function PATCH(request: Request) {
   }
 
   const payload = (await request.json()) as Record<string, unknown>;
+  const heroVideoUrl = toNullableString(payload.heroVideoUrl);
+  const heroVideoEnabled = payload.heroVideoEnabled === true;
+
+  if (heroVideoEnabled && !isValidHeroVideoUrl(heroVideoUrl)) {
+    return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS o local terminado en .mp4." }, { status: 400 });
+  }
 
   const siteConfigData = {
     logoUrl: toNullableString(payload.logoUrl),
@@ -62,8 +85,8 @@ export async function PATCH(request: Request) {
     heroSecondaryCtaLabel: toNullableString(payload.heroSecondaryCtaLabel),
     heroSecondaryCtaHref: toNullableString(payload.heroSecondaryCtaHref),
     heroImageUrl: toNullableString(payload.heroImageUrl),
-    heroVideoUrl: toNullableString(payload.heroVideoUrl),
-    heroVideoEnabled: payload.heroVideoEnabled === true,
+    heroVideoUrl,
+    heroVideoEnabled,
     heroOrder: toNumber(payload.heroOrder, 0),
     featuredClipsEyebrow: toNullableString(payload.featuredClipsEyebrow),
     featuredClipsTitle: toNullableString(payload.featuredClipsTitle),

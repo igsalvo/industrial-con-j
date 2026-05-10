@@ -2,6 +2,19 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Podcast, Store } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
+function isPlayableHeroVideoUrl(value: string) {
+  if (value.startsWith("/")) {
+    return /\.mp4(?:\?.*)?$/i.test(value);
+  }
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
 export function HeroSection({
   config
 }: {
@@ -25,15 +38,17 @@ export function HeroSection({
 }) {
   const secondaryLabel = config.heroSecondaryCtaLabel || "Ver eventos";
   const secondaryHref = config.heroSecondaryCtaHref || "/events";
-  const heroVideoUrl = config.heroVideoEnabled ? config.heroVideoUrl || "/hero-video.mp4" : null;
+  const showVideo = Boolean(config.heroVideoEnabled);
+  const configuredVideoUrl = config.heroVideoUrl?.trim();
+  const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : "/hero-video.mp4";
 
   return (
     <section className="shell py-10 md:py-16">
       <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
-        {heroVideoUrl ? (
+        {showVideo && videoUrl ? (
           <>
             <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
-              <source src={heroVideoUrl} type={heroVideoUrl.endsWith(".webm") ? "video/webm" : "video/mp4"} />
+              <source src={videoUrl} type="video/mp4" />
             </video>
             <div className="absolute inset-0 bg-black/58" />
           </>

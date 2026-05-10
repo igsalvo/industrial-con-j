@@ -7,42 +7,15 @@ export type CalendarEvent = {
   end: Date;
 };
 
-function unfoldIcsLines(input: string) {
-  return input.replace(/\r?\n[ \t]/g, "");
-}
-
-function unescapeIcsText(value: string) {
-  return value.replace(/\\n/g, "\n").replace(/\\,/g, ",").replace(/\\;/g, ";").replace(/\\\\/g, "\\").trim();
-}
-
-function getIcsValue(block: string, property: string) {
-  const line = block.split(/\r?\n/).find((item) => item.startsWith(`${property}:`) || item.startsWith(`${property};`));
-  if (!line) {
-    return null;
-  }
-
-  return line.slice(line.indexOf(":") + 1);
-}
-
-function parseIcsDate(value: string | null) {
-  if (!value) {
-    return null;
-  }
-
-  const normalized = value.trim();
-  if (/^\d{8}$/.test(normalized)) {
-    return new Date(`${normalized.slice(0, 4)}-${normalized.slice(4, 6)}-${normalized.slice(6, 8)}T00:00:00`);
-  }
-
-  const match = normalized.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
-  if (!match) {
-    return null;
-  }
-
-  const [, year, month, day, hour, minute, second, utc] = match;
-  const iso = `${year}-${month}-${day}T${hour}:${minute}:${second}${utc ? "Z" : ""}`;
-  return new Date(iso);
-}
+type IcalEventLike = {
+  type?: string;
+  summary?: unknown;
+  description?: unknown;
+  location?: unknown;
+  start?: Date;
+  end?: Date;
+  uid?: string;
+};
 
 export function toGoogleCalendarDate(date: Date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
@@ -50,6 +23,18 @@ export function toGoogleCalendarDate(date: Date) {
 
 function escapeIcsText(value: string) {
   return value.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+}
+
+function toEventText(value: unknown, fallback = "") {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (value && typeof value === "object" && "val" in value && typeof value.val === "string") {
+    return value.val;
+  }
+
+  return fallback;
 }
 
 export function createGoogleCalendarUrl(event: {
@@ -97,52 +82,28 @@ export function createIcsContent(event: {
 }
 
 export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
-  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+  const url = process.env.GOOGLE_CALENDAR_ID;
 
-  if (!calendarId) {
+  if (!url) {
     return [];
   }
 
-  const calendarUrl = `https://calendar.google.com/calendar/ical/${encodeURIComponent(calendarId)}/public/basic.ics`;
-
   try {
-    const response = await fetch(calendarUrl, {
-      next: { revalidate: 900 }
-    });
-
-    if (!response.ok) {
-      console.error("Google Calendar feed request failed", { status: response.status });
-      return [];
-    }
-
-    const source = unfoldIcsLines(await response.text());
-    const events = source.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+    const ical = await import("node-ical");
+    const data = await ical.async.fromURL(url);
     const now = new Date();
 
-    const parsedEvents: CalendarEvent[] = [];
-
-    for (const block of events) {
-      const start = parseIcsDate(getIcsValue(block, "DTSTART"));
-      if (!start || start < now) {
-        continue;
-      }
-
-      const uid = getIcsValue(block, "UID") || `${start.toISOString()}-${getIcsValue(block, "SUMMARY") || "event"}`;
-      const title = unescapeIcsText(getIcsValue(block, "SUMMARY") || "Evento Industrial con J");
-      const description = getIcsValue(block, "DESCRIPTION");
-      const location = getIcsValue(block, "LOCATION");
-
-      parsedEvents.push({
-        uid,
-        title,
-        description: description ? unescapeIcsText(description) : undefined,
-        location: location ? unescapeIcsText(location) : undefined,
-        start,
-        end: parseIcsDate(getIcsValue(block, "DTEND")) || start
-      });
-    }
-
-    return parsedEvents
+    return (Object.values(data) as IcalEventLike[])
+      .filter((entry) => entry?.type === "VEVENT")
+      .map((event) => ({
+        title: toEventText(event.summary, "Sin título"),
+        description: toEventText(event.description),
+        location: toEventText(event.location),
+        start: event.start as Date,
+        end: (event.end || event.start) as Date,
+        uid: event.uid || `${event.start?.toISOString() || "event"}-${event.summary || "sin-titulo"}`
+      }))
+      .filter((event) => event.start && new Date(event.start) > now)
       .sort((a, b) => a.start.getTime() - b.start.getTime())
       .slice(0, limit);
   } catch (error) {

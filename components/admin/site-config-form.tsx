@@ -193,12 +193,39 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [heroVideoUrl, setHeroVideoUrl] = useState(config.heroVideoUrl || "");
+  const [heroVideoEnabled, setHeroVideoEnabled] = useState(config.heroVideoEnabled);
+
+  function isValidHeroVideoUrl(value: string) {
+    const normalized = value.trim();
+    if (!normalized) {
+      return true;
+    }
+
+    if (normalized.startsWith("/")) {
+      return /\.mp4(?:\?.*)?$/i.test(normalized);
+    }
+
+    try {
+      const url = new URL(normalized);
+      return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+    } catch {
+      return false;
+    }
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError("");
     const formData = new FormData(event.currentTarget);
+    const normalizedHeroVideoUrl = heroVideoUrl.trim();
+
+    if (heroVideoEnabled && !isValidHeroVideoUrl(normalizedHeroVideoUrl)) {
+      setError("La URL del video debe ser HTTPS o local y terminar en .mp4.");
+      setLoading(false);
+      return;
+    }
 
     const response = await fetch("/api/admin/site-config", {
       method: "PATCH",
@@ -230,8 +257,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
         heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
         heroImageUrl: formData.get("heroImageUrl"),
-        heroVideoUrl: formData.get("heroVideoUrl"),
-        heroVideoEnabled: formData.get("heroVideoEnabled") === "on",
+        heroVideoUrl: normalizedHeroVideoUrl,
+        heroVideoEnabled,
         heroOrder: formData.get("heroOrder"),
         featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
         featuredClipsTitle: formData.get("featuredClipsTitle"),
@@ -378,17 +405,21 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
 
         <div className="grid gap-4 md:grid-cols-[220px_1fr]">
           <label className="card flex items-center gap-3 p-4 text-sm font-medium">
-            <input defaultChecked={config.heroVideoEnabled} name="heroVideoEnabled" type="checkbox" />
+            <input checked={heroVideoEnabled} name="heroVideoEnabled" type="checkbox" onChange={(event) => setHeroVideoEnabled(event.target.checked)} />
             Activar video de fondo
           </label>
-          <UploadField
-            name="heroVideoUrl"
-            label="Video de fondo del hero"
-            defaultValue={config.heroVideoUrl || ""}
-            accept="video/mp4,video/webm,video/*"
-            uploadLabel="Subir video"
-            urlPlaceholder="/hero-video.mp4 o URL del video"
-          />
+          <div>
+            <label className="mb-2 block text-sm font-semibold">URL del video de fondo</label>
+            <input
+              className="field"
+              name="heroVideoUrl"
+              type="text"
+              placeholder="URL del video (.mp4)"
+              value={heroVideoUrl}
+              onChange={(event) => setHeroVideoUrl(event.target.value)}
+            />
+            <p className="mt-2 text-xs text-[color:var(--muted)]">Usa una URL pública HTTPS terminada en .mp4. Si lo dejas vacío, se usará /hero-video.mp4.</p>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

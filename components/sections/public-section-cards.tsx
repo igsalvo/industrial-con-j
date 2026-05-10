@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, BadgeDollarSign, CalendarDays, Gift, Handshake, HeartHandshake, Landmark, MapPin, Package, Sparkles, Target, Users } from "lucide-react";
+import { ArrowUpRight, BadgeDollarSign, CalendarDays, CalendarPlus, Download, Gift, Handshake, HeartHandshake, Landmark, MapPin, Package, Sparkles, Target, Users } from "lucide-react";
+import { createGoogleCalendarUrl, type CalendarEvent } from "@/lib/google-calendar";
 
 const icons = {
   purpose: Target,
@@ -137,7 +138,7 @@ function formatEventDate(date: Date) {
 export function EventGrid({
   events
 }: {
-  events: Array<{ id: string; title: string; description: string; startsAt: Date; endsAt: Date | null; location: string | null; imageUrl: string | null; type: string | null; ctaText: string | null; ctaLink: string | null }>;
+  events: CalendarEvent[];
 }) {
   if (events.length === 0) {
     return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay eventos publicados.</p>;
@@ -152,7 +153,7 @@ export function EventGrid({
           ))}
           {Array.from({ length: 35 }, (_, index) => {
             const day = index + 1;
-            const hasEvent = events.some((event) => event.startsAt.getDate() === day);
+            const hasEvent = events.some((event) => event.start.getDate() === day);
             return (
               <div key={day} className={`aspect-square rounded-xl border border-[color:var(--line)] p-2 ${hasEvent ? "bg-[color:var(--accent-soft)] text-[color:var(--accent)]" : ""}`}>
                 {day <= 31 ? day : ""}
@@ -164,27 +165,30 @@ export function EventGrid({
 
       <div className="space-y-4">
         {events.map((event) => (
-          <article key={event.id} className="card grid gap-4 overflow-hidden p-5 md:grid-cols-[160px_1fr]">
+          <article key={event.uid} className="card grid gap-4 overflow-hidden p-5 md:grid-cols-[160px_1fr]">
             <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
               <CalendarDays className="text-[color:var(--accent)]" />
-              <p className="mt-4 text-lg font-black">{formatEventDate(event.startsAt)}</p>
-              {event.type ? <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{event.type}</p> : null}
+              <p className="mt-4 text-lg font-black">{formatEventDate(event.start)}</p>
             </div>
             <div>
               <h3 className="text-2xl font-bold">{event.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">{event.description}</p>
+              {event.description ? <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
               {event.location ? (
                 <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]">
                   <MapPin size={16} />
                   {event.location}
                 </p>
               ) : null}
-              {event.ctaText && event.ctaLink ? (
-                <Link className="btn-secondary mt-5 gap-2" href={event.ctaLink}>
-                  {event.ctaText}
-                  <ArrowUpRight size={15} />
-                </Link>
-              ) : null}
+              <div className="mt-5 flex flex-wrap gap-2">
+                <a className="btn-primary gap-2 !px-4 !py-2 text-sm" href={createGoogleCalendarUrl(event)} target="_blank" rel="noreferrer">
+                  <CalendarPlus size={16} />
+                  Agregar a mi calendario
+                </a>
+                <a className="btn-secondary gap-2 !px-4 !py-2 text-sm" href={`/api/ics?uid=${encodeURIComponent(event.uid)}`}>
+                  <Download size={16} />
+                  .ics
+                </a>
+              </div>
             </div>
           </article>
         ))}

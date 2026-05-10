@@ -1,12 +1,10 @@
 export type CalendarEvent = {
-  id: string;
+  uid: string;
   title: string;
-  description: string | null;
-  location: string | null;
-  startsAt: Date;
-  endsAt: Date | null;
-  googleCalendarUrl: string;
-  icsContent: string;
+  description?: string;
+  location?: string;
+  start: Date;
+  end: Date;
 };
 
 function unfoldIcsLines(input: string) {
@@ -46,7 +44,7 @@ function parseIcsDate(value: string | null) {
   return new Date(iso);
 }
 
-function toGoogleDate(date: Date) {
+export function toGoogleCalendarDate(date: Date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 }
 
@@ -56,39 +54,38 @@ function escapeIcsText(value: string) {
 
 export function createGoogleCalendarUrl(event: {
   title: string;
-  description: string | null;
-  location: string | null;
-  startsAt: Date;
-  endsAt: Date | null;
+  description?: string;
+  location?: string;
+  start: Date;
+  end: Date;
 }) {
   const params = new URLSearchParams({
-    action: "TEMPLATE",
     text: event.title,
-    dates: `${toGoogleDate(event.startsAt)}/${toGoogleDate(event.endsAt || event.startsAt)}`,
+    dates: `${toGoogleCalendarDate(event.start)}/${toGoogleCalendarDate(event.end)}`,
     details: event.description || "",
     location: event.location || ""
   });
 
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  return `https://calendar.google.com/calendar/u/0/r/eventedit?${params.toString()}`;
 }
 
 export function createIcsContent(event: {
-  id: string;
+  uid: string;
   title: string;
-  description: string | null;
-  location: string | null;
-  startsAt: Date;
-  endsAt: Date | null;
+  description?: string;
+  location?: string;
+  start: Date;
+  end: Date;
 }) {
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Industrial con J//Calendar//ES",
     "BEGIN:VEVENT",
-    `UID:${event.id}`,
-    `DTSTAMP:${toGoogleDate(new Date())}`,
-    `DTSTART:${toGoogleDate(event.startsAt)}`,
-    `DTEND:${toGoogleDate(event.endsAt || event.startsAt)}`,
+    `UID:${event.uid}`,
+    `DTSTAMP:${toGoogleCalendarDate(new Date())}`,
+    `DTSTART:${toGoogleCalendarDate(event.start)}`,
+    `DTEND:${toGoogleCalendarDate(event.end)}`,
     `SUMMARY:${escapeIcsText(event.title)}`,
     event.description ? `DESCRIPTION:${escapeIcsText(event.description)}` : null,
     event.location ? `LOCATION:${escapeIcsText(event.location)}` : null,
@@ -99,7 +96,7 @@ export function createIcsContent(event: {
     .join("\r\n");
 }
 
-export async function getGoogleCalendarEvents(limit = 6): Promise<CalendarEvent[]> {
+export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
   const calendarId = process.env.GOOGLE_CALENDAR_ID;
 
   if (!calendarId) {
@@ -122,37 +119,39 @@ export async function getGoogleCalendarEvents(limit = 6): Promise<CalendarEvent[
     const events = source.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
     const now = new Date();
 
-    return events
-      .map((block) => {
-        const startsAt = parseIcsDate(getIcsValue(block, "DTSTART"));
-        if (!startsAt || startsAt < now) {
-          return null;
-        }
+    const parsedEvents: CalendarEvent[] = [];
 
-        const id = getIcsValue(block, "UID") || `${startsAt.toISOString()}-${getIcsValue(block, "SUMMARY") || "event"}`;
-        const title = unescapeIcsText(getIcsValue(block, "SUMMARY") || "Evento Industrial con J");
-        const description = getIcsValue(block, "DESCRIPTION");
-        const location = getIcsValue(block, "LOCATION");
-        const event = {
-          id,
-          title,
-          description: description ? unescapeIcsText(description) : null,
-          location: location ? unescapeIcsText(location) : null,
-          startsAt,
-          endsAt: parseIcsDate(getIcsValue(block, "DTEND"))
-        };
+    for (const block of events) {
+      const start = parseIcsDate(getIcsValue(block, "DTSTART"));
+      if (!start || start < now) {
+        continue;
+      }
 
-        return {
-          ...event,
-          googleCalendarUrl: createGoogleCalendarUrl(event),
-          icsContent: createIcsContent(event)
-        };
-      })
-      .filter((event): event is CalendarEvent => Boolean(event))
-      .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())
+      const uid = getIcsValue(block, "UID") || `${start.toISOString()}-${getIcsValue(block, "SUMMARY") || "event"}`;
+      const title = unescapeIcsText(getIcsValue(block, "SUMMARY") || "Evento Industrial con J");
+      const description = getIcsValue(block, "DESCRIPTION");
+      const location = getIcsValue(block, "LOCATION");
+
+      parsedEvents.push({
+        uid,
+        title,
+        description: description ? unescapeIcsText(description) : undefined,
+        location: location ? unescapeIcsText(location) : undefined,
+        start,
+        end: parseIcsDate(getIcsValue(block, "DTEND")) || start
+      });
+    }
+
+    return parsedEvents
+      .sort((a, b) => a.start.getTime() - b.start.getTime())
       .slice(0, limit);
   } catch (error) {
     console.error("Google Calendar feed parsing failed", error);
     return [];
   }
+}
+
+export async function getCalendarEventByUid(uid: string) {
+  const events = await getEventsFromICS(50);
+  return events.find((event) => event.uid === uid) || null;
 }

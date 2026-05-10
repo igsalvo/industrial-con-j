@@ -205,6 +205,8 @@ model SiteConfig {
   heroSecondaryCtaLabel       String?  @default("Ver eventos")
   heroSecondaryCtaHref        String?  @default("/events")
   heroImageUrl                String?
+  heroVideoUrl                String?
+  heroVideoEnabled            Boolean  @default(false)
   heroOrder                   Int      @default(0)
   featuredClipsEyebrow        String?  @default("Clips destacados")
   featuredClipsTitle          String?  @default("Shorts de los capitulos")

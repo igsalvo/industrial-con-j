@@ -53,6 +53,8 @@ async function main() {
       heroSecondaryCtaLabel: "Ver eventos",
       heroSecondaryCtaHref: "/events",
       heroImageUrl: null,
+      heroVideoUrl: null,
+      heroVideoEnabled: false,
       heroOrder: 0,
       featuredClipsEyebrow: "Clips destacados",
       featuredClipsTitle: "Shorts de los capitulos",
@@ -222,31 +224,6 @@ async function main() {
         ctaText: "Reservar",
         ctaLink: "https://www.instagram.com/ingenieriaindustrialuchile/",
         categoryId: papeleria.id,
-        order: 2
-      }
-    ]
-  });
-
-  await prisma.event.createMany({
-    data: [
-      {
-        title: "Encuentro comunidad industrial",
-        description: "Actividad abierta para compartir ideas, proyectos y oportunidades de colaboracion.",
-        startsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
-        location: "Beauchef",
-        type: "Encuentro",
-        ctaText: "Quiero participar",
-        ctaLink: "/contact",
-        order: 1
-      },
-      {
-        title: "Taller de operaciones",
-        description: "Sesion aplicada para conversar sobre mejora continua, datos y ejecucion.",
-        startsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        location: "Online",
-        type: "Taller",
-        ctaText: "Consultar",
-        ctaLink: "/contact",
         order: 2
       }
     ]

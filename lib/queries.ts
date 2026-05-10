@@ -1,14 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import {
-  getAllEpisodes as getMvpEpisodes,
-  getAllGuests as getMvpGuests,
-  getAllSponsors as getMvpSponsors,
-  getEpisodeBySlug as getMvpEpisodeBySlug,
-  getGuestBySlug as getMvpGuestBySlug,
-  getHomepageData as getMvpHomepageData,
-  getRelatedEpisodes as getMvpRelatedEpisodes,
-  getSearchResults as getMvpSearchResults
-} from "@/lib/mvp-data";
 
 export const defaultSiteConfig = {
   logoUrl: null,
@@ -37,6 +27,8 @@ export const defaultSiteConfig = {
   heroSecondaryCtaLabel: "Ver eventos",
   heroSecondaryCtaHref: "/events",
   heroImageUrl: null,
+  heroVideoUrl: null,
+  heroVideoEnabled: false,
   heroOrder: 0,
   featuredClipsEyebrow: "Clips destacados",
   featuredClipsTitle: "Shorts de los capítulos",
@@ -151,7 +143,18 @@ export async function getSiteConfig() {
 
 export async function getHomepageData() {
   if (!hasDatabase()) {
-    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], events: [], participationItems: [] };
+    return {
+      featuredClips: [],
+      latestEpisodes: [],
+      recommendedEpisodes: [],
+      sponsors: [],
+      guests: [],
+      identityItems: [],
+      honorMembers: [],
+      products: [],
+      events: [],
+      participationItems: []
+    };
   }
 
   try {
@@ -215,8 +218,20 @@ export async function getHomepageData() {
     ]);
 
     return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems };
-  } catch {
-    return { ...getMvpHomepageData(), identityItems: [], honorMembers: [], products: [], events: [], participationItems: [] };
+  } catch (error) {
+    console.error("Homepage data query failed", error);
+    return {
+      featuredClips: [],
+      latestEpisodes: [],
+      recommendedEpisodes: [],
+      sponsors: [],
+      guests: [],
+      identityItems: [],
+      honorMembers: [],
+      products: [],
+      events: [],
+      participationItems: []
+    };
   }
 }
 
@@ -262,7 +277,7 @@ export async function getPublicSectionsData() {
 
 export async function getEpisodeBySlug(slug: string) {
   if (!hasDatabase()) {
-    return getMvpEpisodeBySlug(slug);
+    return null;
   }
 
   try {
@@ -270,14 +285,15 @@ export async function getEpisodeBySlug(slug: string) {
       where: { slug, isVisible: true },
       include: publicEpisodeInclude
     });
-  } catch {
-    return getMvpEpisodeBySlug(slug);
+  } catch (error) {
+    console.error("Episode query failed", error);
+    return null;
   }
 }
 
 export async function getRelatedEpisodes(tags: string[], episodeId: string) {
   if (!hasDatabase()) {
-    return getMvpRelatedEpisodes(tags, episodeId);
+    return [];
   }
 
   if (tags.length === 0) {
@@ -295,14 +311,15 @@ export async function getRelatedEpisodes(tags: string[], episodeId: string) {
       take: 3,
       include: { guests: true, sponsor: true }
     });
-  } catch {
-    return getMvpRelatedEpisodes(tags, episodeId);
+  } catch (error) {
+    console.error("Related episodes query failed", error);
+    return [];
   }
 }
 
 export async function getGuestBySlug(slug: string) {
   if (!hasDatabase()) {
-    return getMvpGuestBySlug(slug);
+    return null;
   }
 
   try {
@@ -316,8 +333,9 @@ export async function getGuestBySlug(slug: string) {
         }
       }
     });
-  } catch {
-    return getMvpGuestBySlug(slug);
+  } catch (error) {
+    console.error("Guest query failed", error);
+    return null;
   }
 }
 
@@ -328,7 +346,7 @@ export async function getSearchResults(searchParams: {
   industry?: string;
 }) {
   if (!hasDatabase()) {
-    return getMvpSearchResults(searchParams);
+    return { episodes: [], guests: [], filters: { guests: [], tags: [], industries: [] } };
   }
 
   const term = searchParams.q?.trim();
@@ -407,14 +425,15 @@ export async function getSearchResults(searchParams: {
         industries: distinctIndustries
       }
     };
-  } catch {
-    return getMvpSearchResults(searchParams);
+  } catch (error) {
+    console.error("Search query failed", error);
+    return { episodes: [], guests: [], filters: { guests: [], tags: [], industries: [] } };
   }
 }
 
 export async function getAllEpisodes() {
   if (!hasDatabase()) {
-    return getMvpEpisodes();
+    return [];
   }
 
   try {
@@ -423,14 +442,15 @@ export async function getAllEpisodes() {
       include: { guests: true, sponsor: true },
       orderBy: { publishedAt: "desc" }
     });
-  } catch {
-    return getMvpEpisodes();
+  } catch (error) {
+    console.error("Episodes query failed", error);
+    return [];
   }
 }
 
 export async function getAllGuests() {
   if (!hasDatabase()) {
-    return getMvpGuests();
+    return [];
   }
 
   try {
@@ -445,14 +465,15 @@ export async function getAllGuests() {
       },
       orderBy: { name: "asc" }
     });
-  } catch {
-    return getMvpGuests();
+  } catch (error) {
+    console.error("Guests query failed", error);
+    return [];
   }
 }
 
 export async function getAllSponsors() {
   if (!hasDatabase()) {
-    return getMvpSponsors();
+    return [];
   }
 
   try {
@@ -460,7 +481,8 @@ export async function getAllSponsors() {
       where: { isVisible: true },
       orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
     });
-  } catch {
-    return getMvpSponsors();
+  } catch (error) {
+    console.error("Sponsors query failed", error);
+    return [];
   }
 }

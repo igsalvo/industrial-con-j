@@ -31,6 +31,8 @@ type SiteConfigShape = {
   heroSecondaryCtaLabel: string | null;
   heroSecondaryCtaHref: string | null;
   heroImageUrl: string | null;
+  heroVideoUrl: string | null;
+  heroVideoEnabled: boolean;
   heroOrder: number;
   featuredClipsEyebrow: string | null;
   featuredClipsTitle: string | null;
@@ -228,6 +230,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
         heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
         heroImageUrl: formData.get("heroImageUrl"),
+        heroVideoUrl: formData.get("heroVideoUrl"),
+        heroVideoEnabled: formData.get("heroVideoEnabled") === "on",
         heroOrder: formData.get("heroOrder"),
         featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
         featuredClipsTitle: formData.get("featuredClipsTitle"),
@@ -369,6 +373,21 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             accept="image/*"
             uploadLabel="Subir imagen"
             urlPlaceholder="https://... o URL de imagen subida"
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+          <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+            <input defaultChecked={config.heroVideoEnabled} name="heroVideoEnabled" type="checkbox" />
+            Activar video de fondo
+          </label>
+          <UploadField
+            name="heroVideoUrl"
+            label="Video de fondo del hero"
+            defaultValue={config.heroVideoUrl || ""}
+            accept="video/mp4,video/webm,video/*"
+            uploadLabel="Subir video"
+            urlPlaceholder="/hero-video.mp4 o URL del video"
           />
         </div>
 

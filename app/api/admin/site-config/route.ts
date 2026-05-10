@@ -62,6 +62,8 @@ export async function PATCH(request: Request) {
     heroSecondaryCtaLabel: toNullableString(payload.heroSecondaryCtaLabel),
     heroSecondaryCtaHref: toNullableString(payload.heroSecondaryCtaHref),
     heroImageUrl: toNullableString(payload.heroImageUrl),
+    heroVideoUrl: toNullableString(payload.heroVideoUrl),
+    heroVideoEnabled: payload.heroVideoEnabled === true,
     heroOrder: toNumber(payload.heroOrder, 0),
     featuredClipsEyebrow: toNullableString(payload.featuredClipsEyebrow),
     featuredClipsTitle: toNullableString(payload.featuredClipsTitle),

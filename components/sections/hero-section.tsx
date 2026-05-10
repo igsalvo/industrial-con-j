@@ -15,6 +15,8 @@ export function HeroSection({
     heroSecondaryCtaLabel?: string | null;
     heroSecondaryCtaHref?: string | null;
     heroImageUrl?: string | null;
+    heroVideoUrl?: string | null;
+    heroVideoEnabled?: boolean;
     showPodcastSection?: boolean;
     showEventsSection?: boolean;
     showHonorSection?: boolean;
@@ -23,11 +25,20 @@ export function HeroSection({
 }) {
   const secondaryLabel = config.heroSecondaryCtaLabel || "Ver eventos";
   const secondaryHref = config.heroSecondaryCtaHref || "/events";
+  const heroVideoUrl = config.heroVideoEnabled ? config.heroVideoUrl || "/hero-video.mp4" : null;
 
   return (
     <section className="shell py-10 md:py-16">
-      <div className="overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+      <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-8 md:p-12" style={{ background: "var(--hero)" }}>
+        {heroVideoUrl ? (
+          <>
+            <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
+              <source src={heroVideoUrl} type={heroVideoUrl.endsWith(".webm") ? "video/webm" : "video/mp4"} />
+            </video>
+            <div className="absolute inset-0 bg-black/58" />
+          </>
+        ) : null}
+        <div className="relative z-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
             <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 600 }}>

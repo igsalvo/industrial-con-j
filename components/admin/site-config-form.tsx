@@ -356,12 +356,38 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showProductsSection", label: "Mostrar TienDIIta", defaultChecked: config.showProductsSection },
     { name: "showEventsSection", label: "Mostrar Eventos", defaultChecked: config.showEventsSection },
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
-    { name: "showCommunityLink", label: "Mostrar comunidad en header y footer", defaultChecked: config.showCommunityLink },
+    { name: "showCommunityLink", label: "Mostrar Comunidad en footer", defaultChecked: config.showCommunityLink },
     { name: "showContactLink", label: "Mostrar Contacto en barra superior", defaultChecked: config.showContactLink }
   ];
 
   return (
     <form onSubmit={onSubmit} className="space-y-8">
+      <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
+        <div>
+          <p className="pill">Video visible del inicio</p>
+          <h3 className="mt-3 text-2xl font-black">Subir u ocultar video</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">
+            Este video aparece dentro del panel principal de la portada. No se usa como fondo.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+          <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+            <input checked={heroVideoEnabled} name="heroVideoEnabled" type="checkbox" onChange={(event) => setHeroVideoEnabled(event.target.checked)} />
+            Mostrar video en inicio
+          </label>
+          <UploadField
+            name="heroVideoUrl"
+            label="Video del inicio"
+            value={heroVideoUrl}
+            onValueChange={setHeroVideoUrl}
+            accept="video/mp4"
+            uploadLabel="Subir video .mp4"
+            urlPlaceholder="URL del video (.mp4)"
+            hint="Puedes subir un archivo .mp4 o pegar una URL pública .mp4. Desactiva el checkbox para ocultarlo."
+          />
+        </div>
+      </div>
+
       <UploadField
         name="logoUrl"
         label="Logo del podcast"
@@ -371,6 +397,11 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         urlPlaceholder="https://... o URL del logo subido"
       />
 
+      <div className="space-y-3">
+        <div>
+          <p className="pill">Barra superior</p>
+          <h3 className="mt-3 text-2xl font-black">Ocultar enlaces del menú</h3>
+        </div>
       <div className="grid gap-3 md:grid-cols-2">
         {toggles.map((toggle) => (
           <label key={toggle.name} className="card flex items-center gap-3 p-4 text-sm">
@@ -378,6 +409,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             {toggle.label}
           </label>
         ))}
+      </div>
       </div>
 
       <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
@@ -403,23 +435,6 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             accept="image/*"
             uploadLabel="Subir imagen"
             urlPlaceholder="https://... o URL de imagen subida"
-          />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
-          <label className="card flex items-center gap-3 p-4 text-sm font-medium">
-            <input checked={heroVideoEnabled} name="heroVideoEnabled" type="checkbox" onChange={(event) => setHeroVideoEnabled(event.target.checked)} />
-            Mostrar video en inicio
-          </label>
-          <UploadField
-            name="heroVideoUrl"
-            label="Video del inicio"
-            value={heroVideoUrl}
-            onValueChange={setHeroVideoUrl}
-            accept="video/mp4"
-            uploadLabel="Subir video .mp4"
-            urlPlaceholder="URL del video (.mp4)"
-            hint="Se muestra como video dentro del panel principal, no como fondo. Desactiva el checkbox para ocultarlo."
           />
         </div>
 

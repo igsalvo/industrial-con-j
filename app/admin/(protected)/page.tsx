@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SiteConfigForm } from "@/components/admin/site-config-form";
-import { hasDatabase } from "@/lib/queries";
+import { getSiteConfig, hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 
@@ -36,9 +36,7 @@ export default async function AdminDashboardPage() {
           orderBy: { createdAt: "desc" },
           take: 5
         }), []),
-        safeQuery(prisma.siteConfig.findUnique({
-          where: { id: "default" }
-        }), null),
+        safeQuery(getSiteConfig(), null),
         safeQuery(prisma.identityItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
         safeQuery(prisma.honorMember.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
         safeQuery(prisma.product.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), []),
@@ -57,6 +55,19 @@ export default async function AdminDashboardPage() {
           El acceso administrativo ya está activo. Ahora puedes gestionar episodios, invitados, sponsors y encuestas desde el mismo panel.
         </p>
       </div>
+
+      {databaseReady && siteConfig ? (
+        <div className="card p-8">
+          <div className="mb-6">
+            <p className="pill">Portada y navegación</p>
+            <h2 className="mt-4 text-3xl font-black">Ocultar barra superior y video del inicio</h2>
+            <p className="mt-2 text-sm text-[color:var(--muted)]">
+              Aquí están los controles para ocultar enlaces del header y subir u ocultar el video visible del inicio.
+            </p>
+          </div>
+          <SiteConfigForm config={siteConfig} />
+        </div>
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
@@ -239,18 +250,6 @@ export default async function AdminDashboardPage() {
         </div>
       )}
 
-      {databaseReady && siteConfig ? (
-        <div className="card p-8">
-          <div className="mb-6">
-            <p className="pill">Home</p>
-            <h2 className="mt-4 text-3xl font-black">Visibilidad de secciones</h2>
-            <p className="mt-2 text-sm text-[color:var(--muted)]">
-              Controla que módulos se muestran en la portada y si comunidad aparece en la navegación pública.
-            </p>
-          </div>
-          <SiteConfigForm config={siteConfig} />
-        </div>
-      ) : null}
     </div>
   );
 }

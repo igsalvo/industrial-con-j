@@ -1,10 +1,10 @@
 export type CalendarEvent = {
   uid: string;
   title: string;
-  description?: string;
-  location?: string;
+  description: string;
+  location: string;
   start: Date;
-  end: Date;
+  end: Date | null;
 };
 
 type IcalEventLike = {
@@ -42,11 +42,11 @@ export function createGoogleCalendarUrl(event: {
   description?: string;
   location?: string;
   start: Date;
-  end: Date;
+  end: Date | null;
 }) {
   const params = new URLSearchParams({
     text: event.title,
-    dates: `${toGoogleCalendarDate(event.start)}/${toGoogleCalendarDate(event.end)}`,
+    dates: `${toGoogleCalendarDate(event.start)}/${toGoogleCalendarDate(event.end || event.start)}`,
     details: event.description || "",
     location: event.location || ""
   });
@@ -60,7 +60,7 @@ export function createIcsContent(event: {
   description?: string;
   location?: string;
   start: Date;
-  end: Date;
+  end: Date | null;
 }) {
   return [
     "BEGIN:VCALENDAR",
@@ -70,7 +70,7 @@ export function createIcsContent(event: {
     `UID:${event.uid}`,
     `DTSTAMP:${toGoogleCalendarDate(new Date())}`,
     `DTSTART:${toGoogleCalendarDate(event.start)}`,
-    `DTEND:${toGoogleCalendarDate(event.end)}`,
+    `DTEND:${toGoogleCalendarDate(event.end || event.start)}`,
     `SUMMARY:${escapeIcsText(event.title)}`,
     event.description ? `DESCRIPTION:${escapeIcsText(event.description)}` : null,
     event.location ? `LOCATION:${escapeIcsText(event.location)}` : null,
@@ -85,6 +85,7 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
   const url = process.env.GOOGLE_CALENDAR_ID;
 
   if (!url) {
+    console.error("Missing GOOGLE_CALENDAR_ID");
     return [];
   }
 
@@ -93,19 +94,23 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
     const data = await ical.async.fromURL(url);
     const now = new Date();
 
-    return (Object.values(data) as IcalEventLike[])
+    const events = (Object.values(data) as IcalEventLike[])
       .filter((entry) => entry?.type === "VEVENT")
       .map((event) => ({
         title: toEventText(event.summary, "Sin título"),
         description: toEventText(event.description),
         location: toEventText(event.location),
-        start: event.start as Date,
-        end: (event.end || event.start) as Date,
+        start: event.start ? new Date(event.start) : null,
+        end: event.end ? new Date(event.end) : null,
         uid: event.uid || `${event.start?.toISOString() || "event"}-${event.summary || "sin-titulo"}`
       }))
-      .filter((event) => event.start && new Date(event.start) > now)
+      .filter((event): event is CalendarEvent => Boolean(event.start && event.start >= now))
       .sort((a, b) => a.start.getTime() - b.start.getTime())
       .slice(0, limit);
+
+    console.log("Eventos detectados:", events.length);
+
+    return events;
   } catch (error) {
     console.error("Google Calendar feed parsing failed", error);
     return [];

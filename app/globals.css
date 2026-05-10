@@ -54,6 +54,12 @@ h6 {
   line-height: 0.98;
 }
 
+/* Mantiene el contenido editorial alineado como bloque sin afectar botones ni navegación. */
+p,
+li {
+  text-align: justify;
+}
+
 .grain {
   position: relative;
 }

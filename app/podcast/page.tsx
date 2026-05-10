@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { EpisodeCard } from "@/components/ui/episode-card";
@@ -16,7 +16,11 @@ const tabs = [
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const params = await searchParams;
-  const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
+  // Comunidad vive en su propia ruta; evitamos mostrar una pantalla intermedia duplicada.
+  if (params.tab === "community") {
+    redirect("/community");
+  }
+  const activeTab = tabs.some((tab) => tab.id === params.tab && tab.id !== "community") ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
   if (!siteConfig.showPodcastSection) {
     notFound();
@@ -59,7 +63,11 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
 
       <nav className="flex flex-wrap gap-2 rounded-2xl border border-[color:var(--line)] p-2">
         {tabs.map((tab) => (
-          <Link key={tab.id} href={`/podcast?tab=${tab.id}`} className={activeTab === tab.id ? "btn-primary !px-4 !py-2 text-sm" : "btn-secondary !px-4 !py-2 text-sm"}>
+          <Link
+            key={tab.id}
+            href={tab.id === "community" ? "/community" : `/podcast?tab=${tab.id}`}
+            className={activeTab === tab.id ? "btn-primary !px-4 !py-2 text-sm" : "btn-secondary !px-4 !py-2 text-sm"}
+          >
             {tab.label}
           </Link>
         ))}

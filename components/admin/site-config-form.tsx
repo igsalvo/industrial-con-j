@@ -408,18 +408,15 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             <input checked={heroVideoEnabled} name="heroVideoEnabled" type="checkbox" onChange={(event) => setHeroVideoEnabled(event.target.checked)} />
             Activar video de fondo
           </label>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">URL del video de fondo</label>
-            <input
-              className="field"
-              name="heroVideoUrl"
-              type="text"
-              placeholder="URL del video (.mp4)"
-              value={heroVideoUrl}
-              onChange={(event) => setHeroVideoUrl(event.target.value)}
-            />
-            <p className="mt-2 text-xs text-[color:var(--muted)]">Usa una URL pública HTTPS terminada en .mp4. Si lo dejas vacío, se usará /hero-video.mp4.</p>
-          </div>
+          <UploadField
+            name="heroVideoUrl"
+            label="Video de fondo del hero"
+            value={heroVideoUrl}
+            onValueChange={setHeroVideoUrl}
+            accept="video/mp4"
+            uploadLabel="Subir video .mp4"
+            urlPlaceholder="URL del video (.mp4)"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

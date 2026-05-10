@@ -41,6 +41,8 @@ export function UploadField({
   name,
   label,
   defaultValue,
+  value: controlledValue,
+  onValueChange,
   accept = "image/*",
   uploadLabel,
   urlPlaceholder
@@ -48,16 +50,24 @@ export function UploadField({
   name: string;
   label: string;
   defaultValue?: string | null;
+  value?: string;
+  onValueChange?: (value: string) => void;
   accept?: string;
   uploadLabel?: string;
   urlPlaceholder?: string;
 }) {
-  const [value, setValue] = useState(defaultValue || "");
+  const [internalValue, setInternalValue] = useState(defaultValue || "");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const inputId = useId();
+  const value = controlledValue ?? internalValue;
   const previewKind = useMemo(() => getPreviewKind(value), [value]);
   const youtubeEmbedUrl = useMemo(() => (value ? getYouTubeEmbedUrl(value) : null), [value]);
+
+  function updateValue(nextValue: string) {
+    onValueChange?.(nextValue);
+    setInternalValue(nextValue);
+  }
 
   async function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -85,7 +95,7 @@ export function UploadField({
         return;
       }
 
-      setValue(body.url || "");
+      updateValue(body.url || "");
     } catch {
       setError("No se pudo subir el archivo.");
     } finally {
@@ -100,7 +110,7 @@ export function UploadField({
         className="field"
         name={name}
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => updateValue(event.target.value)}
         placeholder={urlPlaceholder || "https://..."}
       />
       <div className="flex flex-wrap items-center gap-3">

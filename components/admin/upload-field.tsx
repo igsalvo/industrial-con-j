@@ -1,5 +1,6 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { useId, useMemo, useState } from "react";
 
 function getYouTubeEmbedUrl(url: string) {
@@ -61,6 +62,7 @@ export function UploadField({
   const [internalValue, setInternalValue] = useState(defaultValue || "");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const inputId = useId();
   const value = controlledValue ?? internalValue;
   const previewKind = useMemo(() => getPreviewKind(value), [value]);
@@ -79,27 +81,22 @@ export function UploadField({
 
     setUploading(true);
     setError("");
+    setProgress(0);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/admin/uploads", {
-        method: "POST",
-        body: formData
+      const blob = await upload(`industrial-con-j/${file.name}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/uploads",
+        multipart: file.size > 5 * 1024 * 1024,
+        onUploadProgress: ({ percentage }) => {
+          setProgress(percentage);
+        }
       });
 
-      const body = await response.json();
-
-      if (!response.ok) {
-        setError(body.error || "No se pudo subir el archivo.");
-        setUploading(false);
-        return;
-      }
-
-      updateValue(body.url || "");
-    } catch {
-      setError("No se pudo subir el archivo.");
+      updateValue(blob.url || "");
+    } catch (uploadError) {
+      const message = uploadError instanceof Error ? uploadError.message : "";
+      setError(message || "No se pudo subir el archivo. Revisa BLOB_READ_WRITE_TOKEN o intenta con un .mp4 más liviano.");
     } finally {
       setUploading(false);
     }
@@ -121,7 +118,9 @@ export function UploadField({
           {uploading ? "Subiendo..." : uploadLabel || "Subir archivo"}
         </label>
         <input id={inputId} type="file" accept={accept} className="hidden" onChange={onFileChange} />
-        <span className="text-xs text-[color:var(--muted)]">También puedes pegar una URL pública manualmente.</span>
+        <span className="text-xs text-[color:var(--muted)]">
+          {uploading ? `${Math.round(progress)}% subido` : "También puedes pegar una URL pública manualmente."}
+        </span>
       </div>
 
       {value ? (

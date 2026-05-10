@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ensureAdminApiSession } from "@/lib/auth";
 import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
@@ -165,6 +166,9 @@ export async function PATCH(request: Request) {
       ...siteConfigData
     }
   });
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin");
 
   return NextResponse.json(config);
 }

@@ -45,7 +45,8 @@ export function UploadField({
   onValueChange,
   accept = "image/*",
   uploadLabel,
-  urlPlaceholder
+  urlPlaceholder,
+  hint
 }: {
   name: string;
   label: string;
@@ -55,6 +56,7 @@ export function UploadField({
   accept?: string;
   uploadLabel?: string;
   urlPlaceholder?: string;
+  hint?: string;
 }) {
   const [internalValue, setInternalValue] = useState(defaultValue || "");
   const [error, setError] = useState("");
@@ -113,6 +115,7 @@ export function UploadField({
         onChange={(event) => updateValue(event.target.value)}
         placeholder={urlPlaceholder || "https://..."}
       />
+      {hint ? <p className="text-xs leading-5 text-[color:var(--muted)]">{hint}</p> : null}
       <div className="flex flex-wrap items-center gap-3">
         <label htmlFor={inputId} className="btn-secondary !px-4 !py-2 text-sm cursor-pointer">
           {uploading ? "Subiendo..." : uploadLabel || "Subir archivo"}

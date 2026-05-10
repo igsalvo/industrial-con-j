@@ -117,6 +117,15 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       </div>
       <textarea className="field min-h-24" name="shortDescription" placeholder="Resumen corto" defaultValue={episode?.shortDescription} required />
       <textarea className="field min-h-40" name="longDescription" placeholder="Descripción larga" defaultValue={episode?.longDescription} required />
+      <UploadField
+        name="thumbnailUrl"
+        label="Miniatura pública del episodio"
+        defaultValue={episode?.thumbnailUrl || ""}
+        accept="image/*"
+        uploadLabel="Subir miniatura"
+        urlPlaceholder="https://... o URL de imagen subida"
+        hint="Esta imagen reemplaza el logo en las tarjetas de episodios y en la página de detalle."
+      />
       <textarea className="field min-h-32" name="timestamps" placeholder="00:00 Intro" defaultValue={episode?.timestamps.join("\n")} />
       <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="spotifyUrl" placeholder="Spotify URL" defaultValue={episode?.spotifyUrl || ""} />
@@ -136,7 +145,6 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         />
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
-        <UploadField name="thumbnailUrl" label="Thumbnail del episodio" defaultValue={episode?.thumbnailUrl || ""} />
         <UploadField name="clipThumbnailUrl" label="Thumbnail del clip" defaultValue={episode?.clipThumbnailUrl || ""} />
         <input className="field" name="tags" placeholder="Lean, KPI, Operaciones" defaultValue={episode?.tags.join(", ")} />
       </div>

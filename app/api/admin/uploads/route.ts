@@ -22,10 +22,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const blob = await put(`industrial-con-j/${Date.now()}-${file.name}`, file, {
-    access: "public",
-    token: process.env.BLOB_READ_WRITE_TOKEN
-  });
+  try {
+    const blob = await put(`industrial-con-j/${Date.now()}-${file.name}`, file, {
+      access: "public",
+      token: process.env.BLOB_READ_WRITE_TOKEN
+    });
 
-  return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: blob.url });
+  } catch (error) {
+    console.error("File upload failed", error);
+    return NextResponse.json(
+      { error: "No se pudo subir el archivo. Revisa que BLOB_READ_WRITE_TOKEN este configurado correctamente." },
+      { status: 500 }
+    );
+  }
 }

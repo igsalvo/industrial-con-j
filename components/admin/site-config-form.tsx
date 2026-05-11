@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { UploadField } from "@/components/admin/upload-field";
+import { getYouTubeEmbedUrl } from "@/lib/youtube";
 
 type SiteConfigShape = {
   logoUrl: string | null;
@@ -202,6 +203,10 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       return true;
     }
 
+    if (getYouTubeEmbedUrl(normalized)) {
+      return true;
+    }
+
     if (normalized.startsWith("/")) {
       return /\.mp4(?:\?.*)?$/i.test(normalized);
     }
@@ -222,7 +227,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     const normalizedHeroVideoUrl = heroVideoUrl.trim();
 
     if (heroVideoEnabled && !isValidHeroVideoUrl(normalizedHeroVideoUrl)) {
-      setError("La URL del video debe ser HTTPS o local y terminar en .mp4.");
+      setError("La URL del video debe ser un .mp4 HTTPS/local o un enlace válido de YouTube.");
       setLoading(false);
       return;
     }
@@ -385,8 +390,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             onValueChange={setHeroVideoUrl}
             accept="video/mp4"
             uploadLabel="Subir video .mp4"
-            urlPlaceholder="URL del video (.mp4)"
-            hint="Puedes subir un archivo .mp4 o pegar una URL pública .mp4. Desactiva el checkbox para ocultarlo."
+            urlPlaceholder="URL .mp4 o link de YouTube"
+            hint="Puedes subir un archivo .mp4, pegar una URL pública .mp4 o usar un link de YouTube. Desactiva el checkbox para ocultarlo."
           />
         </div>
       </div>

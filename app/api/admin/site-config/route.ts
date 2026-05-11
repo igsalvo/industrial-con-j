@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { ensureAdminApiSession } from "@/lib/auth";
 import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
+import { getYouTubeEmbedUrl } from "@/lib/youtube";
 
 function toNullableString(value: unknown) {
   const normalized = typeof value === "string" ? value.trim() : "";
@@ -25,6 +26,10 @@ function toNumber(value: unknown, fallback: number) {
 
 function isValidHeroVideoUrl(value: string | null) {
   if (!value) {
+    return true;
+  }
+
+  if (getYouTubeEmbedUrl(value)) {
     return true;
   }
 
@@ -55,7 +60,7 @@ export async function PATCH(request: Request) {
   const heroVideoEnabled = payload.heroVideoEnabled === true;
 
   if (heroVideoEnabled && !isValidHeroVideoUrl(heroVideoUrl)) {
-    return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS o local terminado en .mp4." }, { status: 400 });
+    return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS/local .mp4 o un link válido de YouTube." }, { status: 400 });
   }
 
   const siteConfigData = {

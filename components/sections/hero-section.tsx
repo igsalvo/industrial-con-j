@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Podcast, Store } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { getYouTubeEmbedUrl } from "@/lib/youtube";
 
 function isPlayableHeroVideoUrl(value: string) {
   if (value.startsWith("/")) {
@@ -40,7 +41,9 @@ export function HeroSection({
   const secondaryHref = config.heroSecondaryCtaHref || "/events";
   const showVideo = Boolean(config.heroVideoEnabled);
   const configuredVideoUrl = config.heroVideoUrl?.trim();
-  const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : "/hero-video.mp4";
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(configuredVideoUrl);
+  const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : youtubeEmbedUrl ? null : "/hero-video.mp4";
+  const hasHeroMedia = showVideo && (youtubeEmbedUrl || videoUrl);
 
   return (
     <section className="shell py-10 md:py-16">
@@ -71,7 +74,17 @@ export function HeroSection({
           </div>
 
           <div>
-            {showVideo && videoUrl ? (
+            {showVideo && youtubeEmbedUrl ? (
+              <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
+                <iframe
+                  src={youtubeEmbedUrl}
+                  title="Video de Industrial con J"
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            ) : showVideo && videoUrl ? (
               <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
                 <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
                   <source src={videoUrl} type="video/mp4" />
@@ -82,7 +95,7 @@ export function HeroSection({
                 <img src={config.heroImageUrl} alt="Industrial con J" className="aspect-[4/3] h-full w-full object-cover" />
               </div>
             ) : null}
-            <div className={`grid gap-4 ${showVideo && videoUrl ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
+            <div className={`grid gap-4 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2`}>
               {config.showPodcastSection !== false ? (
                 <Link href="/podcast" className="card block p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]">
                   <Podcast className="text-[color:var(--accent)]" />

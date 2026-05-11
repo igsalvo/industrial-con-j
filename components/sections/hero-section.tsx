@@ -136,7 +136,7 @@ export function HeroSection({
                 <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-cover" />
               </div>
             ) : null}
-            <div className={`grid gap-3 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} sm:grid-cols-2 2xl:grid-cols-4`}>
+            <div className={`grid gap-3 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} grid-cols-2 2xl:grid-cols-4`}>
               {accessItems.map((item) => {
                 const { Icon } = item;
 
@@ -144,19 +144,15 @@ export function HeroSection({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.07] hover:shadow-lg hover:shadow-black/20"
+                    className="group flex min-h-20 flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-4 text-center transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.075] hover:shadow-lg hover:shadow-black/20"
                     aria-label={item.ariaLabel}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-[color:var(--accent)] transition group-hover:border-[color:var(--accent)]/40">
-                        <Icon size={19} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className={`block text-base leading-snug ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 600 }}>
-                          {item.label}
-                        </span>
-                      </span>
-                    </div>
+                    <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-[color:var(--accent)] transition group-hover:border-[color:var(--accent)]/45 group-hover:bg-[color:var(--accent-soft)]">
+                      <Icon size={18} />
+                    </span>
+                    <span className={`block text-sm leading-none md:text-base ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 650 }}>
+                      {item.label}
+                    </span>
                   </Link>
                 );
               })}

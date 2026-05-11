@@ -58,7 +58,6 @@ export function HeroSection({
       ? {
           href: "/podcast",
           label: "Podcast",
-          title: "Episodios",
           Icon: Podcast
         }
       : null,
@@ -66,7 +65,6 @@ export function HeroSection({
       ? {
           href: "/events",
           label: "Eventos",
-          title: "Calendario",
           Icon: CalendarDays,
           ariaLabel: "Ver eventos"
         }
@@ -75,7 +73,6 @@ export function HeroSection({
       ? {
           href: "/honor",
           label: "Alumni",
-          title: "Trayectorias",
           Icon: GraduationCap
         }
       : null,
@@ -83,7 +80,6 @@ export function HeroSection({
       ? {
           href: "/tiendiita",
           label: "TienDIIta",
-          title: "Productos",
           Icon: Store,
           keepLabel: true
         }
@@ -156,11 +152,8 @@ export function HeroSection({
                         <Icon size={19} />
                       </span>
                       <span className="min-w-0">
-                        <span className={`brand-kicker block text-[0.68rem] text-[color:var(--muted)] ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined}>
+                        <span className={`block text-base leading-snug ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 600 }}>
                           {item.label}
-                        </span>
-                        <span className="mt-1 block text-base leading-snug" style={{ fontWeight: 600 }}>
-                          {item.title}
                         </span>
                       </span>
                     </div>

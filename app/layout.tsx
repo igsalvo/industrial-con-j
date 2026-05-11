@@ -45,6 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <main>{children}</main>
             <SiteFooter
               showCommunityLink={siteConfig.showCommunityLink}
+              showIdentityLink={siteConfig.showIdentitySection}
               showDonationsLink={siteConfig.showDonationsSection}
               footerTitle={siteConfig.footerTitle}
               footerDescription={siteConfig.footerDescription}

@@ -2,11 +2,13 @@ import Link from "next/link";
 
 export function SiteFooter({
   showCommunityLink = true,
+  showIdentityLink = true,
   showDonationsLink = true,
   footerTitle = "Industrial con J",
   footerDescription = "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."
 }: {
   showCommunityLink?: boolean;
+  showIdentityLink?: boolean;
   showDonationsLink?: boolean;
   footerTitle?: string | null;
   footerDescription?: string | null;
@@ -25,7 +27,7 @@ export function SiteFooter({
           <Link href="/guests">Invitados</Link>
           <Link href="/sponsors">Sponsors</Link>
           <Link href="/events">Eventos</Link>
-          <Link href="/identity">Identidad</Link>
+          {showIdentityLink ? <Link href="/identity">Identidad</Link> : null}
           <Link href="/honor">Alumni</Link>
           <Link href="/tiendiita" className="notranslate" translate="no">TienDIIta</Link>
           {showDonationsLink ? <Link href="/donations">Donaciones</Link> : null}

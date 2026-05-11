@@ -128,10 +128,15 @@ export function ProductGrid({
             </div>
             {product.ctaText && product.ctaLink ? (
               <a className="btn-primary mt-5 w-full gap-2" href={product.ctaLink} target="_blank" rel="noreferrer">
-                {product.ctaText}
+                {["agregar al carrito", "comprar ahora", "comprar"].includes(product.ctaText.trim().toLowerCase()) ? "Consultar" : product.ctaText}
                 <ArrowUpRight size={15} />
               </a>
-            ) : null}
+            ) : (
+              <Link className="btn-secondary mt-5 w-full gap-2" href="/contact">
+                Consultar
+                <ArrowUpRight size={15} />
+              </Link>
+            )}
           </div>
         </article>
       ))}

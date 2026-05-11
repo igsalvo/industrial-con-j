@@ -43,7 +43,7 @@ async function main() {
       showCommunityLink: true,
       showDonationsSection: true,
       showSponsorBanner: true,
-      sponsorBannerTitle: "Auspiciadores",
+      sponsorBannerTitle: "Aliados",
       heroEyebrow: "Comunidad industrial en movimiento",
       heroTitle: "Contenido, eventos y comunidad de",
       heroTitleAccent: "Industrial con J",
@@ -64,9 +64,9 @@ async function main() {
       latestEpisodesTitle: "Conversaciones aplicadas a operaciones",
       latestEpisodesDescription: "Desde mejora continua hasta transformacion digital, con invitados del mundo industrial.",
       latestEpisodesOrder: 2,
-      sponsorsSectionEyebrow: "Sponsors",
-      sponsorsSectionTitle: "Marcas alineadas con la industria",
-      sponsorsSectionDescription: "Espacio para patrocinadores destacados y oportunidades de partnership por episodio.",
+      sponsorsSectionEyebrow: "Aliados",
+      sponsorsSectionTitle: "Aliados de Industrial con J",
+      sponsorsSectionDescription: "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.",
       sponsorsSectionOrder: 3,
       donationsSectionEyebrow: "Donaciones",
       donationsSectionTitle: "Apoya nuevas conversaciones industriales",
@@ -91,7 +91,7 @@ async function main() {
       honorSectionOrder: 7,
       productsSectionEyebrow: "TienDIIta CEIN",
       productsSectionTitle: "Catálogo simple",
-      productsSectionDescription: "Productos administrables para consultar o reservar sin carrito ni pagos.",
+      productsSectionDescription: "Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial.",
       productsSectionOrder: 8,
       eventsSectionEyebrow: "Eventos",
       eventsSectionTitle: "Próximas actividades",
@@ -106,14 +106,14 @@ async function main() {
       contactPageDescription: "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
       communityPageEyebrow: "Comunidad",
       communityPageTitle: "Encuestas, preguntas y contacto",
-      communityPageDescription: "Participa en preguntas generales o asociadas a capitulos especificos. Los comentarios quedan en la bandeja del administrador.",
+      communityPageDescription: "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad.",
       communityEmptyTitle: "No hay encuestas activas",
-      communityEmptyDescription: "Publica una encuesta desde el administrador para mostrarla aqui.",
+      communityEmptyDescription: "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad.",
       communityContactTitle: "Contáctanos",
       communityContactDescription: "Deja tu comentario e información de contacto para responderte después.",
       communityContactSubmitLabel: "Enviar comentario",
       donationsContactTitle: "Dejar datos para donar",
-      donationsContactDescription: "Completa el formulario y quedara en la bandeja del administrador para responderte.",
+      donationsContactDescription: "Déjanos tus datos y cuéntanos cómo te gustaría colaborar. Nos pondremos en contacto contigo para coordinar los próximos pasos.",
       donationsContactSubmitLabel: "Enviar datos",
       episodesPageEyebrow: "Archivo",
       episodesPageTitle: "Todos los episodios",
@@ -121,9 +121,9 @@ async function main() {
       guestsPageEyebrow: "Invitados",
       guestsPageTitle: "Personas que construyen industria",
       guestsPageDescription: "Perfiles, empresas, enlaces sociales y episodios donde participan.",
-      sponsorsPageEyebrow: "Sponsors",
-      sponsorsPageTitle: "Aliados comerciales del podcast",
-      sponsorsPageDescription: "Grid de logos, links de salida y sponsor destacado por episodio.",
+      sponsorsPageEyebrow: "Aliados",
+      sponsorsPageTitle: "Aliados de Industrial con J",
+      sponsorsPageDescription: "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.",
       footerTitle: "Industrial con J",
       footerDescription: "Contenido para lideres de operaciones, ingenieria industrial y equipos que quieren escalar sistemas reales."
     }
@@ -169,7 +169,7 @@ async function main() {
     prisma.identityItem.deleteMany({ where: { title: { in: ["Proposito Industrial con J", "Vision Industrial con J", "Mision Industrial con J", "Valores Industrial con J"] } } }),
     prisma.honorMember.deleteMany({ where: { name: "Comunidad Industrial" } }),
     prisma.event.deleteMany({ where: { title: { in: ["Encuentro comunidad industrial", "Taller de operaciones"] } } }),
-    prisma.participationItem.deleteMany({ where: { title: { in: ["Donar al proyecto", "Auspiciar episodios", "Sumarse a la comunidad"] } } }),
+    prisma.participationItem.deleteMany({ where: { title: { in: ["Donar al proyecto", "Alianzas para episodios", "Sumarse a la comunidad"] } } }),
     prisma.product.deleteMany({ where: { slug: { in: ["polera-industrial-con-j", "sticker-pack-cein"] } } })
   ]);
 
@@ -232,7 +232,7 @@ async function main() {
   await prisma.participationItem.createMany({
     data: [
       { title: "Donar al proyecto", description: "Apoya la produccion de nuevos episodios y recursos.", type: "DONATION", icon: "donation", ctaText: "Contactar", ctaLink: "/contact", order: 1 },
-      { title: "Auspiciar episodios", description: "Conecta tu marca con una audiencia industrial concreta.", type: "SPONSORSHIP", icon: "sponsorship", ctaText: "Proponer auspicio", ctaLink: "/contact", order: 2 },
+      { title: "Alianzas para episodios", description: "Conecta tu marca con una audiencia industrial concreta.", type: "SPONSORSHIP", icon: "sponsorship", ctaText: "Conversemos", ctaLink: "/contact", order: 2 },
       { title: "Sumarse a la comunidad", description: "Participa en encuestas, preguntas y futuras actividades.", type: "PARTICIPATION", icon: "participation", ctaText: "Ir a comunidad", ctaLink: "/community", order: 3 }
     ]
   });

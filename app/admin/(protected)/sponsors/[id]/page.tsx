@@ -11,7 +11,7 @@ export default async function AdminSponsorDetailPage({ params }: { params: Promi
       <MvpPlaceholder
         eyebrow="Admin"
         title="Falta conectar la base de datos"
-        description="Para editar sponsors desde el panel necesitas configurar DATABASE_URL en Vercel y en tu entorno local."
+        description="Para editar aliados desde el panel necesitas configurar DATABASE_URL en Vercel y en tu entorno local."
       />
     );
   }
@@ -28,11 +28,11 @@ export default async function AdminSponsorDetailPage({ params }: { params: Promi
       <div className="card p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="pill">Sponsors</p>
-            <h1 className="mt-4 text-4xl font-black">Editar sponsor</h1>
+            <p className="pill">Aliados</p>
+            <h1 className="mt-4 text-4xl font-black">Editar aliado</h1>
           </div>
           <Link href="/admin/sponsors" className="btn-secondary !px-4 !py-2 text-sm">
-            Volver a sponsors
+            Volver a aliados
           </Link>
         </div>
       </div>

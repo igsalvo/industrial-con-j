@@ -50,7 +50,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             <ExternalLink size={14} />
           </Link>
         </div>
-        {episode.sponsor ? <p className="mt-3 text-xs text-[color:var(--muted)]">Sponsor: {episode.sponsor.name}</p> : null}
+        {episode.sponsor ? <p className="mt-3 text-xs text-[color:var(--muted)]">Aliado: {episode.sponsor.name}</p> : null}
       </div>
     </article>
   );

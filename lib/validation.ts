@@ -214,6 +214,19 @@ export const eventInputSchema = z.object({
   isVisible: z.boolean().default(true)
 });
 
+export const mediaItemInputSchema = z.object({
+  section: z.string().trim().min(1),
+  src: z.string().trim().min(1, "Sube una imagen o pega una URL."),
+  alt: z.string().trim().min(1),
+  label: z.string().trim().optional().or(z.literal("")),
+  href: optionalUrl,
+  positionX: z.enum(["left", "center", "right"]).default("center"),
+  positionY: z.enum(["top", "center", "bottom"]).default("center"),
+  order: z.coerce.number().int().default(0),
+  isFeatured: z.boolean().default(false),
+  isVisible: z.boolean().default(true)
+});
+
 export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
   return {
     name: input.name,
@@ -352,6 +365,21 @@ export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
     ctaText: input.ctaText || undefined,
     ctaLink: input.ctaLink,
     order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toMediaItemPayload(input: z.infer<typeof mediaItemInputSchema>) {
+  return {
+    section: input.section,
+    src: input.src,
+    alt: input.alt,
+    label: input.label || undefined,
+    href: input.href,
+    positionX: input.positionX,
+    positionY: input.positionY,
+    order: input.order,
+    isFeatured: input.isFeatured,
     isVisible: input.isVisible
   };
 }

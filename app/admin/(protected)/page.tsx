@@ -52,7 +52,7 @@ export default async function AdminDashboardPage() {
         <p className="pill">Admin</p>
         <h1 className="mt-4 text-4xl font-black">Panel de gestión</h1>
         <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-          El acceso administrativo ya está activo. Ahora puedes gestionar episodios, invitados, sponsors y encuestas desde el mismo panel.
+          El acceso administrativo ya está activo. Ahora puedes gestionar episodios, invitados, aliados y encuestas desde el mismo panel.
         </p>
       </div>
 
@@ -82,8 +82,8 @@ export default async function AdminDashboardPage() {
             href: "/admin/guests"
           },
           {
-            title: "Sponsors",
-            text: "Crear, editar y eliminar sponsors.",
+            title: "Aliados",
+            text: "Crear, editar y organizar aliados.",
             href: "/admin/sponsors"
           },
           {
@@ -203,13 +203,13 @@ export default async function AdminDashboardPage() {
             <div className="card p-8">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <p className="pill">Sponsors y encuestas</p>
+                  <p className="pill">Aliados y encuestas</p>
                   <h2 className="mt-4 text-2xl font-black">Modulos activos</h2>
                 </div>
               </div>
               <div className="mt-6 grid gap-3">
                 <Link href="/admin/sponsors" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
-                  <span className="font-semibold">Sponsors</span>
+                  <span className="font-semibold">Aliados</span>
                   <span className="text-xs text-[color:var(--muted)]">{sponsors.length} registros</span>
                 </Link>
                 <Link href="/admin/surveys" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">

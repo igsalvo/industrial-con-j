@@ -18,12 +18,12 @@ export const defaultSiteConfig = {
   showContactLink: true,
   showDonationsSection: true,
   showSponsorBanner: true,
-  sponsorBannerTitle: "Auspiciadores",
+  sponsorBannerTitle: "Aliados",
   heroEyebrow: "Comunidad industrial en movimiento",
-  heroTitle: "Contenido, eventos y comunidad de",
-  heroTitleAccent: "Industrial con J",
-  heroDescription: "Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial.",
-  heroPrimaryCtaLabel: "Explorar plataforma",
+  heroTitle: "Ingeniería Industrial se escribe con",
+  heroTitleAccent: "J",
+  heroDescription: "Un espacio para reunir historias, conversaciones, eventos e iniciativas que conectan a la comunidad de Ingeniería Industrial de la Universidad de Chile.",
+  heroPrimaryCtaLabel: "Explorar Industrial con J",
   heroPrimaryCtaHref: "/podcast",
   heroSecondaryCtaLabel: "Ver eventos",
   heroSecondaryCtaHref: "/events",
@@ -40,9 +40,9 @@ export const defaultSiteConfig = {
   latestEpisodesTitle: "Conversaciones aplicadas a operaciones",
   latestEpisodesDescription: "Desde mejora continua hasta transformación digital, con invitados del mundo industrial.",
   latestEpisodesOrder: 2,
-  sponsorsSectionEyebrow: "Sponsors",
-  sponsorsSectionTitle: "Marcas alineadas con la industria",
-  sponsorsSectionDescription: "Espacio para patrocinadores destacados y oportunidades de partnership por episodio.",
+  sponsorsSectionEyebrow: "Aliados",
+  sponsorsSectionTitle: "Aliados de Industrial con J",
+  sponsorsSectionDescription: "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.",
   sponsorsSectionOrder: 3,
   donationsSectionEyebrow: "Donaciones",
   donationsSectionTitle: "Apoya nuevas conversaciones industriales",
@@ -66,8 +66,8 @@ export const defaultSiteConfig = {
   honorSectionDescription: "Reconocimientos y perfiles destacados del ecosistema industrial.",
   honorSectionOrder: 7,
   productsSectionEyebrow: "TienDIIta CEIN",
-  productsSectionTitle: "Catálogo simple",
-  productsSectionDescription: "Productos administrables para consultar o reservar sin carrito ni pagos.",
+  productsSectionTitle: "Productos con identidad industrial",
+  productsSectionDescription: "Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial.",
   productsSectionOrder: 8,
   eventsSectionEyebrow: "Eventos",
   eventsSectionTitle: "Próximas actividades",
@@ -80,26 +80,26 @@ export const defaultSiteConfig = {
   contactPageEyebrow: "Contacto",
   contactPageTitle: "Contáctanos",
   contactPageDescription: "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
-  communityPageEyebrow: "Comunidad",
-  communityPageTitle: "Encuestas, preguntas y contacto",
-  communityPageDescription: "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador.",
-  communityEmptyTitle: "No hay encuestas activas",
-  communityEmptyDescription: "Publica una encuesta desde el administrador para mostrarla aquí.",
-  communityContactTitle: "Contáctanos",
-  communityContactDescription: "Deja tu comentario e información de contacto para responderte después.",
-  communityContactSubmitLabel: "Enviar comentario",
-  donationsContactTitle: "Dejar datos para donar",
-  donationsContactDescription: "Completa el formulario y quedará en la bandeja del administrador para responderte.",
-  donationsContactSubmitLabel: "Enviar datos",
-  episodesPageEyebrow: "Archivo",
-  episodesPageTitle: "Todos los episodios",
-  episodesPageDescription: "Explora el catálogo completo con lecturas limpias, links externos y relación entre invitados, tags e industrias.",
+  communityPageEyebrow: "COMUNIDAD",
+  communityPageTitle: "Participa en Industrial con J",
+  communityPageDescription: "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad.",
+  communityEmptyTitle: "No hay preguntas activas por ahora",
+  communityEmptyDescription: "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad.",
+  communityContactTitle: "Queremos escucharte",
+  communityContactDescription: "Déjanos tu comentario, idea o propuesta.",
+  communityContactSubmitLabel: "Enviar mensaje",
+  donationsContactTitle: "Donaciones y alianzas",
+  donationsContactDescription: "Déjanos tus datos y cuéntanos cómo te gustaría colaborar. Nos pondremos en contacto contigo para coordinar los próximos pasos.",
+  donationsContactSubmitLabel: "Quiero apoyar",
+  episodesPageEyebrow: "CONTENIDO",
+  episodesPageTitle: "Episodios",
+  episodesPageDescription: "Conversaciones con personas de la comunidad industrial sobre trayectorias, aprendizajes, decisiones y desafíos que conectan la ingeniería con el mundo real.",
   guestsPageEyebrow: "Invitados",
   guestsPageTitle: "Personas que construyen industria",
   guestsPageDescription: "Perfiles, empresas, enlaces sociales y episodios donde participan.",
-  sponsorsPageEyebrow: "Sponsors",
-  sponsorsPageTitle: "Aliados comerciales del podcast",
-  sponsorsPageDescription: "Grid de logos, links de salida y sponsor destacado por episodio.",
+  sponsorsPageEyebrow: "ALIADOS",
+  sponsorsPageTitle: "Aliados de Industrial con J",
+  sponsorsPageDescription: "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.",
   footerTitle: "Industrial con J",
   footerDescription: "Historias, conversaciones e iniciativas que conectan a la comunidad de Ingeniería Industrial."
 } as const;
@@ -140,6 +140,51 @@ export async function getSiteConfig() {
     return config;
   } catch {
     return defaultSiteConfig;
+  }
+}
+
+export type PublicMediaItem = {
+  id: string;
+  section: string;
+  src: string;
+  alt: string;
+  label: string | null;
+  href: string | null;
+  positionX: string;
+  positionY: string;
+  order: number;
+  isFeatured: boolean;
+};
+
+export async function getMediaItems(section: string): Promise<PublicMediaItem[]> {
+  if (!hasDatabase()) {
+    return [];
+  }
+
+  try {
+    return await prisma.mediaItem.findMany({
+      where: { section, isVisible: true },
+      orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function getMediaItemsBySections(sections: string[]) {
+  if (!hasDatabase() || sections.length === 0) {
+    return Object.fromEntries(sections.map((section) => [section, [] as PublicMediaItem[]]));
+  }
+
+  try {
+    const items = await prisma.mediaItem.findMany({
+      where: { section: { in: sections }, isVisible: true },
+      orderBy: [{ section: "asc" }, { order: "asc" }, { updatedAt: "desc" }]
+    });
+
+    return Object.fromEntries(sections.map((section) => [section, items.filter((item) => item.section === section)]));
+  } catch {
+    return Object.fromEntries(sections.map((section) => [section, [] as PublicMediaItem[]]));
   }
 }
 

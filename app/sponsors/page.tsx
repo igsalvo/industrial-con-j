@@ -9,12 +9,12 @@ export default async function SponsorsPage() {
   return (
     <section className="shell py-12">
       <SectionHeading
-        eyebrow={config.sponsorsPageEyebrow || "Sponsors"}
-        title={config.sponsorsPageTitle || "Aliados comerciales del podcast"}
-        description={config.sponsorsPageDescription || "Grid de logos, links de salida y sponsor destacado por episodio."}
+        eyebrow={config.sponsorsPageEyebrow || "ALIADOS"}
+        title={config.sponsorsPageTitle || "Aliados de Industrial con J"}
+        description={config.sponsorsPageDescription || "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial."}
       />
       {sponsors.length === 0 ? (
-        <EmptyState title="Aún no hay sponsors" description="El MVP deja este espacio listo para sumar aliados más adelante." />
+        <EmptyState title="Aún no hay aliados publicados" description="Pronto destacaremos a las organizaciones que impulsan esta comunidad." />
       ) : (
         <SponsorGrid sponsors={sponsors} />
       )}

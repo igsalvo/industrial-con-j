@@ -34,8 +34,8 @@ export default async function TiendiitaPage({
     <main className="shell space-y-8 py-10">
       <SectionHeading
         eyebrow={siteConfig.productsSectionEyebrow || "TienDIIta CEIN"}
-        title={siteConfig.productsSectionTitle || "Catálogo simple"}
-        description={siteConfig.productsSectionDescription || "Productos administrables para consultar o reservar sin carrito ni pagos."}
+        title={siteConfig.productsSectionTitle || "Productos con identidad industrial"}
+        description={siteConfig.productsSectionDescription || "Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial."}
       />
 
       <form className="card grid gap-4 p-5 md:grid-cols-[1fr_220px_180px_auto]">

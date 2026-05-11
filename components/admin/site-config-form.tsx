@@ -127,7 +127,7 @@ const sectionFields = [
   },
   {
     key: "sponsorsSection",
-    label: "Sponsors",
+    label: "Aliados",
     orderName: "sponsorsSectionOrder",
     eyebrowName: "sponsorsSectionEyebrow",
     titleName: "sponsorsSectionTitle",
@@ -358,7 +358,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showHeroSection", label: "Mostrar bienvenida", defaultChecked: config.showHeroSection },
     { name: "showFeaturedClips", label: "Mostrar shorts destacados", defaultChecked: config.showFeaturedClips },
     { name: "showLatestEpisodes", label: "Mostrar últimos episodios", defaultChecked: config.showLatestEpisodes },
-    { name: "showSponsorsSection", label: "Mostrar sección sponsors", defaultChecked: config.showSponsorsSection },
+    { name: "showSponsorsSection", label: "Mostrar sección aliados", defaultChecked: config.showSponsorsSection },
     { name: "showDonationsSection", label: "Mostrar Donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar sección invitados", defaultChecked: config.showGuestsSection },
     { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },
@@ -540,7 +540,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
         <div>
           <p className="pill">Páginas públicas</p>
           <h3 className="mt-3 text-2xl font-black">Textos editables</h3>
-          <p className="mt-2 text-sm text-[color:var(--muted)]">Estos textos controlan comunidad, donaciones, archivo, invitados, sponsors y footer.</p>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">Estos textos controlan comunidad, donaciones, archivo, invitados, aliados y footer.</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
@@ -575,15 +575,15 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
 
         <div className="grid gap-4 md:grid-cols-3">
           <div>
-            <label className="mb-2 block text-sm font-semibold">Sponsors eyebrow</label>
+            <label className="mb-2 block text-sm font-semibold">Aliados eyebrow</label>
             <input className="field" name="sponsorsPageEyebrow" defaultValue={config.sponsorsPageEyebrow || ""} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold">Sponsors título</label>
+            <label className="mb-2 block text-sm font-semibold">Aliados título</label>
             <input className="field" name="sponsorsPageTitle" defaultValue={config.sponsorsPageTitle || ""} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold">Sponsors descripción</label>
+            <label className="mb-2 block text-sm font-semibold">Aliados descripción</label>
             <textarea className="field min-h-24" name="sponsorsPageDescription" defaultValue={config.sponsorsPageDescription || ""} />
           </div>
         </div>

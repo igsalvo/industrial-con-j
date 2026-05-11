@@ -44,7 +44,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
               <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
                 <p>{formatDate(episode.publishedAt)}</p>
                 <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitados asociados"}</p>
-                <p>{episode.sponsor ? `Sponsor: ${episode.sponsor.name}` : "Sin sponsor"}</p>
+                <p>{episode.sponsor ? `Aliado: ${episode.sponsor.name}` : "Sin aliado"}</p>
               </div>
             </div>
           </div>

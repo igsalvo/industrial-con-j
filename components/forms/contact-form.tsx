@@ -80,13 +80,13 @@ export function ContactForm({
             <option value="">Motivo opcional</option>
             <option value="Consulta general">Consulta general</option>
             <option value="Invitados">Invitados</option>
-            <option value="Sponsors">Sponsors</option>
+            <option value="Aliados">Aliados</option>
             <option className="notranslate" translate="no" value="TienDIIta CEIN">TienDIIta CEIN</option>
             <option value="Donaciones">Donaciones</option>
           </select>
         ) : null}
         <input className="field" name="phone" placeholder="Teléfono opcional" />
-        <input className="field" name="company" placeholder="Empresa / institución opcional" />
+        <input className="field" name="company" placeholder="Organización / institución opcional" />
       </div>
 
       <textarea className="field min-h-32" name="message" placeholder="Comentario" required />

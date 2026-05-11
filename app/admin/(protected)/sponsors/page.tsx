@@ -10,7 +10,7 @@ export default async function AdminSponsorsPage() {
       <MvpPlaceholder
         eyebrow="Admin"
         title="Falta conectar la base de datos"
-        description="Para listar y editar sponsors desde el panel necesitas configurar DATABASE_URL en Vercel y en tu entorno local."
+        description="Para listar y editar aliados desde el panel necesitas configurar DATABASE_URL en Vercel y en tu entorno local."
       />
     );
   }
@@ -24,36 +24,36 @@ export default async function AdminSponsorsPage() {
       <div className="card p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="pill">Sponsors</p>
-            <h1 className="mt-4 text-4xl font-black">Gestionar sponsors</h1>
+            <p className="pill">Aliados</p>
+            <h1 className="mt-4 text-4xl font-black">Gestionar aliados</h1>
           </div>
           <Link href="/admin/sponsors/new" className="btn-primary !px-4 !py-2 text-sm">
-            Nuevo sponsor
+            Nuevo aliado
           </Link>
         </div>
       </div>
 
       <div className="card p-8">
         {sponsors.length === 0 ? (
-          <p className="text-sm text-[color:var(--muted)]">Todavía no hay sponsors en la base.</p>
+          <p className="text-sm text-[color:var(--muted)]">Todavía no hay aliados en la base.</p>
         ) : (
           <div className="space-y-3">
-            {sponsors.map((sponsor) => (
+            {sponsors.map((aliado) => (
               <Link
-                key={sponsor.id}
-                href={`/admin/sponsors/${sponsor.id}`}
+                key={aliado.id}
+                href={`/admin/sponsors/${aliado.id}`}
                 className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4"
               >
                 <div>
                   <div className="flex items-center gap-3">
-                    <p className="font-semibold">{sponsor.name}</p>
+                    <p className="font-semibold">{aliado.name}</p>
                     <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                      {sponsor.isVisible ? "Visible" : "Oculto"}
+                      {aliado.isVisible ? "Visible" : "Oculto"}
                     </span>
                   </div>
-                  <p className="text-xs text-[color:var(--muted)]">{sponsor.slug}</p>
+                  <p className="text-xs text-[color:var(--muted)]">{aliado.slug}</p>
                 </div>
-                <p className="text-xs text-[color:var(--muted)]">{formatDate(sponsor.updatedAt)}</p>
+                <p className="text-xs text-[color:var(--muted)]">{formatDate(aliado.updatedAt)}</p>
               </Link>
             ))}
           </div>

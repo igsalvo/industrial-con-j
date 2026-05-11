@@ -81,7 +81,7 @@ export async function PATCH(request: Request) {
     showContactLink: payload.showContactLink === true,
     showDonationsSection: payload.showDonationsSection === true,
     showSponsorBanner: payload.showSponsorBanner === true,
-    sponsorBannerTitle: toNullableString(payload.sponsorBannerTitle) || "Auspiciadores",
+    sponsorBannerTitle: toNullableString(payload.sponsorBannerTitle) || "Aliados",
     heroEyebrow: toNullableString(payload.heroEyebrow),
     heroTitle: toNullableString(payload.heroTitle),
     heroTitleAccent: toNullableString(payload.heroTitleAccent),

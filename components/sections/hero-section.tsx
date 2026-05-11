@@ -7,6 +7,7 @@ type AccessItem = {
   href: string;
   label: string;
   title: string;
+  description: string;
   Icon: LucideIcon;
   ariaLabel?: string;
   keepLabel?: boolean;
@@ -60,6 +61,8 @@ export function HeroSection({
       ? {
           href: "/podcast",
           label: "Podcast",
+          title: "Podcast",
+          description: "Conversaciones con voces de la comunidad industrial.",
           Icon: Podcast
         }
       : null,
@@ -67,6 +70,8 @@ export function HeroSection({
       ? {
           href: "/events",
           label: "Eventos",
+          title: "Eventos",
+          description: "Encuentros y actividades para reunirnos.",
           Icon: CalendarDays,
           ariaLabel: "Ver eventos"
         }
@@ -75,6 +80,8 @@ export function HeroSection({
       ? {
           href: "/honor",
           label: "Alumni",
+          title: "Alumni",
+          description: "Trayectorias que inspiran al Círculo de Honor.",
           Icon: GraduationCap
         }
       : null,
@@ -82,6 +89,8 @@ export function HeroSection({
       ? {
           href: "/tiendiita",
           label: "TienDIIta",
+          title: "Tiendita",
+          description: "Productos con identidad industrial.",
           Icon: Store,
           keepLabel: true
         }
@@ -94,17 +103,17 @@ export function HeroSection({
         <div className="relative z-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr] xl:items-center">
           <div className="max-w-3xl xl:pr-2">
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
-            <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 600 }}>
-              {config.heroTitle || "Contenido, eventos y comunidad de"}{" "}
-              <span className="text-[color:var(--accent)]">{config.heroTitleAccent || "Industrial con J"}</span>
+            <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 650 }}>
+              {config.heroTitle || "Ingeniería Industrial se escribe con"}{" "}
+              <span className="text-[color:var(--accent)]">{config.heroTitleAccent || "J"}</span>
             </h1>
             <p className="text-content mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
               {config.heroDescription ||
-                "Un espacio para conectar ideas, personas, eventos, alumni, productos e iniciativas del ecosistema industrial."}
+                "Un espacio para reunir historias, conversaciones, eventos e iniciativas que conectan a la comunidad de Ingeniería Industrial de la Universidad de Chile."}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href={config.heroPrimaryCtaHref || "/podcast"} className="btn-primary gap-2">
-                {config.heroPrimaryCtaLabel || "Explorar plataforma"}
+                {config.heroPrimaryCtaLabel || "Explorar Industrial con J"}
                 <ArrowRight size={16} />
               </Link>
               <Link href={secondaryHref} className="btn-secondary">
@@ -152,7 +161,7 @@ export function HeroSection({
                 <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-cover" />
               </div>
             ) : null}
-            <div className={`grid gap-3 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} grid-cols-2 2xl:grid-cols-4`}>
+            <div className={`grid gap-3 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4`}>
               {accessItems.map((item) => {
                 const { Icon } = item;
 
@@ -160,7 +169,7 @@ export function HeroSection({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group flex min-h-20 flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-4 text-center transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.075] hover:shadow-lg hover:shadow-black/20"
+                    className="group flex min-h-28 flex-col rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.075] hover:shadow-lg hover:shadow-black/20"
                     aria-label={item.ariaLabel}
                   >
                     <span className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-[color:var(--accent)] transition group-hover:border-[color:var(--accent)]/45 group-hover:bg-[color:var(--accent-soft)]">
@@ -169,6 +178,8 @@ export function HeroSection({
                     <span className={`block text-sm leading-none md:text-base ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 650 }}>
                       {item.label}
                     </span>
+                    <span className="mt-2 block text-xs leading-5 text-[color:var(--muted)]">{item.description}</span>
+                    <ArrowRight className="mt-auto text-[color:var(--accent)] opacity-70 transition group-hover:translate-x-1 group-hover:opacity-100" size={15} />
                   </Link>
                 );
               })}

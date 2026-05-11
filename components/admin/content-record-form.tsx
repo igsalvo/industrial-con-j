@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UploadField } from "@/components/admin/upload-field";
 
 type Field =
-  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }> };
+  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
 
 type ContentRecordFormProps = {
   mode: "create" | "edit";
@@ -94,7 +94,7 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
           if (field.type === "checkbox") {
             return (
               <label key={field.name} className="card flex items-center gap-3 p-4 text-sm font-medium">
-                <input defaultChecked={Boolean(record?.[field.name] ?? true)} name={field.name} type="checkbox" />
+                <input defaultChecked={Boolean(record?.[field.name] ?? field.defaultChecked ?? true)} name={field.name} type="checkbox" />
                 {field.label}
               </label>
             );

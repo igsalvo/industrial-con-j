@@ -9,12 +9,13 @@ import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorGrid } from "@/components/ui/sponsor-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
+import { Lightbulb, Mic2, MessageCircle } from "lucide-react";
 
 const tabs = [
   { id: "episodes", label: "Episodios" },
   { id: "guests", label: "Invitados" },
   { id: "community", label: "Comunidad" },
-  { id: "sponsors", label: "Sponsors" }
+  { id: "sponsors", label: "Aliados" }
 ] as const;
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
@@ -52,15 +53,15 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
     },
     community: {
       eyebrow: siteConfig.communityPageEyebrow || "Comunidad",
-      title: siteConfig.communityPageTitle || "Encuestas, preguntas y contacto",
+      title: siteConfig.communityPageTitle || "Participa en Industrial con J",
       description:
         siteConfig.communityPageDescription ||
-        "Participa en preguntas generales o asociadas a capítulos específicos. Los comentarios quedan en la bandeja del administrador."
+        "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad."
     },
     sponsors: {
-      eyebrow: siteConfig.sponsorsPageEyebrow || "Sponsors",
-      title: siteConfig.sponsorsPageTitle || "Aliados comerciales del podcast",
-      description: siteConfig.sponsorsPageDescription || "Grid de logos, links de salida y sponsor destacado por episodio."
+      eyebrow: siteConfig.sponsorsPageEyebrow || "ALIADOS",
+      title: siteConfig.sponsorsPageTitle || "Aliados de Industrial con J",
+      description: siteConfig.sponsorsPageDescription || "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial."
     }
   } as const;
   const heading = headings[activeTab as keyof typeof headings];
@@ -126,16 +127,38 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       ) : null}
 
       {activeTab === "community" ? (
-        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <section className="grid gap-8 xl:grid-cols-[0.82fr_1fr_0.95fr]">
+          <aside className="card p-6">
+            <h2 className="text-2xl font-black">Espacios de participación</h2>
+            <div className="mt-5 space-y-4">
+              {[
+                { title: "Propón un tema", text: "Sugiere un tema que te gustaría que conversemos en el podcast.", icon: Lightbulb },
+                { title: "Sugiere un invitado", text: "Recomienda a alguien que aporte valor a nuestra audiencia.", icon: Mic2 },
+                { title: "Cuéntanos tu idea", text: "Comparte tu idea, proyecto o iniciativa con la comunidad.", icon: MessageCircle }
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article key={item.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
+                    <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
+                      <Icon size={18} />
+                    </div>
+                    <h3 className="font-bold">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-[color:var(--muted)]">{item.text}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </aside>
+
           <div className="space-y-6">
             {surveys.length === 0 ? (
               <div className="card p-8">
-                <h2 className="text-2xl font-bold">{siteConfig.communityEmptyTitle || "No hay encuestas activas"}</h2>
+                <h2 className="text-2xl font-bold">{siteConfig.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
                 <p className="text-content mt-3 text-sm text-[color:var(--muted)]">
-                  {siteConfig.communityEmptyDescription || "Publica una encuesta desde el administrador para mostrarla aquí."}
+                  {siteConfig.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}
                 </p>
                 <Link href="/podcast?tab=episodes" className="btn-secondary mt-5">
-                  Ver episodios
+                  Explorar episodios
                 </Link>
               </div>
             ) : (
@@ -157,9 +180,9 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
 
           <ContactForm
             type="CONTACT"
-            title={siteConfig.communityContactTitle || "Contáctanos"}
-            description={siteConfig.communityContactDescription || "Deja tu comentario e información de contacto para responderte después."}
-            submitLabel={siteConfig.communityContactSubmitLabel || "Enviar comentario"}
+            title={siteConfig.communityContactTitle || "Queremos escucharte"}
+            description={siteConfig.communityContactDescription || "Déjanos tu comentario, idea o propuesta."}
+            submitLabel={siteConfig.communityContactSubmitLabel || "Enviar mensaje"}
           />
         </section>
       ) : null}

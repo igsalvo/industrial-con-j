@@ -46,7 +46,7 @@ export function SponsorForm({
     const body = await response.json();
 
     if (!response.ok) {
-      setError(body.error || "No se pudo guardar el sponsor.");
+      setError(body.error || "No se pudo guardar el aliado.");
       return;
     }
 
@@ -55,7 +55,7 @@ export function SponsorForm({
   }
 
   async function onDelete() {
-    if (!sponsor || !window.confirm("Eliminar sponsor?")) {
+    if (!sponsor || !window.confirm("Eliminar aliado?")) {
       return;
     }
 
@@ -73,12 +73,12 @@ export function SponsorForm({
       <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="websiteUrl" placeholder="Website URL" defaultValue={sponsor?.websiteUrl} required />
         <UploadField name="logoUrl" label="Logo" defaultValue={sponsor?.logoUrl || ""} />
-        <input className="field" name="tier" placeholder="Gold / Silver / Partner" defaultValue={sponsor?.tier || ""} />
+        <input className="field" name="tier" placeholder="Gold / Silver / Media Partner / Comunidad / Colaborador" defaultValue={sponsor?.tier || ""} />
       </div>
       <textarea className="field min-h-32" name="description" placeholder="Descripción" defaultValue={sponsor?.description || ""} />
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={sponsor?.isFeatured} name="isFeatured" type="checkbox" />
-        Sponsor destacado
+        Aliado destacado
       </label>
       <label className="card flex items-center gap-3 p-4 text-sm font-medium">
         <input defaultChecked={sponsor?.isVisible ?? true} name="isVisible" type="checkbox" />
@@ -87,7 +87,7 @@ export function SponsorForm({
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">
         <button className="btn-primary" type="submit">
-          {mode === "create" ? "Crear sponsor" : "Guardar cambios"}
+          {mode === "create" ? "Crear aliado" : "Guardar cambios"}
         </button>
         {mode === "edit" ? (
           <button className="btn-secondary" type="button" onClick={onDelete}>

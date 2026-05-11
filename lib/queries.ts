@@ -101,7 +101,7 @@ export const defaultSiteConfig = {
   sponsorsPageTitle: "Aliados comerciales del podcast",
   sponsorsPageDescription: "Grid de logos, links de salida y sponsor destacado por episodio.",
   footerTitle: "Industrial con J",
-  footerDescription: "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."
+  footerDescription: "Historias, conversaciones e iniciativas que conectan a la comunidad de Ingeniería Industrial."
 } as const;
 
 export const publicEpisodeInclude = {

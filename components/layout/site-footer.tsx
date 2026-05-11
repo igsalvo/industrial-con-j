@@ -3,18 +3,22 @@ import { Building2, Contact, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export function SiteFooter({
   footerTitle = "Industrial con J",
-  footerDescription = "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."
+  footerDescription = "Historias, conversaciones e iniciativas que conectan a la comunidad de Ingeniería Industrial."
 }: {
   footerTitle?: string | null;
   footerDescription?: string | null;
 }) {
+  const legacyFooterDescription = "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales.";
+  const currentFooterDescription = "Historias, conversaciones e iniciativas que conectan a la comunidad de Ingeniería Industrial.";
+  const resolvedFooterDescription = !footerDescription || footerDescription === legacyFooterDescription ? currentFooterDescription : footerDescription;
+
   return (
     <footer className="border-t border-[color:var(--line)] py-10">
       <div className="shell flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>{footerTitle || "Industrial con J"}</p>
           <p className="mt-2 max-w-xl text-sm text-[color:var(--muted)]">
-            {footerDescription || "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."}
+            {resolvedFooterDescription}
           </p>
         </div>
 

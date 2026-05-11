@@ -94,19 +94,28 @@ export function SiteHeader({
 
         {!isAdminRoute ? (
           <nav className="hidden items-center gap-6 lg:flex">
-            {visibleLinks.map((link: { href: string; label: string }) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-base transition hover:text-[color:var(--foreground)] ${
-                  "cta" in link && link.cta ? "rounded-full bg-[color:var(--accent)] px-4 py-2 font-semibold text-white shadow-[0_10px_26px_rgba(215,9,4,0.2)] hover:text-white" : "text-[color:var(--muted)]"
-                } ${link.label === "TienDIIta" ? "notranslate" : ""}`}
-                translate={link.label === "TienDIIta" ? "no" : undefined}
-                style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {visibleLinks.map((link) => {
+              const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-base transition hover:text-[color:var(--foreground)] ${
+                    "cta" in link && link.cta
+                      ? "rounded-full bg-[color:var(--accent)] px-4 py-2 font-semibold text-white shadow-[0_10px_26px_rgba(215,9,4,0.2)] hover:text-white"
+                      : isActive
+                        ? "text-[color:var(--foreground)]"
+                        : "text-[color:var(--muted)]"
+                  } ${link.label === "TienDIIta" ? "notranslate" : ""}`}
+                  translate={link.label === "TienDIIta" ? "no" : undefined}
+                  aria-current={isActive ? "page" : undefined}
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         ) : null}
 
@@ -140,18 +149,27 @@ export function SiteHeader({
         <div className="border-t border-[color:var(--line)] bg-[color:var(--surface)] lg:hidden">
           <div className="shell space-y-4 py-4">
             <nav className="grid grid-cols-2 gap-2">
-              {visibleLinks.map((link: { href: string; label: string }) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`rounded-2xl border border-[color:var(--line)] px-4 py-3 text-center text-sm font-semibold transition hover:border-[color:var(--accent)] ${
-                    "cta" in link && link.cta ? "bg-[color:var(--accent)] text-white" : "bg-[color:var(--surface-strong)] text-[color:var(--foreground)]"
-                  } ${link.label === "TienDIIta" ? "notranslate" : ""}`}
-                  translate={link.label === "TienDIIta" ? "no" : undefined}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {visibleLinks.map((link) => {
+                const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition hover:border-[color:var(--accent)] ${
+                      "cta" in link && link.cta
+                        ? "border-[color:var(--accent)] bg-[color:var(--accent)] text-white"
+                        : isActive
+                          ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--foreground)]"
+                          : "border-[color:var(--line)] bg-[color:var(--surface-strong)] text-[color:var(--foreground)]"
+                    } ${link.label === "TienDIIta" ? "notranslate" : ""}`}
+                    translate={link.label === "TienDIIta" ? "no" : undefined}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="flex flex-wrap items-center gap-3">

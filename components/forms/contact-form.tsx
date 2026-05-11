@@ -1,5 +1,6 @@
 "use client";
 
+import { Send } from "lucide-react";
 import { useState } from "react";
 
 type ContactFormProps = {
@@ -9,6 +10,8 @@ type ContactFormProps = {
   submitLabel?: string;
   showSubject?: boolean;
   showMotive?: boolean;
+  hideHeader?: boolean;
+  className?: string;
 };
 
 export function ContactForm({
@@ -17,7 +20,9 @@ export function ContactForm({
   description = "¿Tienes una idea, propuesta o quieres ser parte? Escríbenos y conversemos.",
   submitLabel = "Enviar",
   showSubject = false,
-  showMotive = false
+  showMotive = false,
+  hideHeader = false,
+  className = ""
 }: ContactFormProps) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -57,12 +62,14 @@ export function ContactForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="card space-y-5 p-6">
-      <div>
-        <p className="pill">{type === "DONATION" ? "Donaciones" : "Contacto"}</p>
-        <h3 className="mt-4 text-2xl font-bold">{title}</h3>
-        <p className="mt-2 text-sm text-[color:var(--muted)]">{description}</p>
-      </div>
+    <form onSubmit={onSubmit} className={`card space-y-5 p-6 ${className}`}>
+      {!hideHeader ? (
+        <div>
+          <p className="pill">{type === "DONATION" ? "Donaciones" : "Contacto"}</p>
+          <h3 className="mt-4 text-2xl font-bold">{title}</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">{description}</p>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <input className="field" name="name" placeholder="Nombre" required />
@@ -79,13 +86,14 @@ export function ContactForm({
           </select>
         ) : null}
         <input className="field" name="phone" placeholder="Teléfono opcional" />
-        <input className="field" name="company" placeholder="Empresa / institucion opcional" />
+        <input className="field" name="company" placeholder="Empresa / institución opcional" />
       </div>
 
       <textarea className="field min-h-32" name="message" placeholder="Comentario" required />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <button type="submit" className="btn-primary" disabled={status === "submitting"}>
+        <button type="submit" className="btn-primary gap-2" disabled={status === "submitting"}>
+          <Send size={17} />
           {status === "submitting" ? "Enviando..." : submitLabel}
         </button>
         {message ? <p className={`text-sm ${status === "error" ? "text-red-500" : "text-[color:var(--muted)]"}`}>{message}</p> : null}

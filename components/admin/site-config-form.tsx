@@ -331,8 +331,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     void fetch("/api/admin/site-config", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true
+      body: JSON.stringify(payload)
     })
       .then(async (response) => {
         const body = await response.json().catch(() => ({}));

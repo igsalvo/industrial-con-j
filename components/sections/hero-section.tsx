@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, GraduationCap, Podcast, Store, type LucideIcon } from "lucide-react";
+import { ArrowRight, CalendarDays, GraduationCap, Play, Podcast, Store, type LucideIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 
@@ -39,6 +39,7 @@ export function HeroSection({
     heroSecondaryCtaHref?: string | null;
     heroImageUrl?: string | null;
     heroVideoUrl?: string | null;
+    heroVideoPosterUrl?: string | null;
     heroVideoEnabled?: boolean;
     showPodcastSection?: boolean;
     showEventsSection?: boolean;
@@ -53,6 +54,7 @@ export function HeroSection({
   const youtubeEmbedUrl = getYouTubeEmbedUrl(configuredVideoUrl);
   const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : youtubeEmbedUrl ? null : "/hero-video.mp4";
   const hasHeroMedia = showVideo && (youtubeEmbedUrl || videoUrl);
+  const videoPosterUrl = config.heroVideoPosterUrl || config.heroImageUrl || undefined;
   const accessItems = ([
     config.showPodcastSection !== false
       ? {
@@ -89,7 +91,7 @@ export function HeroSection({
   return (
     <section className="shell py-10 md:py-16">
       <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-6 md:p-10 xl:p-12" style={{ background: "var(--hero)" }}>
-        <div className="relative z-10 grid gap-8 xl:grid-cols-[0.85fr_1.15fr] xl:items-center">
+        <div className="relative z-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr] xl:items-center">
           <div className="max-w-3xl xl:pr-2">
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
             <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 600 }}>
@@ -115,8 +117,22 @@ export function HeroSection({
           </div>
 
           <div className="min-w-0">
-            {showVideo && youtubeEmbedUrl ? (
-              <div className="aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-black shadow-2xl shadow-black/35 ring-1 ring-white/5">
+            {showVideo && youtubeEmbedUrl && videoPosterUrl ? (
+              <a
+                href={youtubeEmbedUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative block aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5"
+                aria-label="Ver video de Industrial con J en YouTube"
+              >
+                <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
+                <span className="absolute inset-0 bg-black/20 transition group-hover:bg-black/10" />
+                <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[color:var(--accent)] text-white shadow-2xl shadow-black/40 transition group-hover:scale-105">
+                  <Play size={28} fill="currentColor" />
+                </span>
+              </a>
+            ) : showVideo && youtubeEmbedUrl ? (
+              <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
                 <iframe
                   src={youtubeEmbedUrl}
                   title="Video de Industrial con J"
@@ -126,13 +142,13 @@ export function HeroSection({
                 />
               </div>
             ) : showVideo && videoUrl ? (
-              <div className="aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-black shadow-2xl shadow-black/35 ring-1 ring-white/5">
-                <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={config.heroImageUrl || undefined}>
+              <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
+                <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={videoPosterUrl}>
                   <source src={videoUrl} type="video/mp4" />
                 </video>
               </div>
             ) : config.heroImageUrl ? (
-              <div className="aspect-video w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-[color:var(--surface-strong)] shadow-2xl shadow-black/25 ring-1 ring-white/5">
+              <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-[color:var(--surface-strong)] shadow-2xl shadow-black/25 ring-1 ring-white/5">
                 <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-cover" />
               </div>
             ) : null}

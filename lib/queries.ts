@@ -29,6 +29,7 @@ export const defaultSiteConfig = {
   heroSecondaryCtaHref: "/events",
   heroImageUrl: null,
   heroVideoUrl: null,
+  heroVideoPosterUrl: null,
   heroVideoEnabled: false,
   heroOrder: 0,
   featuredClipsEyebrow: "Clips destacados",

@@ -33,6 +33,7 @@ type SiteConfigShape = {
   heroSecondaryCtaHref: string | null;
   heroImageUrl: string | null;
   heroVideoUrl: string | null;
+  heroVideoPosterUrl: string | null;
   heroVideoEnabled: boolean;
   heroOrder: number;
   featuredClipsEyebrow: string | null;
@@ -261,6 +262,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
       heroImageUrl: formData.get("heroImageUrl"),
       heroVideoUrl: normalizedHeroVideoUrl,
+      heroVideoPosterUrl: formData.get("heroVideoPosterUrl"),
       heroVideoEnabled,
       heroOrder: formData.get("heroOrder"),
       featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
@@ -393,6 +395,17 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             urlPlaceholder="URL .mp4 o link de YouTube"
             hint="Puedes subir un archivo .mp4, pegar una URL pública .mp4 o usar un link de YouTube. Desactiva el checkbox para ocultarlo."
           />
+          <div className="md:col-start-2">
+            <UploadField
+              name="heroVideoPosterUrl"
+              label="Portada del video"
+              defaultValue={config.heroVideoPosterUrl || ""}
+              accept="image/*"
+              uploadLabel="Subir portada"
+              urlPlaceholder="URL de imagen para la portada"
+              hint="Opcional. Se usa como imagen inicial del video. Para YouTube aparece como portada clickeable antes de reproducir."
+            />
+          </div>
         </div>
       </div>
 

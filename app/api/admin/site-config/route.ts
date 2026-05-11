@@ -92,6 +92,7 @@ export async function PATCH(request: Request) {
     heroSecondaryCtaHref: toNullableString(payload.heroSecondaryCtaHref),
     heroImageUrl: toNullableString(payload.heroImageUrl),
     heroVideoUrl,
+    heroVideoPosterUrl: toNullableString(payload.heroVideoPosterUrl),
     heroVideoEnabled,
     heroOrder: toNumber(payload.heroOrder, 0),
     featuredClipsEyebrow: toNullableString(payload.featuredClipsEyebrow),

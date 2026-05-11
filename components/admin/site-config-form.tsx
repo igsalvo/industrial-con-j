@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { UploadField } from "@/components/admin/upload-field";
 
@@ -191,8 +190,8 @@ const sectionFields = [
 ] as const;
 
 export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
-  const router = useRouter();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [heroVideoUrl, setHeroVideoUrl] = useState(config.heroVideoUrl || "");
   const [heroVideoEnabled, setHeroVideoEnabled] = useState(config.heroVideoEnabled);
@@ -219,6 +218,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     event.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
     const formData = new FormData(event.currentTarget);
     const normalizedHeroVideoUrl = heroVideoUrl.trim();
 
@@ -339,7 +339,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       return;
     }
 
-    router.refresh();
+    setSuccess("Cambios guardados.");
     setLoading(false);
   }
 
@@ -615,6 +615,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       </div>
 
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
+      {success ? <p className="text-sm font-semibold text-[color:var(--accent)]">{success}</p> : null}
 
       <button className="btn-primary" type="submit" disabled={loading}>
         {loading ? "Guardando..." : "Guardar portada"}

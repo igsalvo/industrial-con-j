@@ -216,7 +216,6 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
     setError("");
     setSuccess("");
     const formData = new FormData(event.currentTarget);
@@ -228,119 +227,127 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       return;
     }
 
-    const response = await fetch("/api/admin/site-config", {
+    const payload = {
+      logoUrl: formData.get("logoUrl"),
+      showPodcastSection: formData.get("showPodcastSection") === "on",
+      showHeroSection: formData.get("showHeroSection") === "on",
+      showFeaturedClips: formData.get("showFeaturedClips") === "on",
+      showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
+      showSponsorsSection: formData.get("showSponsorsSection") === "on",
+      showRecommendedSection: false,
+      showGuestsSection: formData.get("showGuestsSection") === "on",
+      showIdentitySection: formData.get("showIdentitySection") === "on",
+      showHonorSection: formData.get("showHonorSection") === "on",
+      showProductsSection: formData.get("showProductsSection") === "on",
+      showEventsSection: formData.get("showEventsSection") === "on",
+      showParticipationSection: formData.get("showParticipationSection") === "on",
+      showCommunityLink: formData.get("showCommunityLink") === "on",
+      showContactLink: formData.get("showContactLink") === "on",
+      showDonationsSection: formData.get("showDonationsSection") === "on",
+      showSponsorBanner: formData.get("showSponsorBanner") === "on",
+      sponsorBannerTitle: formData.get("sponsorBannerTitle"),
+      heroEyebrow: formData.get("heroEyebrow"),
+      heroTitle: formData.get("heroTitle"),
+      heroTitleAccent: formData.get("heroTitleAccent"),
+      heroDescription: formData.get("heroDescription"),
+      heroPrimaryCtaLabel: formData.get("heroPrimaryCtaLabel"),
+      heroPrimaryCtaHref: formData.get("heroPrimaryCtaHref"),
+      heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
+      heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
+      heroImageUrl: formData.get("heroImageUrl"),
+      heroVideoUrl: normalizedHeroVideoUrl,
+      heroVideoEnabled,
+      heroOrder: formData.get("heroOrder"),
+      featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
+      featuredClipsTitle: formData.get("featuredClipsTitle"),
+      featuredClipsDescription: formData.get("featuredClipsDescription"),
+      featuredClipsOrder: formData.get("featuredClipsOrder"),
+      latestEpisodesEyebrow: formData.get("latestEpisodesEyebrow"),
+      latestEpisodesTitle: formData.get("latestEpisodesTitle"),
+      latestEpisodesDescription: formData.get("latestEpisodesDescription"),
+      latestEpisodesOrder: formData.get("latestEpisodesOrder"),
+      sponsorsSectionEyebrow: formData.get("sponsorsSectionEyebrow"),
+      sponsorsSectionTitle: formData.get("sponsorsSectionTitle"),
+      sponsorsSectionDescription: formData.get("sponsorsSectionDescription"),
+      sponsorsSectionOrder: formData.get("sponsorsSectionOrder"),
+      donationsSectionEyebrow: formData.get("donationsSectionEyebrow"),
+      donationsSectionTitle: formData.get("donationsSectionTitle"),
+      donationsSectionDescription: formData.get("donationsSectionDescription"),
+      donationsSectionOrder: formData.get("donationsSectionOrder"),
+      donationUrl: formData.get("donationUrl"),
+      guestsSectionEyebrow: formData.get("guestsSectionEyebrow"),
+      guestsSectionTitle: formData.get("guestsSectionTitle"),
+      guestsSectionDescription: formData.get("guestsSectionDescription"),
+      guestsSectionOrder: formData.get("guestsSectionOrder"),
+      identitySectionEyebrow: formData.get("identitySectionEyebrow"),
+      identitySectionTitle: formData.get("identitySectionTitle"),
+      identitySectionDescription: formData.get("identitySectionDescription"),
+      identitySectionOrder: formData.get("identitySectionOrder"),
+      honorSectionEyebrow: formData.get("honorSectionEyebrow"),
+      honorSectionTitle: formData.get("honorSectionTitle"),
+      honorSectionDescription: formData.get("honorSectionDescription"),
+      honorSectionOrder: formData.get("honorSectionOrder"),
+      productsSectionEyebrow: formData.get("productsSectionEyebrow"),
+      productsSectionTitle: formData.get("productsSectionTitle"),
+      productsSectionDescription: formData.get("productsSectionDescription"),
+      productsSectionOrder: formData.get("productsSectionOrder"),
+      eventsSectionEyebrow: formData.get("eventsSectionEyebrow"),
+      eventsSectionTitle: formData.get("eventsSectionTitle"),
+      eventsSectionDescription: formData.get("eventsSectionDescription"),
+      eventsSectionOrder: formData.get("eventsSectionOrder"),
+      participationSectionEyebrow: formData.get("participationSectionEyebrow"),
+      participationSectionTitle: formData.get("participationSectionTitle"),
+      participationSectionDescription: formData.get("participationSectionDescription"),
+      participationSectionOrder: formData.get("participationSectionOrder"),
+      contactPageEyebrow: formData.get("contactPageEyebrow"),
+      contactPageTitle: formData.get("contactPageTitle"),
+      contactPageDescription: formData.get("contactPageDescription"),
+      communityPageEyebrow: formData.get("communityPageEyebrow"),
+      communityPageTitle: formData.get("communityPageTitle"),
+      communityPageDescription: formData.get("communityPageDescription"),
+      communityEmptyTitle: formData.get("communityEmptyTitle"),
+      communityEmptyDescription: formData.get("communityEmptyDescription"),
+      communityContactTitle: formData.get("communityContactTitle"),
+      communityContactDescription: formData.get("communityContactDescription"),
+      communityContactSubmitLabel: formData.get("communityContactSubmitLabel"),
+      donationsContactTitle: formData.get("donationsContactTitle"),
+      donationsContactDescription: formData.get("donationsContactDescription"),
+      donationsContactSubmitLabel: formData.get("donationsContactSubmitLabel"),
+      episodesPageEyebrow: formData.get("episodesPageEyebrow"),
+      episodesPageTitle: formData.get("episodesPageTitle"),
+      episodesPageDescription: formData.get("episodesPageDescription"),
+      guestsPageEyebrow: formData.get("guestsPageEyebrow"),
+      guestsPageTitle: formData.get("guestsPageTitle"),
+      guestsPageDescription: formData.get("guestsPageDescription"),
+      sponsorsPageEyebrow: formData.get("sponsorsPageEyebrow"),
+      sponsorsPageTitle: formData.get("sponsorsPageTitle"),
+      sponsorsPageDescription: formData.get("sponsorsPageDescription"),
+      footerTitle: formData.get("footerTitle"),
+      footerDescription: formData.get("footerDescription")
+    };
+
+    setSuccess("Guardando en segundo plano...");
+
+    void fetch("/api/admin/site-config", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        logoUrl: formData.get("logoUrl"),
-        showPodcastSection: formData.get("showPodcastSection") === "on",
-        showHeroSection: formData.get("showHeroSection") === "on",
-        showFeaturedClips: formData.get("showFeaturedClips") === "on",
-        showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
-        showSponsorsSection: formData.get("showSponsorsSection") === "on",
-        showRecommendedSection: false,
-        showGuestsSection: formData.get("showGuestsSection") === "on",
-        showIdentitySection: formData.get("showIdentitySection") === "on",
-        showHonorSection: formData.get("showHonorSection") === "on",
-        showProductsSection: formData.get("showProductsSection") === "on",
-        showEventsSection: formData.get("showEventsSection") === "on",
-        showParticipationSection: formData.get("showParticipationSection") === "on",
-        showCommunityLink: formData.get("showCommunityLink") === "on",
-        showContactLink: formData.get("showContactLink") === "on",
-        showDonationsSection: formData.get("showDonationsSection") === "on",
-        showSponsorBanner: formData.get("showSponsorBanner") === "on",
-        sponsorBannerTitle: formData.get("sponsorBannerTitle"),
-        heroEyebrow: formData.get("heroEyebrow"),
-        heroTitle: formData.get("heroTitle"),
-        heroTitleAccent: formData.get("heroTitleAccent"),
-        heroDescription: formData.get("heroDescription"),
-        heroPrimaryCtaLabel: formData.get("heroPrimaryCtaLabel"),
-        heroPrimaryCtaHref: formData.get("heroPrimaryCtaHref"),
-        heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
-        heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
-        heroImageUrl: formData.get("heroImageUrl"),
-        heroVideoUrl: normalizedHeroVideoUrl,
-        heroVideoEnabled,
-        heroOrder: formData.get("heroOrder"),
-        featuredClipsEyebrow: formData.get("featuredClipsEyebrow"),
-        featuredClipsTitle: formData.get("featuredClipsTitle"),
-        featuredClipsDescription: formData.get("featuredClipsDescription"),
-        featuredClipsOrder: formData.get("featuredClipsOrder"),
-        latestEpisodesEyebrow: formData.get("latestEpisodesEyebrow"),
-        latestEpisodesTitle: formData.get("latestEpisodesTitle"),
-        latestEpisodesDescription: formData.get("latestEpisodesDescription"),
-        latestEpisodesOrder: formData.get("latestEpisodesOrder"),
-        sponsorsSectionEyebrow: formData.get("sponsorsSectionEyebrow"),
-        sponsorsSectionTitle: formData.get("sponsorsSectionTitle"),
-        sponsorsSectionDescription: formData.get("sponsorsSectionDescription"),
-        sponsorsSectionOrder: formData.get("sponsorsSectionOrder"),
-        donationsSectionEyebrow: formData.get("donationsSectionEyebrow"),
-        donationsSectionTitle: formData.get("donationsSectionTitle"),
-        donationsSectionDescription: formData.get("donationsSectionDescription"),
-        donationsSectionOrder: formData.get("donationsSectionOrder"),
-        donationUrl: formData.get("donationUrl"),
-        guestsSectionEyebrow: formData.get("guestsSectionEyebrow"),
-        guestsSectionTitle: formData.get("guestsSectionTitle"),
-        guestsSectionDescription: formData.get("guestsSectionDescription"),
-        guestsSectionOrder: formData.get("guestsSectionOrder"),
-        identitySectionEyebrow: formData.get("identitySectionEyebrow"),
-        identitySectionTitle: formData.get("identitySectionTitle"),
-        identitySectionDescription: formData.get("identitySectionDescription"),
-        identitySectionOrder: formData.get("identitySectionOrder"),
-        honorSectionEyebrow: formData.get("honorSectionEyebrow"),
-        honorSectionTitle: formData.get("honorSectionTitle"),
-        honorSectionDescription: formData.get("honorSectionDescription"),
-        honorSectionOrder: formData.get("honorSectionOrder"),
-        productsSectionEyebrow: formData.get("productsSectionEyebrow"),
-        productsSectionTitle: formData.get("productsSectionTitle"),
-        productsSectionDescription: formData.get("productsSectionDescription"),
-        productsSectionOrder: formData.get("productsSectionOrder"),
-        eventsSectionEyebrow: formData.get("eventsSectionEyebrow"),
-        eventsSectionTitle: formData.get("eventsSectionTitle"),
-        eventsSectionDescription: formData.get("eventsSectionDescription"),
-        eventsSectionOrder: formData.get("eventsSectionOrder"),
-        participationSectionEyebrow: formData.get("participationSectionEyebrow"),
-        participationSectionTitle: formData.get("participationSectionTitle"),
-        participationSectionDescription: formData.get("participationSectionDescription"),
-        participationSectionOrder: formData.get("participationSectionOrder"),
-        contactPageEyebrow: formData.get("contactPageEyebrow"),
-        contactPageTitle: formData.get("contactPageTitle"),
-        contactPageDescription: formData.get("contactPageDescription"),
-        communityPageEyebrow: formData.get("communityPageEyebrow"),
-        communityPageTitle: formData.get("communityPageTitle"),
-        communityPageDescription: formData.get("communityPageDescription"),
-        communityEmptyTitle: formData.get("communityEmptyTitle"),
-        communityEmptyDescription: formData.get("communityEmptyDescription"),
-        communityContactTitle: formData.get("communityContactTitle"),
-        communityContactDescription: formData.get("communityContactDescription"),
-        communityContactSubmitLabel: formData.get("communityContactSubmitLabel"),
-        donationsContactTitle: formData.get("donationsContactTitle"),
-        donationsContactDescription: formData.get("donationsContactDescription"),
-        donationsContactSubmitLabel: formData.get("donationsContactSubmitLabel"),
-        episodesPageEyebrow: formData.get("episodesPageEyebrow"),
-        episodesPageTitle: formData.get("episodesPageTitle"),
-        episodesPageDescription: formData.get("episodesPageDescription"),
-        guestsPageEyebrow: formData.get("guestsPageEyebrow"),
-        guestsPageTitle: formData.get("guestsPageTitle"),
-        guestsPageDescription: formData.get("guestsPageDescription"),
-        sponsorsPageEyebrow: formData.get("sponsorsPageEyebrow"),
-        sponsorsPageTitle: formData.get("sponsorsPageTitle"),
-        sponsorsPageDescription: formData.get("sponsorsPageDescription"),
-        footerTitle: formData.get("footerTitle"),
-        footerDescription: formData.get("footerDescription")
+      body: JSON.stringify(payload),
+      keepalive: true
+    })
+      .then(async (response) => {
+        const body = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(body.error || "No se pudo guardar la configuracion.");
+        }
+
+        setSuccess("Cambios guardados.");
       })
-    });
-
-    const body = await response.json();
-
-    if (!response.ok) {
-      setError(body.error || "No se pudo guardar la configuracion.");
-      setLoading(false);
-      return;
-    }
-
-    setSuccess("Cambios guardados.");
-    setLoading(false);
+      .catch((saveError) => {
+        setSuccess("");
+        setError(saveError instanceof Error ? saveError.message : "No se pudo guardar la configuracion.");
+      })
+      .finally(() => setLoading(false));
   }
 
   const toggles = [

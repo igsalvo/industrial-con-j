@@ -157,14 +157,19 @@ export async function PATCH(request: Request) {
     footerDescription: toNullableString(payload.footerDescription)
   };
 
-  const config = await prisma.siteConfig.upsert({
+  const result = await prisma.siteConfig.updateMany({
     where: { id: "default" },
-    update: siteConfigData,
-    create: {
-      id: "default",
-      ...siteConfigData
-    }
+    data: siteConfigData
   });
 
-  return NextResponse.json(config);
+  if (result.count === 0) {
+    await prisma.siteConfig.create({
+      data: {
+      id: "default",
+      ...siteConfigData
+      }
+    });
+  }
+
+  return NextResponse.json({ ok: true });
 }

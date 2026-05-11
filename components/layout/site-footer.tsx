@@ -1,15 +1,10 @@
 import Link from "next/link";
+import { Building2, Contact, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export function SiteFooter({
-  showCommunityLink = true,
-  showIdentityLink = true,
-  showDonationsLink = true,
   footerTitle = "Industrial con J",
   footerDescription = "Contenido para líderes de operaciones, ingeniería industrial y equipos que quieren escalar sistemas reales."
 }: {
-  showCommunityLink?: boolean;
-  showIdentityLink?: boolean;
-  showDonationsLink?: boolean;
   footerTitle?: string | null;
   footerDescription?: string | null;
 }) {
@@ -23,20 +18,26 @@ export function SiteFooter({
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-4 text-sm text-[color:var(--muted)]">
-          <Link href="/guests">Invitados</Link>
-          <Link href="/sponsors">Sponsors</Link>
-          <Link href="/events">Eventos</Link>
-          {showIdentityLink ? <Link href="/identity">Identidad</Link> : null}
-          <Link href="/honor">Alumni</Link>
-          <Link href="/tiendiita" className="notranslate" translate="no">TienDIIta</Link>
-          {showDonationsLink ? <Link href="/donations">Donaciones</Link> : null}
-          <Link href="/contact">Contacto</Link>
-          <a href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">
+        <div className="flex flex-wrap gap-3 text-sm text-[color:var(--muted)]">
+          <Link className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="/contact">
+            <Contact size={16} />
+            Contacto
+          </Link>
+          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">
+            <Instagram size={16} />
             Instagram
           </a>
-          <a href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all" target="_blank" rel="noreferrer">
+          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all" target="_blank" rel="noreferrer">
+            <Linkedin size={16} />
             LinkedIn
+          </a>
+          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.youtube.com/channel/UCIk3G6moIvN8JzMt4p1H5wQ" target="_blank" rel="noreferrer">
+            <Youtube size={16} />
+            YouTube
+          </a>
+          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.dii.uchile.cl/" target="_blank" rel="noreferrer">
+            <Building2 size={16} />
+            Sitio web ingeniería industrial
           </a>
         </div>
       </div>

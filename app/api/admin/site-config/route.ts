@@ -157,18 +157,26 @@ export async function PATCH(request: Request) {
     footerDescription: toNullableString(payload.footerDescription)
   };
 
-  const result = await prisma.siteConfig.updateMany({
-    where: { id: "default" },
-    data: siteConfigData
-  });
-
-  if (result.count === 0) {
-    await prisma.siteConfig.create({
-      data: {
-      id: "default",
-      ...siteConfigData
-      }
+  try {
+    const result = await prisma.siteConfig.updateMany({
+      where: { id: "default" },
+      data: siteConfigData
     });
+
+    if (result.count === 0) {
+      await prisma.siteConfig.create({
+        data: {
+          id: "default",
+          ...siteConfigData
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Site config save failed", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "No se pudo guardar la configuracion." },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ ok: true });

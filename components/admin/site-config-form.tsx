@@ -326,27 +326,24 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       footerDescription: formData.get("footerDescription")
     };
 
-    setSuccess("Guardando en segundo plano...");
+    setLoading(true);
+    setSuccess("");
 
-    void fetch("/api/admin/site-config", {
+    const response = await fetch("/api/admin/site-config", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
-    })
-      .then(async (response) => {
-        const body = await response.json().catch(() => ({}));
+    });
+    const body = await response.json().catch(() => ({}));
 
-        if (!response.ok) {
-          throw new Error(body.error || "No se pudo guardar la configuracion.");
-        }
+    if (!response.ok) {
+      setError(body.error || "No se pudo guardar la configuracion.");
+      setLoading(false);
+      return;
+    }
 
-        setSuccess("Cambios guardados.");
-      })
-      .catch((saveError) => {
-        setSuccess("");
-        setError(saveError instanceof Error ? saveError.message : "No se pudo guardar la configuracion.");
-      })
-      .finally(() => setLoading(false));
+    setSuccess("Cambios guardados.");
+    setLoading(false);
   }
 
   const toggles = [

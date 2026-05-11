@@ -15,7 +15,6 @@ const links = [
   { href: "/honor", label: "Alumni" },
   { href: "/tiendiita", label: "TienDIIta" },
   { href: "/donations", label: "Donaciones", cta: true },
-  { href: "/aliados", label: "Aliados" },
   { href: "/contact", label: "Contacto" }
 ];
 

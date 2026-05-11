@@ -17,6 +17,8 @@ export function GuestForm({
     company: string | null;
     role: string | null;
     profileImage: string | null;
+    profilePositionX?: string | null;
+    profilePositionY?: string | null;
     industries: string[];
     isVisible: boolean;
     socialLinks: unknown;
@@ -40,6 +42,8 @@ export function GuestForm({
         company: formData.get("company"),
         role: formData.get("role"),
         profileImage: formData.get("profileImage"),
+        profilePositionX: formData.get("profilePositionX"),
+        profilePositionY: formData.get("profilePositionY"),
         industries: formData.get("industries"),
         linkedin: formData.get("linkedin"),
         x: formData.get("x"),
@@ -80,6 +84,18 @@ export function GuestForm({
         <input className="field" name="company" placeholder="Empresa" defaultValue={guest?.company || ""} />
         <input className="field" name="role" placeholder="Cargo" defaultValue={guest?.role || ""} />
         <UploadField name="profileImage" label="Imagen de perfil" defaultValue={guest?.profileImage || ""} />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <select className="field" name="profilePositionX" defaultValue={guest?.profilePositionX || "center"}>
+          <option value="left">Encuadre horizontal: izquierda</option>
+          <option value="center">Encuadre horizontal: centro</option>
+          <option value="right">Encuadre horizontal: derecha</option>
+        </select>
+        <select className="field" name="profilePositionY" defaultValue={guest?.profilePositionY || "center"}>
+          <option value="top">Encuadre vertical: arriba</option>
+          <option value="center">Encuadre vertical: centro</option>
+          <option value="bottom">Encuadre vertical: abajo</option>
+        </select>
       </div>
       <input className="field" name="industries" placeholder="Manufacturing, Mining" defaultValue={guest?.industries.join(", ")} />
       <div className="grid gap-4 lg:grid-cols-3">

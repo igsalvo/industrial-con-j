@@ -14,6 +14,8 @@ type EpisodeCardProps = {
     tags: string[];
     publishedAt: Date;
     thumbnailUrl?: string | null;
+    thumbnailPositionX?: string | null;
+    thumbnailPositionY?: string | null;
     clipThumbnailUrl: string | null;
     guests: Array<{ id: string; name: string }>;
     sponsor: { name: string } | null;
@@ -22,11 +24,12 @@ type EpisodeCardProps = {
 
 export function EpisodeCard({ episode }: EpisodeCardProps) {
   const imageUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || episodePlaceholder;
+  const imagePosition = `${episode.thumbnailPositionX || "center"} ${episode.thumbnailPositionY || "center"}`;
 
   return (
     <article className="card overflow-hidden">
       <div className="relative h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64">
-        <Image src={imageUrl} alt={episode.title} fill className="object-cover" sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
+        <Image src={imageUrl} alt={episode.title} fill className="object-cover" style={{ objectPosition: imagePosition }} sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
       </div>
       <div className="p-6">
         <div className="flex flex-wrap gap-2">

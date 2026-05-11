@@ -19,6 +19,8 @@ type EpisodeFormProps = {
     videoEmbedUrl: string | null;
     audioEmbedUrl: string | null;
     thumbnailUrl: string | null;
+    thumbnailPositionX?: string | null;
+    thumbnailPositionY?: string | null;
     clipThumbnailUrl: string | null;
     clipVideoUrl: string | null;
     tags: string[];
@@ -69,6 +71,8 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
       videoEmbedUrl: formData.get("videoEmbedUrl"),
       audioEmbedUrl: formData.get("audioEmbedUrl"),
       thumbnailUrl: formData.get("thumbnailUrl"),
+      thumbnailPositionX: formData.get("thumbnailPositionX"),
+      thumbnailPositionY: formData.get("thumbnailPositionY"),
       clipThumbnailUrl: formData.get("clipThumbnailUrl"),
       clipVideoUrl: formData.get("clipVideoUrl"),
       tags: formData.get("tags"),
@@ -126,6 +130,18 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
         urlPlaceholder="https://... o URL de imagen subida"
         hint="Esta imagen reemplaza el logo en las tarjetas de episodios y en la página de detalle."
       />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <select className="field" name="thumbnailPositionX" defaultValue={episode?.thumbnailPositionX || "center"}>
+          <option value="left">Encuadre horizontal: izquierda</option>
+          <option value="center">Encuadre horizontal: centro</option>
+          <option value="right">Encuadre horizontal: derecha</option>
+        </select>
+        <select className="field" name="thumbnailPositionY" defaultValue={episode?.thumbnailPositionY || "center"}>
+          <option value="top">Encuadre vertical: arriba</option>
+          <option value="center">Encuadre vertical: centro</option>
+          <option value="bottom">Encuadre vertical: abajo</option>
+        </select>
+      </div>
       <textarea className="field min-h-32" name="timestamps" placeholder="00:00 Intro" defaultValue={episode?.timestamps.join("\n")} />
       <div className="grid gap-4 lg:grid-cols-3">
         <input className="field" name="spotifyUrl" placeholder="Spotify URL" defaultValue={episode?.spotifyUrl || ""} />
@@ -160,7 +176,7 @@ export function EpisodeForm({ mode, episode, guests, sponsors }: EpisodeFormProp
           defaultValue={episode?.publishedAt ? new Date(episode.publishedAt).toISOString().slice(0, 16) : ""}
         />
         <select className="field" name="sponsorId" defaultValue={episode?.sponsorId || ""}>
-          <option value="">Sin sponsor</option>
+          <option value="">Sin aliado</option>
           {sponsors.map((sponsor: { id: string; name: string }) => (
             <option key={sponsor.id} value={sponsor.id}>
               {sponsor.name}

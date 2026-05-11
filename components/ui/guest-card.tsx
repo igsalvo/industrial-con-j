@@ -10,12 +10,16 @@ export function GuestCard({
     company: string | null;
     bio: string;
     profileImage: string | null;
+    profilePositionX?: string | null;
+    profilePositionY?: string | null;
   };
 }) {
+  const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
+
   return (
     <article className="card overflow-hidden">
       <div className="relative h-60 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
-        {guest.profileImage ? <img src={guest.profileImage} alt={guest.name} className="h-full w-full object-cover" /> : null}
+        {guest.profileImage ? <img src={guest.profileImage} alt={guest.name} className="h-full w-full object-cover" style={{ objectPosition: imagePosition }} /> : null}
       </div>
       <div className="p-6">
         <h3 className="text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>

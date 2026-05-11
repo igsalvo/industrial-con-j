@@ -39,6 +39,8 @@ model Episode {
   videoEmbedUrl      String?
   audioEmbedUrl      String?
   thumbnailUrl       String?
+  thumbnailPositionX String           @default("center")
+  thumbnailPositionY String           @default("center")
   clipThumbnailUrl   String?
   clipVideoUrl       String?
   resourceLinks      Json?
@@ -64,6 +66,8 @@ model Guest {
   slug         String    @unique
   name         String
   profileImage String?
+  profilePositionX String @default("center")
+  profilePositionY String @default("center")
   bio          String
   company      String?
   role         String?
@@ -355,6 +359,8 @@ model Product {
   name        String
   slug        String           @unique
   photoUrl    String?
+  photoPositionX String @default("center")
+  photoPositionY String @default("center")
   description String
   price       Decimal          @db.Decimal(10, 2)
   stock       Int?
@@ -397,6 +403,8 @@ model Event {
   endsAt      DateTime?
   location    String?
   imageUrl    String?
+  imagePositionX String @default("center")
+  imagePositionY String @default("center")
   type        String?
   ctaText     String?
   ctaLink     String?

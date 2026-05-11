@@ -105,7 +105,7 @@ export function HonorGrid({
 export function ProductGrid({
   products
 }: {
-  products: Array<{ id: string; name: string; photoUrl: string | null; description: string; price: unknown; stock: number | null; ctaText: string | null; ctaLink: string | null; category: { name: string } }>;
+  products: Array<{ id: string; name: string; photoUrl: string | null; photoPositionX?: string | null; photoPositionY?: string | null; description: string; price: unknown; stock: number | null; ctaText: string | null; ctaLink: string | null; category: { name: string } }>;
 }) {
   if (products.length === 0) {
     return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">No hay productos que coincidan con la búsqueda.</p>;
@@ -116,7 +116,7 @@ export function ProductGrid({
       {products.map((product) => (
         <article key={product.id} className="card overflow-hidden">
           <div className="aspect-square bg-[color:var(--surface-strong)]">
-            {product.photoUrl ? <img src={product.photoUrl} alt={product.name} className="h-full w-full object-cover" /> : null}
+            {product.photoUrl ? <img src={product.photoUrl} alt={product.name} className="h-full w-full object-cover" style={{ objectPosition: `${product.photoPositionX || "center"} ${product.photoPositionY || "center"}` }} /> : null}
           </div>
           <div className="p-5">
             <p className="pill">{product.category.name}</p>

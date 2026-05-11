@@ -34,6 +34,9 @@ const percentageNumber = z.preprocess(
   z.coerce.number().int().min(0).max(100).default(50)
 );
 
+const objectPositionX = z.preprocess((value) => (value === "" || value === null ? undefined : value), z.enum(["left", "center", "right"]).default("center"));
+const objectPositionY = z.preprocess((value) => (value === "" || value === null ? undefined : value), z.enum(["top", "center", "bottom"]).default("center"));
+
 export const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido."),
   password: z.string().min(6, "La clave debe tener al menos 6 caracteres.")
@@ -46,6 +49,8 @@ export const guestInputSchema = z.object({
   company: z.string().optional(),
   role: z.string().optional(),
   profileImage: optionalUrl,
+  profilePositionX: objectPositionX,
+  profilePositionY: objectPositionY,
   industries: z.string().optional(),
   linkedin: optionalUrl,
   x: optionalUrl,
@@ -76,6 +81,8 @@ export const episodeInputSchema = z.object({
   videoEmbedUrl: optionalUrl,
   audioEmbedUrl: optionalUrl,
   thumbnailUrl: optionalUrl,
+  thumbnailPositionX: objectPositionX,
+  thumbnailPositionY: objectPositionY,
   clipThumbnailUrl: optionalUrl,
   clipVideoUrl: optionalUrl,
   tags: z.string().optional(),
@@ -178,6 +185,8 @@ export const productInputSchema = z.object({
   name: z.string().trim().min(1),
   slug: z.string().trim().optional().or(z.literal("")),
   photoUrl: optionalUrl,
+  photoPositionX: objectPositionX,
+  photoPositionY: objectPositionY,
   description: z.string().trim().min(1),
   price: z.coerce.number().min(0),
   stock: z.coerce.number().int().optional().or(z.literal("")),
@@ -207,6 +216,8 @@ export const eventInputSchema = z.object({
   endsAt: z.string().trim().optional().or(z.literal("")),
   location: z.string().trim().optional().or(z.literal("")),
   imageUrl: optionalUrl,
+  imagePositionX: objectPositionX,
+  imagePositionY: objectPositionY,
   type: z.string().trim().optional().or(z.literal("")),
   ctaText: z.string().trim().optional().or(z.literal("")),
   ctaLink: optionalUrl,
@@ -220,8 +231,8 @@ export const mediaItemInputSchema = z.object({
   alt: z.string().trim().min(1),
   label: z.string().trim().optional().or(z.literal("")),
   href: optionalUrl,
-  positionX: z.enum(["left", "center", "right"]).default("center"),
-  positionY: z.enum(["top", "center", "bottom"]).default("center"),
+  positionX: objectPositionX,
+  positionY: objectPositionY,
   order: z.coerce.number().int().default(0),
   isFeatured: z.boolean().default(false),
   isVisible: z.boolean().default(true)
@@ -235,6 +246,8 @@ export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
     company: input.company || undefined,
     role: input.role || undefined,
     profileImage: input.profileImage,
+    profilePositionX: input.profilePositionX,
+    profilePositionY: input.profilePositionY,
     industries: normalizeList(input.industries || ""),
     isVisible: input.isVisible,
     socialLinks: {
@@ -273,6 +286,8 @@ export function toEpisodePayload(input: z.infer<typeof episodeInputSchema>) {
     videoEmbedUrl: resolvedVideoEmbedUrl,
     audioEmbedUrl: input.audioEmbedUrl,
     thumbnailUrl: input.thumbnailUrl,
+    thumbnailPositionX: input.thumbnailPositionX,
+    thumbnailPositionY: input.thumbnailPositionY,
     clipThumbnailUrl: input.clipThumbnailUrl,
     clipVideoUrl: input.clipVideoUrl,
     tags: normalizeList(input.tags || ""),
@@ -328,6 +343,8 @@ export function toProductPayload(input: z.infer<typeof productInputSchema>) {
     name: input.name,
     slug: input.slug?.trim() || slugify(input.name),
     photoUrl: input.photoUrl,
+    photoPositionX: input.photoPositionX,
+    photoPositionY: input.photoPositionY,
     description: input.description,
     price: input.price,
     stock: input.stock === "" || input.stock === undefined ? undefined : input.stock,
@@ -361,6 +378,8 @@ export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
     endsAt: input.endsAt ? new Date(input.endsAt) : undefined,
     location: input.location || undefined,
     imageUrl: input.imageUrl,
+    imagePositionX: input.imagePositionX,
+    imagePositionY: input.imagePositionY,
     type: input.type || undefined,
     ctaText: input.ctaText || undefined,
     ctaLink: input.ctaLink,

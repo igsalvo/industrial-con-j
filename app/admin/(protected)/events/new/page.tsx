@@ -9,6 +9,8 @@ const fields = [
   { name: "location", label: "Lugar" },
   { name: "type", label: "Tipo" },
   { name: "imageUrl", label: "Imagen opcional", type: "image" },
+  { name: "imagePositionX", label: "Encuadre horizontal", type: "select", options: [{ label: "Izquierda", value: "left" }, { label: "Centro", value: "center" }, { label: "Derecha", value: "right" }] },
+  { name: "imagePositionY", label: "Encuadre vertical", type: "select", options: [{ label: "Arriba", value: "top" }, { label: "Centro", value: "center" }, { label: "Abajo", value: "bottom" }] },
   { name: "ctaText", label: "Texto CTA" },
   { name: "ctaLink", label: "Link CTA", type: "url" },
   { name: "order", label: "Orden", type: "number" },

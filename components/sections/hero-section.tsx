@@ -58,7 +58,7 @@ export function HeroSection({
       ? {
           href: "/podcast",
           label: "Podcast",
-          title: "Episodios e invitados",
+          title: "Episodios",
           Icon: Podcast
         }
       : null,
@@ -66,7 +66,7 @@ export function HeroSection({
       ? {
           href: "/events",
           label: "Eventos",
-          title: "Calendario y actividades",
+          title: "Calendario",
           Icon: CalendarDays,
           ariaLabel: "Ver eventos"
         }
@@ -75,7 +75,7 @@ export function HeroSection({
       ? {
           href: "/honor",
           label: "Alumni",
-          title: "Red y trayectorias",
+          title: "Trayectorias",
           Icon: GraduationCap
         }
       : null,
@@ -83,7 +83,7 @@ export function HeroSection({
       ? {
           href: "/tiendiita",
           label: "TienDIIta",
-          title: "Productos e iniciativas",
+          title: "Productos",
           Icon: Store,
           keepLabel: true
         }

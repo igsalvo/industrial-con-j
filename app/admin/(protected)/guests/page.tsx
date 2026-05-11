@@ -50,6 +50,11 @@ export default async function AdminGuestsPage() {
                     <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
                       {guest.isVisible ? "Visible" : "Oculto"}
                     </span>
+                    {guest.isFeatured ? (
+                      <span className="rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--accent-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Destacado
+                      </span>
+                    ) : null}
                   </div>
                   <p className="text-xs text-[color:var(--muted)]">{guest.slug}</p>
                 </div>

@@ -74,7 +74,15 @@ export function ContactForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <input className="field" name="name" placeholder="Nombre" required />
         <input className="field" name="email" type="email" placeholder="Correo" required />
-        {showSubject ? <input className="field" name="subject" placeholder="Asunto" required /> : null}
+        {showSubject ? (
+          <select className="field sm:col-span-2" name="subject" defaultValue="" required>
+            <option value="" disabled>Asunto</option>
+            <option value="Propuesta de contenido">Propuesta de contenido</option>
+            <option value="Eventos y activaciones">Eventos y activaciones</option>
+            <option value="Comunidad">Comunidad</option>
+            <option value="Otro">Otro</option>
+          </select>
+        ) : null}
         {showMotive ? (
           <select className="field" name="motive" defaultValue="">
             <option value="">Motivo opcional</option>
@@ -93,8 +101,8 @@ export function ContactForm({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="submit" className="btn-primary gap-2" disabled={status === "submitting"}>
-          <Send size={17} />
           {status === "submitting" ? "Enviando..." : submitLabel}
+          <Send size={17} />
         </button>
         {message ? <p className={`text-sm ${status === "error" ? "text-red-500" : "text-[color:var(--muted)]"}`}>{message}</p> : null}
       </div>

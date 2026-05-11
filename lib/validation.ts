@@ -55,6 +55,7 @@ export const guestInputSchema = z.object({
   linkedin: optionalUrl,
   x: optionalUrl,
   website: optionalUrl,
+  isFeatured: z.boolean().default(false),
   isVisible: z.boolean().default(true)
 });
 
@@ -249,6 +250,7 @@ export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
     profilePositionX: input.profilePositionX,
     profilePositionY: input.profilePositionY,
     industries: normalizeList(input.industries || ""),
+    isFeatured: input.isFeatured,
     isVisible: input.isVisible,
     socialLinks: {
       linkedin: input.linkedin,

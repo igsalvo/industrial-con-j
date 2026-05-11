@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, Clock3, MapPin } from "lucide-react";
+import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import type { PublicMediaItem } from "@/lib/queries";
 
 export type PublicCalendarEvent = {
   uid: string;
@@ -62,7 +63,7 @@ function isSameMonth(date: Date, monthDate: Date) {
   return date.getFullYear() === monthDate.getFullYear() && date.getMonth() === monthDate.getMonth();
 }
 
-export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
+export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEvent[]; fallbackImage?: PublicMediaItem }) {
   const eventItems = useMemo(
     () =>
       events
@@ -79,6 +80,10 @@ export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
   const monthDays = getMonthDays(visibleMonth);
   const eventsInMonth = eventItems.filter((event) => isSameMonth(event.startDate, visibleMonth));
   const featured = eventsInMonth[0] || eventItems[0];
+  const featuredImageUrl = featured?.imageUrl || fallbackImage?.src;
+  const featuredImagePosition = featured?.imageUrl
+    ? `${featured.imagePositionX || "center"} ${featured.imagePositionY || "center"}`
+    : `${fallbackImage?.positionX || "center"} ${fallbackImage?.positionY || "center"}`;
 
   if (eventItems.length === 0) {
     return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay eventos publicados.</p>;
@@ -89,15 +94,15 @@ export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="mt-5 space-y-7">
       <div className="grid gap-5 lg:grid-cols-[0.78fr_1.22fr]">
-        <div className="card p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
           <div className="mb-5 flex items-center justify-between gap-3">
-            <button type="button" className="btn-secondary !p-3" onClick={() => changeMonth(-1)} aria-label="Mes anterior">
+            <button type="button" className="btn-secondary !bg-transparent !p-3" onClick={() => changeMonth(-1)} aria-label="Mes anterior">
               <ChevronLeft size={18} />
             </button>
             <p className="text-center text-lg font-black capitalize">{formatMonth(visibleMonth)}</p>
-            <button type="button" className="btn-secondary !p-3" onClick={() => changeMonth(1)} aria-label="Mes siguiente">
+            <button type="button" className="btn-secondary !bg-transparent !p-3" onClick={() => changeMonth(1)} aria-label="Mes siguiente">
               <ChevronRight size={18} />
             </button>
           </div>
@@ -109,7 +114,7 @@ export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
               const hasEvent = day ? eventsInMonth.some((event) => event.startDate.getDate() === day) : false;
               const isSelected = featured && day === featured.startDate.getDate() && isSameMonth(featured.startDate, visibleMonth);
               return (
-                <div key={`${day || "empty"}-${index}`} className={`relative aspect-square rounded-xl border border-[color:var(--line)] p-2 ${isSelected ? "bg-[color:var(--accent)] text-white" : hasEvent ? "bg-[color:var(--accent-soft)] text-[color:var(--accent)]" : ""}`}>
+                <div key={`${day || "empty"}-${index}`} className={`relative aspect-square rounded-lg border border-white/10 p-2 text-sm font-bold ${isSelected ? "bg-[color:var(--accent)] text-white shadow-[0_0_24px_rgba(226,33,28,0.5)]" : hasEvent ? "text-white" : "text-white/70"}`}>
                   {day || ""}
                   {hasEvent && day ? <span className={`absolute bottom-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full ${isSelected ? "bg-white" : "bg-[color:var(--accent)]"}`} /> : null}
                 </div>
@@ -122,25 +127,22 @@ export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
           </div>
         </div>
 
-        <article className="card overflow-hidden">
-          <div className="relative min-h-64 bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
-            {featured.imageUrl ? (
-              <img src={featured.imageUrl} alt={featured.title} className="h-full min-h-64 w-full object-cover opacity-85" style={{ objectPosition: `${featured.imagePositionX || "center"} ${featured.imagePositionY || "center"}` }} />
+        <article className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-7">
+          <div className="absolute inset-0">
+            {featuredImageUrl ? (
+              <img src={featuredImageUrl} alt={featured.title} className="h-full min-h-64 w-full object-cover opacity-85" style={{ objectPosition: featuredImagePosition }} />
             ) : (
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(226,33,28,0.38),transparent_28%),linear-gradient(135deg,#333,#151515)]" />
             )}
-            <div className="absolute inset-0 bg-black/35" />
-            <div className="absolute bottom-5 left-5 right-5 text-white">
-              <p className="pill !border-white/20 !bg-black/40 !text-white">Evento destacado</p>
-              <h2 className="mt-4 text-4xl font-black">{featured.title}</h2>
-            </div>
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,19,18,0.98)_0%,rgba(17,19,18,0.86)_42%,rgba(17,19,18,0.32)_100%)]" />
           </div>
-          <div className="p-6">
-            {featured.description ? <p className="whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p> : null}
-            <div className="mt-5 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-3">
-              <span className="inline-flex items-center gap-2"><CalendarDays size={16} />{formatEventDate(featured.startDate)}</span>
-              <span className="inline-flex items-center gap-2"><Clock3 size={16} />{formatEventTime(featured.startDate)}</span>
-              {featured.location ? <span className="inline-flex items-center gap-2"><MapPin size={16} />{featured.location}</span> : null}
+          <div className="relative max-w-xl py-5">
+            <p className="brand-kicker text-xs text-[color:var(--accent)]">Evento destacado</p>
+            <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.title}</h2>
+            {featured.description ? <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p> : null}
+            <div className="mt-6 grid gap-4 text-sm text-white sm:grid-cols-2">
+              <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-[color:var(--accent)]"><CalendarDays size={18} /></span>{formatEventDate(featured.startDate)}<br />{formatEventTime(featured.startDate)}</span>
+              {featured.location ? <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-white/70"><MapPin size={18} /></span>{featured.location}</span> : null}
             </div>
             <div className="mt-6 flex flex-wrap gap-2">
               <a className="btn-primary gap-2 !px-4 !py-2 text-sm" href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })} target="_blank" rel="noreferrer">
@@ -159,23 +161,26 @@ export function EventGrid({ events }: { events: PublicCalendarEvent[] }) {
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-3xl font-black">Próximos eventos</h2>
-        <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-xl font-black">Próximos eventos</h2>
+          <a href="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent)]">Ver agenda completa<ArrowRight size={16} /></a>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
           {eventsInMonth.length ? (
             eventsInMonth.map((event) => (
-              <article key={event.uid} className="card grid gap-4 overflow-hidden p-5 md:grid-cols-[150px_1fr_auto] md:items-center">
-                <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
+              <article key={event.uid} className="grid gap-4 overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-5 md:grid-cols-[84px_1fr_auto] md:items-center">
+                <div className="rounded-xl border border-white/10 bg-black/10 p-4">
                   <CalendarDays className="text-[color:var(--accent)]" />
                   <p className="mt-4 text-lg font-black">{formatEventDate(event.startDate)}</p>
                   <p className="mt-1 text-xs text-[color:var(--muted)]">{formatEventTime(event.startDate)}</p>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold">{event.title}</h3>
+                  <h3 className="text-lg font-bold">{event.title}</h3>
                   {event.description ? <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
                   {event.location ? <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]"><MapPin size={16} />{event.location}</p> : null}
                 </div>
                 {event.ctaLink ? (
-                  <a className="btn-secondary !px-4 !py-2 text-sm" href={event.ctaLink} target="_blank" rel="noreferrer">Ver detalles</a>
+                  <a className="btn-secondary !bg-transparent !p-3 text-sm" href={event.ctaLink} target="_blank" rel="noreferrer" aria-label={`Ver detalles de ${event.title}`}><ArrowRight size={16} /></a>
                 ) : null}
               </article>
             ))

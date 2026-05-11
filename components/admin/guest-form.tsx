@@ -20,6 +20,7 @@ export function GuestForm({
     profilePositionX?: string | null;
     profilePositionY?: string | null;
     industries: string[];
+    isFeatured?: boolean;
     isVisible: boolean;
     socialLinks: unknown;
   };
@@ -48,6 +49,7 @@ export function GuestForm({
         linkedin: formData.get("linkedin"),
         x: formData.get("x"),
         website: formData.get("website"),
+        isFeatured: formData.get("isFeatured") === "on",
         isVisible: formData.get("isVisible") === "on"
       })
     });
@@ -103,10 +105,16 @@ export function GuestForm({
         <input className="field" name="x" placeholder="X URL" defaultValue={links.x || ""} />
         <input className="field" name="website" placeholder="Website URL" defaultValue={links.website || ""} />
       </div>
-      <label className="card flex items-center gap-3 p-4 text-sm font-medium">
-        <input defaultChecked={guest?.isVisible ?? true} name="isVisible" type="checkbox" />
-        Mostrar en la página
-      </label>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+          <input defaultChecked={guest?.isFeatured ?? false} name="isFeatured" type="checkbox" />
+          Destacar en la página de invitados
+        </label>
+        <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+          <input defaultChecked={guest?.isVisible ?? true} name="isVisible" type="checkbox" />
+          Mostrar en la página
+        </label>
+      </div>
       {error ? <p className="text-sm text-red-500">{error}</p> : null}
       <div className="flex flex-wrap gap-3">
         <button className="btn-primary" type="submit">

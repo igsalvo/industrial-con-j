@@ -303,6 +303,8 @@ model HonorMember {
   id            String   @id @default(cuid())
   name          String
   photoUrl      String?
+  photoPositionX Int     @default(50)
+  photoPositionY Int     @default(50)
   description   String
   role          String?
   generation    String?

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, BadgeDollarSign, CalendarDays, CalendarPlus, Download, Gift, Handshake, HeartHandshake, Landmark, MapPin, Package, Sparkles, Target, Users } from "lucide-react";
-import { createGoogleCalendarUrl, type CalendarEvent } from "@/lib/google-calendar";
+import { ArrowUpRight, BadgeDollarSign, Gift, Handshake, HeartHandshake, Landmark, Package, Sparkles, Target, Users } from "lucide-react";
 
 const icons = {
   purpose: Target,
@@ -51,7 +50,17 @@ export function IdentityGrid({
 export function HonorGrid({
   members
 }: {
-  members: Array<{ id: string; name: string; photoUrl: string | null; description: string; role: string | null; generation: string | null; externalLinks: unknown }>;
+  members: Array<{
+    id: string;
+    name: string;
+    photoUrl: string | null;
+    photoPositionX?: number | null;
+    photoPositionY?: number | null;
+    description: string;
+    role: string | null;
+    generation: string | null;
+    externalLinks: unknown;
+  }>;
 }) {
   if (members.length === 0) {
     return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay personas publicadas.</p>;
@@ -61,26 +70,30 @@ export function HonorGrid({
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
       {members.map((member) => {
         const links = Array.isArray(member.externalLinks) ? (member.externalLinks as Array<{ label: string; url: string }>) : [];
+        const photoPosition = `${member.photoPositionX ?? 50}% ${member.photoPositionY ?? 50}%`;
         return (
           <article key={member.id} className="card overflow-hidden">
             <div className="aspect-[4/3] bg-[color:var(--surface-strong)]">
-              {member.photoUrl ? <img src={member.photoUrl} alt={member.name} className="h-full w-full object-cover" /> : null}
+              {member.photoUrl ? <img src={member.photoUrl} alt={member.name} className="h-full w-full object-cover" style={{ objectPosition: photoPosition }} /> : null}
             </div>
             <div className="p-5">
               <h3 className="text-2xl font-bold">{member.name}</h3>
-              {[member.role, member.generation].filter(Boolean).length ? (
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
-                  {[member.role, member.generation].filter(Boolean).join(" · ")}
-                </p>
-              ) : null}
-              <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">{member.description}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {links.map((link) => (
-                  <a key={link.url} className="btn-secondary !px-3 !py-2 text-xs" href={link.url} target="_blank" rel="noreferrer">
-                    {link.label}
-                  </a>
-                ))}
-              </div>
+              {member.generation ? <p className="mt-2 text-sm font-semibold text-[color:var(--accent)]">{member.generation}</p> : null}
+              {member.role ? <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{member.role}</p> : null}
+              <details className="group mt-4">
+                <summary className="cursor-pointer list-none text-sm font-semibold text-[color:var(--foreground)]">
+                  <span className="group-open:hidden">Ver perfil</span>
+                  <span className="hidden group-open:inline">Ocultar perfil</span>
+                </summary>
+                <p className="mt-3 text-justify text-sm leading-6 text-[color:var(--muted)]">{member.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {links.map((link) => (
+                    <a key={link.url} className="btn-secondary !px-3 !py-2 text-xs" href={link.url} target="_blank" rel="noreferrer">
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </details>
             </div>
           </article>
         );
@@ -122,77 +135,6 @@ export function ProductGrid({
           </div>
         </article>
       ))}
-    </div>
-  );
-}
-
-function formatEventDate(date: Date) {
-  return new Intl.DateTimeFormat("es-CL", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(date);
-}
-
-export function EventGrid({
-  events
-}: {
-  events: CalendarEvent[];
-}) {
-  if (events.length === 0) {
-    return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay eventos publicados.</p>;
-  }
-
-  return (
-    <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
-      <div className="card p-5">
-        <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-[color:var(--muted)]">
-          {["L", "M", "M", "J", "V", "S", "D"].map((day, index) => (
-            <span key={`${day}-${index}`}>{day}</span>
-          ))}
-          {Array.from({ length: 35 }, (_, index) => {
-            const day = index + 1;
-            const hasEvent = events.some((event) => event.start.getDate() === day);
-            return (
-              <div key={day} className={`aspect-square rounded-xl border border-[color:var(--line)] p-2 ${hasEvent ? "bg-[color:var(--accent-soft)] text-[color:var(--accent)]" : ""}`}>
-                {day <= 31 ? day : ""}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {events.map((event) => (
-          <article key={event.uid} className="card grid gap-4 overflow-hidden p-5 md:grid-cols-[160px_1fr]">
-            <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
-              <CalendarDays className="text-[color:var(--accent)]" />
-              <p className="mt-4 text-lg font-black">{formatEventDate(event.start)}</p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold">{event.title}</h3>
-              {event.description ? <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
-              {event.location ? (
-                <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]">
-                  <MapPin size={16} />
-                  {event.location}
-                </p>
-              ) : null}
-              <div className="mt-5 flex flex-wrap gap-2">
-                <a className="btn-primary gap-2 !px-4 !py-2 text-sm" href={createGoogleCalendarUrl(event)} target="_blank" rel="noreferrer">
-                  <CalendarPlus size={16} />
-                  Agregar a mi calendario
-                </a>
-                <a className="btn-secondary gap-2 !px-4 !py-2 text-sm" href={`/api/ics?uid=${encodeURIComponent(event.uid)}`}>
-                  <Download size={16} />
-                  .ics
-                </a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
     </div>
   );
 }

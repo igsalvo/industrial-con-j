@@ -29,6 +29,11 @@ const optionalUrl = z
   .optional()
   .transform((value) => value || undefined);
 
+const percentageNumber = z.preprocess(
+  (value) => (value === "" || value === null || value === undefined ? undefined : value),
+  z.coerce.number().int().min(0).max(100).default(50)
+);
+
 export const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido."),
   password: z.string().min(6, "La clave debe tener al menos 6 caracteres.")
@@ -151,6 +156,8 @@ export const identityItemInputSchema = z.object({
 export const honorMemberInputSchema = z.object({
   name: z.string().trim().min(1),
   photoUrl: optionalUrl,
+  photoPositionX: percentageNumber,
+  photoPositionY: percentageNumber,
   description: z.string().trim().min(1),
   role: z.string().trim().optional().or(z.literal("")),
   generation: z.string().trim().optional().or(z.literal("")),
@@ -282,6 +289,8 @@ export function toHonorMemberPayload(input: z.infer<typeof honorMemberInputSchem
   return {
     name: input.name,
     photoUrl: input.photoUrl,
+    photoPositionX: input.photoPositionX,
+    photoPositionY: input.photoPositionY,
     description: input.description,
     role: input.role || undefined,
     generation: input.generation || undefined,

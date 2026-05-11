@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 const fields = [
   { name: "name", label: "Nombre", required: true },
   { name: "photoUrl", label: "Foto", type: "image" },
+  { name: "photoPositionX", label: "Posición horizontal de foto (0 izquierda, 100 derecha)", type: "number" },
+  { name: "photoPositionY", label: "Posición vertical de foto (0 arriba, 100 abajo)", type: "number" },
   { name: "description", label: "Descripción", type: "textarea", required: true },
   { name: "role", label: "Cargo / rol opcional" },
   { name: "generation", label: "Generación / año opcional" },

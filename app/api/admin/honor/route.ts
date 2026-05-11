@@ -6,7 +6,7 @@ const handlers = createAdminCollectionHandlers({
   model: prisma.honorMember,
   schema: honorMemberInputSchema,
   toPayload: toHonorMemberPayload,
-  listArgs: { orderBy: [{ order: "asc" }, { updatedAt: "desc" }] }
+  listArgs: { orderBy: [{ name: "asc" }] }
 });
 
 export const GET = handlers.GET;

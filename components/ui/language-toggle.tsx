@@ -79,7 +79,7 @@ export function LanguageToggle() {
     <>
       <div id="google_translate_element" aria-hidden="true" className="google-translate-host" />
       <Script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="afterInteractive" />
-      <div className="flex rounded-full border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-1 text-sm" aria-label="Idioma">
+      <div className="notranslate flex rounded-full border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-1 text-sm" aria-label="Idioma" translate="no">
         <button
           type="button"
           className={`rounded-full px-3 py-2 font-semibold transition ${language === "es" ? "bg-[color:var(--accent)] text-white" : "text-[color:var(--muted)] hover:text-[color:var(--foreground)]"}`}

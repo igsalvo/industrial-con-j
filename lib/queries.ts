@@ -197,7 +197,7 @@ export async function getHomepageData() {
       }),
       prisma.honorMember.findMany({
         where: { isVisible: true },
-        orderBy: [{ order: "asc" }, { updatedAt: "desc" }],
+        orderBy: [{ name: "asc" }],
         take: 4
       }),
       prisma.product.findMany({
@@ -249,7 +249,7 @@ export async function getPublicSectionsData() {
       }),
       prisma.honorMember.findMany({
         where: { isVisible: true },
-        orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+        orderBy: [{ name: "asc" }]
       }),
       prisma.product.findMany({
         where: { isVisible: true, category: { isVisible: true } },

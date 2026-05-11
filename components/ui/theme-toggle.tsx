@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button type="button" className="btn-secondary gap-2 !px-4 !py-3 text-sm" aria-label="Cambiar tema" disabled>
+      <button type="button" className="btn-secondary notranslate gap-2 !px-4 !py-3 text-sm" aria-label="Cambiar tema" translate="no" disabled>
         <span className="h-4 w-4 rounded-full border border-[color:var(--line)]" />
         Tema
       </button>
@@ -24,7 +24,7 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <button type="button" onClick={() => setTheme(isDark ? "light" : "dark")} className="btn-secondary gap-2 !px-4 !py-3 text-sm">
+    <button type="button" onClick={() => setTheme(isDark ? "light" : "dark")} className="btn-secondary notranslate gap-2 !px-4 !py-3 text-sm" translate="no">
       {isDark ? <SunMedium size={16} /> : <Moon size={16} />}
       {isDark ? "Modo claro" : "Modo oscuro"}
     </button>

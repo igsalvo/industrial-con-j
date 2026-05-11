@@ -1,4 +1,4 @@
-import { EventGrid } from "@/components/sections/public-section-cards";
+import { EventGrid } from "@/components/sections/event-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getEventsFromICS } from "@/lib/google-calendar";
 import { getSiteConfig } from "@/lib/queries";
@@ -17,7 +17,13 @@ export default async function EventsPage() {
         title={siteConfig.eventsSectionTitle || "Próximas actividades"}
         description={siteConfig.eventsSectionDescription || "Calendario de encuentros, hitos y actividades abiertas para la comunidad."}
       />
-      <EventGrid events={events} />
+      <EventGrid
+        events={events.map((event) => ({
+          ...event,
+          start: event.start.toISOString(),
+          end: event.end?.toISOString() || null
+        }))}
+      />
     </main>
   );
 }

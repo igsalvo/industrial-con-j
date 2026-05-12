@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
-import { SponsorGrid } from "@/components/ui/sponsor-grid";
+import { SponsorShowcase } from "@/components/sections/sponsor-showcase";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Lightbulb, Mic2, MessageCircle, Star } from "lucide-react";
 
@@ -130,7 +130,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
           {featuredGuests.length ? (
             <div className="grid gap-6 md:grid-cols-2">
               {featuredGuests.map((guest) => (
-                <div key={guest.slug} className="relative rounded-[1.75rem] border border-[color:var(--accent)]/60 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.14),transparent_32%),rgba(255,255,255,0.04)] p-1 shadow-[0_0_36px_rgba(226,33,28,0.13)]">
+                <div key={guest.slug} className="relative rounded-[1.75rem] border border-[color:var(--accent)]/60 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.14),transparent_32%),rgba(255,255,255,0.04)] p-1 shadow-[0_0_36px_rgba(226,33,28,0.13)] [&_.card]:grid [&_.card]:overflow-hidden [&_.card]:md:grid-cols-[0.9fr_1fr] [&_.card>div:first-child]:h-[260px] [&_.card>div:first-child]:border-b-0 [&_.guest-card-image]:object-contain">
                   <span className="absolute left-5 top-5 z-10 inline-flex items-center gap-1 rounded-full border border-[color:var(--accent)]/60 bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)] backdrop-blur">
                     <Star size={12} />Destacado
                   </span>
@@ -208,7 +208,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
         </section>
       ) : null}
 
-      {activeTab === "sponsors" ? <SponsorGrid sponsors={sponsors} /> : null}
+      {activeTab === "sponsors" ? <SponsorShowcase sponsors={sponsors} /> : null}
     </main>
   );
 }

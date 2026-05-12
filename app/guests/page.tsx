@@ -87,10 +87,10 @@ export default async function GuestsPage({
           {featured.length ? (
           <section className="-mt-1 grid gap-4 lg:grid-cols-2">
             {featured.map((guest) => (
-              <article key={guest.slug} className="grid overflow-hidden rounded-xl border border-[color:var(--accent)]/50 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_0_34px_rgba(226,33,28,0.12)] md:grid-cols-[0.82fr_1fr]">
-                <div className="relative min-h-72 bg-[#242424]">
+              <article key={guest.slug} className="grid min-h-[260px] overflow-hidden rounded-xl border border-[color:var(--accent)]/50 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_0_34px_rgba(226,33,28,0.12)] md:grid-cols-[0.9fr_1fr]">
+                <div className="relative h-[260px] bg-[#242424]">
                   {guest.profileImage ? (
-                    <img src={guest.profileImage} alt={guest.name} className="h-full min-h-72 w-full object-cover" style={{ objectPosition: `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}` }} />
+                    <img src={guest.profileImage} alt={guest.name} className="h-full w-full object-contain" style={{ objectPosition: `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}` }} />
                   ) : null}
                   <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full border border-[color:var(--accent)]/60 bg-black/45 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)] backdrop-blur">
                     <Star size={12} />Destacado

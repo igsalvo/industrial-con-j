@@ -250,7 +250,6 @@ export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
     profilePositionX: input.profilePositionX,
     profilePositionY: input.profilePositionY,
     industries: normalizeList(input.industries || ""),
-    isFeatured: input.isFeatured,
     isVisible: input.isVisible,
     socialLinks: {
       linkedin: input.linkedin,

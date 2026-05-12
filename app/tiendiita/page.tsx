@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgeCheck, Package, Search, SlidersHorizontal, Star, Truck, Shirt, NotebookPen, ShoppingBag } from "lucide-react";
+import { BadgeCheck, Package, Search, SlidersHorizontal, Star, Shirt, NotebookPen, ShoppingBag } from "lucide-react";
 import { getMediaItems, getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { ProductGrid } from "@/components/sections/public-section-cards";
 
@@ -63,7 +63,6 @@ export default async function TiendiitaPage({
           <div className="mt-7 grid max-w-3xl gap-3 text-xs text-white/70 sm:grid-cols-3">
             <span className="inline-flex items-center gap-2"><BadgeCheck size={16} />Diseños exclusivos para la comunidad</span>
             <span className="inline-flex items-center gap-2"><Star size={16} />Calidad premium y materiales duraderos</span>
-            <span className="inline-flex items-center gap-2"><Truck size={16} />Envíos a todo Chile rápidos y seguros</span>
           </div>
         </div>
       </section>

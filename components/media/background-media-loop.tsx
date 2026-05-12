@@ -30,7 +30,7 @@ export function BackgroundMediaLoop({
   }, [visibleItems.length]);
 
   return (
-    <section className="relative min-h-[540px] overflow-hidden rounded-2xl border border-white/10 bg-[#151515]">
+    <section className="relative min-h-[620px] overflow-hidden rounded-2xl border border-white/10 bg-[#151515]">
       {current ? (
         <img
           src={current.src}

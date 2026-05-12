@@ -39,9 +39,9 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
 
   return (
     <div className="space-y-5">
-      <article className="grid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:grid-cols-[0.86fr_1fr]">
-        <div className="min-h-[300px] bg-white/5">
-          {featured.photoUrl ? <img src={featured.photoUrl} alt={featured.name} className="h-full min-h-[300px] w-full object-cover grayscale" style={{ objectPosition: featuredPosition }} /> : null}
+      <article className="grid min-h-[360px] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:grid-cols-[0.86fr_1fr]">
+        <div className="h-[360px] bg-white/5">
+          {featured.photoUrl ? <img src={featured.photoUrl} alt={featured.name} className="h-full w-full object-cover" style={{ objectPosition: featuredPosition }} /> : null}
         </div>
         <div className="relative overflow-hidden p-8">
           <div className="pointer-events-none absolute right-0 top-0 h-full w-64 bg-[radial-gradient(circle_at_70%_20%,rgba(226,33,28,0.13),transparent_35%)]" />

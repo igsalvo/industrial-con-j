@@ -1,4 +1,4 @@
-import { CalendarDays, HelpCircle, Instagram, Linkedin, Mail, Mic2, Users, Youtube } from "lucide-react";
+import { CalendarDays, HelpCircle, Mic2, Users } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { BackgroundMediaLoop } from "@/components/media/background-media-loop";
 import { getMediaItems, getSiteConfig } from "@/lib/queries";
@@ -8,13 +8,6 @@ const helpItems = [
   { title: "Eventos y activaciones", description: "Participar, patrocinar o postular tu evento.", icon: CalendarDays },
   { title: "Comunidad", description: "Alumni, alianzas o iniciativas conjuntas.", icon: Users },
   { title: "Otros", description: "Dudas, sugerencias o comentarios.", icon: HelpCircle }
-];
-
-const socialItems = [
-  { label: "Instagram", href: "https://www.instagram.com/industrialconj", icon: Instagram },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/industrial-con-j", icon: Linkedin },
-  { label: "YouTube", href: "https://www.youtube.com/@industrialconj", icon: Youtube },
-  { label: "Correo directo", href: "mailto:hola@industrialconj.cl", icon: Mail }
 ];
 
 export default async function ContactPage() {
@@ -55,21 +48,6 @@ export default async function ContactPage() {
                     <h3 className="mt-4 text-sm font-black leading-tight">{item.title}</h3>
                     <p className="mt-1 text-xs leading-4 text-[color:var(--muted)]">{item.description}</p>
                   </article>
-                );
-              })}
-            </div>
-          </section>
-
-          <section className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
-            <h2 className="text-sm font-bold">Conversemos también por aquí</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {socialItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-white/75 transition hover:text-white">
-                    <Icon className="text-[color:var(--accent)]" size={18} />
-                    {item.label}
-                  </a>
                 );
               })}
             </div>

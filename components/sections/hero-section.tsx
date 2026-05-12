@@ -111,17 +111,8 @@ export function HeroSection({
               {config.heroDescription ||
                 "Un espacio para reunir historias, conversaciones, eventos e iniciativas que conectan a la comunidad de Ingeniería Industrial de la Universidad de Chile."}
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href={config.heroPrimaryCtaHref || "/podcast"} className="btn-primary gap-2">
-                {config.heroPrimaryCtaLabel || "Explorar Industrial con J"}
-                <ArrowRight size={16} />
-              </Link>
-              <Link href={secondaryHref} className="btn-secondary">
-                {secondaryLabel}
-              </Link>
-              <div className="sm:hidden">
-                <ThemeToggle />
-              </div>
+            <div className="mt-8 sm:hidden">
+              <ThemeToggle />
             </div>
           </div>
 
@@ -161,6 +152,15 @@ export function HeroSection({
                 <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-cover" />
               </div>
             ) : null}
+            <div className={`${hasHeroMedia || config.heroImageUrl ? "mt-6" : ""} flex flex-wrap gap-4`}>
+              <Link href={config.heroPrimaryCtaHref || "/podcast"} className="btn-primary gap-2">
+                {config.heroPrimaryCtaLabel || "Explorar Industrial con J"}
+                <ArrowRight size={16} />
+              </Link>
+              <Link href={secondaryHref} className="btn-secondary">
+                {secondaryLabel}
+              </Link>
+            </div>
             <div className={`grid gap-3 ${hasHeroMedia ? "mt-4" : config.heroImageUrl ? "mt-4" : ""} grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4`}>
               {accessItems.map((item) => {
                 const { Icon } = item;

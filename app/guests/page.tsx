@@ -33,7 +33,7 @@ export default async function GuestsPage({
     return matchesTerm && matchesIndustry;
   });
   const selectedFeatured = filtered.filter(isFeaturedGuest);
-  const featured = (selectedFeatured.length ? selectedFeatured : filtered).slice(0, 2);
+  const featured = selectedFeatured.slice(0, 2);
   const rest = filtered.filter((guest) => !featured.some((item) => item.id === guest.id));
 
   return (
@@ -84,9 +84,10 @@ export default async function GuestsPage({
         <EmptyState title="Todavía no hay invitados" description="Pronto aparecerán nuevas voces de la comunidad industrial." />
       ) : (
         <>
+          {featured.length ? (
           <section className="-mt-1 grid gap-4 lg:grid-cols-2">
             {featured.map((guest) => (
-              <article key={guest.slug} className="grid overflow-hidden rounded-xl border border-white/10 bg-white/[0.05] md:grid-cols-[0.82fr_1fr]">
+              <article key={guest.slug} className="grid overflow-hidden rounded-xl border border-[color:var(--accent)]/50 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_0_34px_rgba(226,33,28,0.12)] md:grid-cols-[0.82fr_1fr]">
                 <div className="relative min-h-72 bg-[#242424]">
                   {guest.profileImage ? (
                     <img src={guest.profileImage} alt={guest.name} className="h-full min-h-72 w-full object-cover" style={{ objectPosition: `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}` }} />
@@ -107,6 +108,7 @@ export default async function GuestsPage({
               </article>
             ))}
           </section>
+          ) : null}
 
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {rest.map((guest) => <GuestCard key={guest.slug} guest={guest} />)}

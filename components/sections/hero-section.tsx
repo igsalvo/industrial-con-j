@@ -111,7 +111,7 @@ export function HeroSection({
               {config.heroDescription ||
                 "Un espacio para reunir historias, conversaciones, eventos e iniciativas que conectan a la comunidad de Ingeniería Industrial de la Universidad de Chile."}
             </p>
-            <div className="mt-7 grid max-w-2xl grid-cols-2 gap-3">
+            <div className="mt-7 grid max-w-2xl grid-cols-4 gap-2">
               {accessItems.map((item) => {
                 const { Icon } = item;
 
@@ -119,16 +119,16 @@ export function HeroSection({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group flex min-h-20 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.075]"
+                    className="group flex min-h-16 items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.045] px-3 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-white/[0.075]"
                     aria-label={item.ariaLabel}
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-[color:var(--accent)] transition group-hover:border-[color:var(--accent)]/45 group-hover:bg-[color:var(--accent-soft)]">
-                      <Icon size={18} />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-[color:var(--accent)] transition group-hover:border-[color:var(--accent)]/45 group-hover:bg-[color:var(--accent-soft)]">
+                      <Icon size={16} />
                     </span>
-                    <span className={`min-w-0 text-sm leading-none md:text-base ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 650 }}>
+                    <span className={`min-w-0 text-xs leading-none md:text-sm ${item.keepLabel ? "notranslate" : ""}`} translate={item.keepLabel ? "no" : undefined} style={{ fontWeight: 650 }}>
                       {item.label}
                     </span>
-                    <ArrowRight className="ml-auto shrink-0 text-[color:var(--accent)] opacity-70 transition group-hover:translate-x-1 group-hover:opacity-100" size={15} />
+                    <ArrowRight className="ml-auto shrink-0 text-[color:var(--accent)] opacity-70 transition group-hover:translate-x-1 group-hover:opacity-100" size={13} />
                   </Link>
                 );
               })}

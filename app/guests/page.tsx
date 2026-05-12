@@ -38,7 +38,7 @@ export default async function GuestsPage({
 
   return (
     <main className="dark bg-[#111312] text-white">
-      <div className="shell space-y-5 py-9">
+      <div className="shell space-y-3 py-9">
       <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
         <div>
           <p className="brand-kicker text-xs text-[color:var(--muted)]">{(config.guestsPageEyebrow || "INVITADOS").toUpperCase()}</p>
@@ -57,7 +57,7 @@ export default async function GuestsPage({
         ))}
       </nav>
 
-      <form className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 lg:grid-cols-[1fr_220px_170px_auto_auto]">
+      <form className="-mt-2 grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 lg:grid-cols-[1fr_220px_170px_auto_auto]">
         <label className="relative block">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)]" size={18} />
           <input className="field pl-11" name="q" placeholder="Buscar invitados por nombre, empresa o tema" defaultValue={params.q || ""} />
@@ -84,7 +84,7 @@ export default async function GuestsPage({
         <EmptyState title="Todavía no hay invitados" description="Pronto aparecerán nuevas voces de la comunidad industrial." />
       ) : (
         <>
-          <section className="grid gap-4 lg:grid-cols-2">
+          <section className="-mt-1 grid gap-4 lg:grid-cols-2">
             {featured.map((guest) => (
               <article key={guest.slug} className="grid overflow-hidden rounded-xl border border-white/10 bg-white/[0.05] md:grid-cols-[0.82fr_1fr]">
                 <div className="relative min-h-72 bg-[#242424]">

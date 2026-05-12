@@ -100,7 +100,7 @@ export function HeroSection({
   return (
     <section className="shell py-10 md:py-16">
       <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-6 md:p-10 xl:p-12" style={{ background: "var(--hero)" }}>
-        <div className="relative z-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr] xl:items-center">
+        <div className="relative z-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr] xl:items-start">
           <div className="max-w-3xl xl:pr-2">
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
             <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 650 }}>
@@ -116,7 +116,7 @@ export function HeroSection({
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 xl:pt-1">
             {showVideo && youtubeEmbedUrl && videoPosterUrl ? (
               <a
                 href={youtubeEmbedUrl}

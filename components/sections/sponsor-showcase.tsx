@@ -1,4 +1,4 @@
-import { CalendarDays, Handshake, Megaphone, Mic2, Trophy, Users } from "lucide-react";
+import { CalendarDays, Handshake, Megaphone, Mic2, Trophy } from "lucide-react";
 
 type Sponsor = {
   id: string;
@@ -7,8 +7,6 @@ type Sponsor = {
   logoUrl: string | null;
   tier: string | null;
 };
-
-const tiers = ["Todos", "Gold", "Silver", "Media Partner", "Comunidad"];
 
 const impactItems = [
   { title: "Auspicio de episodios", text: "Tu marca presente en episodios que inspiran a miles de oyentes.", icon: Mic2 },
@@ -31,17 +29,9 @@ export function SponsorShowcase({ sponsors }: { sponsors: Sponsor[] }) {
   }
 
   return (
-    <div className="space-y-5">
-      <nav className="flex flex-wrap gap-2 rounded-xl border border-white/10 bg-white/[0.04] p-2">
-        {tiers.map((tier, index) => (
-          <span key={tier} className={`rounded-full px-6 py-3 text-sm font-bold ${index === 0 ? "bg-[color:var(--accent)] text-white" : "border border-white/10 bg-white/[0.04] text-white/80"}`}>
-            {tier}
-          </span>
-        ))}
-      </nav>
-
+    <div>
       <div className="grid gap-4 lg:grid-cols-[1fr_0.55fr]">
-        <div className="space-y-4">
+        <div>
           <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-3">
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {sponsors.map((sponsor, index) => (
@@ -57,12 +47,6 @@ export function SponsorShowcase({ sponsors }: { sponsors: Sponsor[] }) {
                 </a>
               ))}
             </div>
-          </section>
-
-          <section className="grid gap-4 rounded-xl border border-white/10 bg-white/[0.035] p-5 md:grid-cols-3">
-            <div className="flex items-center gap-4"><Users className="text-[color:var(--accent)]" /><strong className="text-2xl">+{sponsors.length}</strong><span className="text-sm text-[color:var(--muted)]">aliados</span></div>
-            <div className="flex items-center gap-4"><Mic2 className="text-[color:var(--accent)]" /><strong className="text-2xl">+30</strong><span className="text-sm text-[color:var(--muted)]">episodios impulsados</span></div>
-            <div className="flex items-center gap-4"><CalendarDays className="text-[color:var(--accent)]" /><strong className="text-2xl">+8</strong><span className="text-sm text-[color:var(--muted)]">actividades apoyadas</span></div>
           </section>
         </div>
 

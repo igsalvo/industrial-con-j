@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ContentRecordForm } from "@/components/admin/content-record-form";
 import { MvpPlaceholder } from "@/components/ui/mvp-placeholder";
+import { formatChileDateTimeLocal } from "@/lib/date-time";
 import { prisma } from "@/lib/prisma";
 
 const fields = [
@@ -22,8 +23,8 @@ const fields = [
 function normalizeRecord(record: NonNullable<Awaited<ReturnType<typeof prisma.event.findUnique>>>) {
   return {
     ...record,
-    startsAt: record.startsAt.toISOString().slice(0, 16),
-    endsAt: record.endsAt ? record.endsAt.toISOString().slice(0, 16) : ""
+    startsAt: formatChileDateTimeLocal(record.startsAt),
+    endsAt: record.endsAt ? formatChileDateTimeLocal(record.endsAt) : ""
   };
 }
 

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { formatChileEventDate, formatChileEventTime, formatChileMonth } from "@/lib/date-time";
 import type { PublicMediaItem } from "@/lib/queries";
 
 export type PublicCalendarEvent = {
@@ -23,15 +24,15 @@ function toDate(value: string | null | undefined) {
 }
 
 function formatEventDate(date: Date) {
-  return new Intl.DateTimeFormat("es-CL", { day: "2-digit", month: "short" }).format(date);
+  return formatChileEventDate(date);
 }
 
 function formatEventTime(date: Date) {
-  return new Intl.DateTimeFormat("es-CL", { hour: "2-digit", minute: "2-digit" }).format(date);
+  return formatChileEventTime(date);
 }
 
 function formatMonth(date: Date) {
-  return new Intl.DateTimeFormat("es-CL", { month: "long", year: "numeric" }).format(date);
+  return formatChileMonth(date);
 }
 
 function toGoogleCalendarDate(date: Date) {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseChileDateTimeLocal } from "@/lib/date-time";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { normalizeList, slugify } from "@/lib/utils";
 
@@ -376,8 +377,8 @@ export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
   return {
     title: input.title,
     description: input.description,
-    startsAt: new Date(input.startsAt),
-    endsAt: input.endsAt ? new Date(input.endsAt) : undefined,
+    startsAt: parseChileDateTimeLocal(input.startsAt),
+    endsAt: input.endsAt ? parseChileDateTimeLocal(input.endsAt) : undefined,
     location: input.location || undefined,
     imageUrl: input.imageUrl,
     imagePositionX: input.imagePositionX,

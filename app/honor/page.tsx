@@ -1,6 +1,5 @@
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
-import { HonorGrid } from "@/components/sections/public-section-cards";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { HonorShowcase } from "@/components/sections/honor-showcase";
 import { notFound } from "next/navigation";
 
 export default async function HonorPage() {
@@ -10,13 +9,17 @@ export default async function HonorPage() {
   }
 
   return (
-    <main className="shell py-10">
-      <SectionHeading
-        eyebrow={siteConfig.honorSectionEyebrow || "Alumni"}
-        title={siteConfig.honorSectionTitle || "Personas que abren camino"}
-        description={siteConfig.honorSectionDescription || "Reconocimientos y perfiles destacados del ecosistema industrial."}
-      />
-      <HonorGrid members={honorMembers} />
+    <main className="dark bg-[#111312] text-white">
+      <div className="shell space-y-5 py-9">
+        <section className="max-w-3xl">
+          <p className="brand-kicker text-xs text-white/55">{siteConfig.honorSectionEyebrow || "ALUMNI"}</p>
+          <h1 className="mt-3 text-4xl font-black">{siteConfig.honorSectionTitle || "Círculo de honor"}</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-[color:var(--muted)]">
+            {siteConfig.honorSectionDescription || "Reconocimiento a egresados y egresadas de Ingeniería Industrial que han dejado una huella significativa en la industria, la sociedad y el desarrollo del país."}
+          </p>
+        </section>
+        <HonorShowcase members={honorMembers} />
+      </div>
     </main>
   );
 }

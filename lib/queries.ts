@@ -233,7 +233,7 @@ export async function getHomepageData() {
       }),
       prisma.guest.findMany({
         where: { isVisible: true },
-        orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+        orderBy: { createdAt: "desc" },
         take: 4
       }),
       prisma.identityItem.findMany({
@@ -510,7 +510,7 @@ export async function getAllGuests() {
           include: { sponsor: true, guests: true }
         }
       },
-      orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+      orderBy: { name: "asc" }
     });
   } catch (error) {
     console.error("Guests query failed", error);

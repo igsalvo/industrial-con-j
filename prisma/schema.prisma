@@ -72,14 +72,11 @@ model Guest {
   company      String?
   role         String?
   industries   String[]
-  isFeatured   Boolean   @default(false)
   isVisible    Boolean   @default(true)
   socialLinks  Json?
   episodes     Episode[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-
-  @@index([isFeatured, isVisible])
 }
 
 model Sponsor {

@@ -255,7 +255,8 @@ export function toGuestPayload(input: z.infer<typeof guestInputSchema>) {
     socialLinks: {
       linkedin: input.linkedin,
       x: input.x,
-      website: input.website
+      website: input.website,
+      isFeatured: input.isFeatured
     }
   };
 }

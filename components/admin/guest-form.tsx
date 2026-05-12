@@ -20,14 +20,15 @@ export function GuestForm({
     profilePositionX?: string | null;
     profilePositionY?: string | null;
     industries: string[];
-    isFeatured?: boolean;
     isVisible: boolean;
     socialLinks: unknown;
   };
 }) {
   const router = useRouter();
   const [error, setError] = useState("");
-  const links = (guest?.socialLinks ?? {}) as Record<string, string | undefined>;
+  const links = (guest?.socialLinks ?? {}) as Record<string, unknown>;
+  const featuredValue = links.isFeatured;
+  const isFeatured = featuredValue === true || featuredValue === "true" || featuredValue === "on" || featuredValue === "1";
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -101,13 +102,13 @@ export function GuestForm({
       </div>
       <input className="field" name="industries" placeholder="Manufacturing, Mining" defaultValue={guest?.industries.join(", ")} />
       <div className="grid gap-4 lg:grid-cols-3">
-        <input className="field" name="linkedin" placeholder="LinkedIn URL" defaultValue={links.linkedin || ""} />
-        <input className="field" name="x" placeholder="X URL" defaultValue={links.x || ""} />
-        <input className="field" name="website" placeholder="Website URL" defaultValue={links.website || ""} />
+        <input className="field" name="linkedin" placeholder="LinkedIn URL" defaultValue={typeof links.linkedin === "string" ? links.linkedin : ""} />
+        <input className="field" name="x" placeholder="X URL" defaultValue={typeof links.x === "string" ? links.x : ""} />
+        <input className="field" name="website" placeholder="Website URL" defaultValue={typeof links.website === "string" ? links.website : ""} />
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <label className="card flex items-center gap-3 p-4 text-sm font-medium">
-          <input defaultChecked={guest?.isFeatured ?? false} name="isFeatured" type="checkbox" />
+          <input defaultChecked={isFeatured} name="isFeatured" type="checkbox" />
           Destacar en la página de invitados
         </label>
         <label className="card flex items-center gap-3 p-4 text-sm font-medium">

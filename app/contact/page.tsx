@@ -1,6 +1,6 @@
 import { CalendarDays, HelpCircle, Instagram, Linkedin, Mail, Mic2, Users, Youtube } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
-import { MediaCollage } from "@/components/media/media-collage";
+import { BackgroundMediaLoop } from "@/components/media/background-media-loop";
 import { getMediaItems, getSiteConfig } from "@/lib/queries";
 
 const helpItems = [
@@ -24,12 +24,10 @@ export default async function ContactPage() {
     <section className="dark bg-[#111312] text-white">
       <div className="shell grid gap-8 py-8 sm:py-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
         <div className="lg:sticky lg:top-28">
-          <MediaCollage
+          <BackgroundMediaLoop
             items={mediaItems}
-            title="Historias"
-            accent="en movimiento"
+            title="Nuestra comunidad en movimiento"
             description="Personas, ideas e iniciativas que impulsan a la ingeniería industrial."
-            className="!border-0 !bg-transparent !p-0 !shadow-none"
           />
         </div>
 

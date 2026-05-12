@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lightbulb, Mic2, MessageCircle } from "lucide-react";
+import { ArrowRight, CalendarDays, Handshake, Lightbulb, MessageCircle, Mic2, Users } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { getSiteConfig, hasDatabase } from "@/lib/queries";
@@ -23,18 +23,28 @@ export default async function CommunityPage() {
   ]);
 
   return (
-    <section className="shell py-12">
+    <main className="dark bg-[#111312] text-white">
+      <section className="shell py-9">
       <div className="max-w-3xl">
-        <p className="pill">{config.communityPageEyebrow || "COMUNIDAD"}</p>
-        <h1 className="mt-4 text-4xl font-black">{config.communityPageTitle || "Participa en Industrial con J"}</h1>
-        <p className="text-content mt-4 text-sm leading-7 text-[color:var(--muted)]">
+        <p className="brand-kicker text-xs text-[color:var(--accent)]">{config.communityPageEyebrow || "COMUNIDAD"}</p>
+        <h1 className="mt-3 text-4xl font-black">{config.communityPageTitle || "Participa en Industrial con J"}</h1>
+        <p className="mt-4 text-sm leading-6 text-[color:var(--muted)]">
           {config.communityPageDescription || "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad."}
         </p>
       </div>
 
-      <div className="mt-8 grid gap-8 xl:grid-cols-[0.82fr_1fr_0.95fr]">
-        <aside className="card p-6">
-          <h2 className="text-2xl font-black">Espacios de participación</h2>
+      <nav className="mt-6 flex flex-wrap gap-2 rounded-xl border border-white/10 bg-white/[0.04] p-2">
+        {["Episodios", "Invitados", "Comunidad", "Aliados"].map((item) => (
+          <Link key={item} href={item === "Comunidad" ? "/community" : `/podcast?tab=${item.toLowerCase()}`} className={`rounded-full px-5 py-2 text-sm font-bold ${item === "Comunidad" ? "bg-[color:var(--accent)] text-white" : "border border-white/10 bg-white/[0.04] text-white/75"}`}>
+            {item}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="mt-5 grid gap-4 xl:grid-cols-[0.82fr_1fr_0.95fr]">
+        <aside className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <h2 className="text-xl font-black">Espacios de participación</h2>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">Elige cómo te gustaría contribuir a la comunidad.</p>
           <div className="mt-5 space-y-4">
             {[
               { title: "Propón un tema", text: "Sugiere un tema que te gustaría que conversemos en el podcast.", icon: Lightbulb },
@@ -43,12 +53,15 @@ export default async function CommunityPage() {
             ].map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
-                  <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
+                <article key={item.title} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.035] p-4">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-white/15 text-[color:var(--accent)]">
                     <Icon size={18} />
                   </div>
+                  <div className="min-w-0 flex-1">
                   <h3 className="font-bold">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[color:var(--muted)]">{item.text}</p>
+                  <p className="mt-1 text-xs leading-5 text-[color:var(--muted)]">{item.text}</p>
+                  </div>
+                  <ArrowRight size={17} />
                 </article>
               );
             })}
@@ -57,12 +70,15 @@ export default async function CommunityPage() {
 
         <div className="space-y-6">
           {surveys.length === 0 ? (
-            <div className="card p-8">
-              <h2 className="text-2xl font-bold">{config.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
-              <p className="mt-3 text-sm text-[color:var(--muted)]">{config.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}</p>
+            <div className="grid min-h-[340px] place-items-center rounded-2xl border border-white/10 bg-white/[0.035] p-8 text-center">
+              <div>
+              <MessageCircle className="mx-auto text-white/45" size={82} />
+              <h2 className="mt-6 text-2xl font-bold">{config.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[color:var(--muted)]">{config.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}</p>
               <Link href="/episodes" className="btn-secondary mt-5">
-                Explorar episodios
+                Explorar episodios <ArrowRight size={16} />
               </Link>
+              </div>
             </div>
           ) : (
             surveys.map((survey) => (
@@ -81,13 +97,38 @@ export default async function CommunityPage() {
           )}
         </div>
 
-        <ContactForm
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <ContactForm
           type="CONTACT"
           title={config.communityContactTitle || "Queremos escucharte"}
           description={config.communityContactDescription || "Déjanos tu comentario, idea o propuesta."}
           submitLabel={config.communityContactSubmitLabel || "Enviar mensaje"}
+          hideHeader={false}
+          className="!border-0 !bg-transparent !p-0 !shadow-none"
         />
+        </div>
       </div>
-    </section>
+
+      <section className="mt-4 grid gap-4 rounded-xl border border-white/10 bg-white/[0.035] p-5 md:grid-cols-4">
+        {[
+          { title: "Podcast", text: "Escucha conversaciones con líderes de la industria.", icon: Mic2 },
+          { title: "Eventos", text: "Participa en encuentros, charlas y actividades.", icon: CalendarDays },
+          { title: "Comunidad", text: "Comparte, aprende y colabora con personas apasionadas.", icon: Users },
+          { title: "Aliados", text: "Conoce a nuestras organizaciones aliadas.", icon: Handshake }
+        ].map((item) => {
+          const Icon = item.icon;
+          return (
+            <article key={item.title} className="flex items-center gap-4 md:border-r md:border-white/10 md:last:border-r-0">
+              <span className="grid h-12 w-12 place-items-center rounded-full border border-white/10 text-[color:var(--accent)]"><Icon size={21} /></span>
+              <div>
+                <h3 className="font-bold">{item.title}</h3>
+                <p className="mt-1 text-xs leading-5 text-[color:var(--muted)]">{item.text}</p>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+      </section>
+    </main>
   );
 }

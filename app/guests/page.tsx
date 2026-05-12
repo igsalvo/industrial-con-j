@@ -11,6 +11,11 @@ const tabs = [
   { href: "/podcast?tab=sponsors", label: "Aliados" }
 ];
 
+function isFeaturedGuest(guest: { socialLinks: unknown }) {
+  const links = (guest.socialLinks ?? {}) as Record<string, unknown>;
+  return links.isFeatured === true || links.isFeatured === "true" || links.isFeatured === "on" || links.isFeatured === "1";
+}
+
 export default async function GuestsPage({
   searchParams
 }: {
@@ -27,7 +32,7 @@ export default async function GuestsPage({
     const matchesIndustry = industry ? guest.industries.includes(industry) : true;
     return matchesTerm && matchesIndustry;
   });
-  const selectedFeatured = filtered.filter((guest) => guest.isFeatured);
+  const selectedFeatured = filtered.filter(isFeaturedGuest);
   const featured = (selectedFeatured.length ? selectedFeatured : filtered).slice(0, 2);
   const rest = filtered.filter((guest) => !featured.some((item) => item.id === guest.id));
 

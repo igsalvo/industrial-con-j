@@ -50,7 +50,7 @@ export default async function AdminGuestsPage() {
                     <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
                       {guest.isVisible ? "Visible" : "Oculto"}
                     </span>
-                    {guest.isFeatured ? (
+                    {((guest.socialLinks as Record<string, unknown> | null)?.isFeatured === true || (guest.socialLinks as Record<string, unknown> | null)?.isFeatured === "true") ? (
                       <span className="rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--accent-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Destacado
                       </span>

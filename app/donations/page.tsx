@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { ContactForm } from "@/components/forms/contact-form";
-import { MediaCollage } from "@/components/media/media-collage";
+import { BackgroundMediaLoop } from "@/components/media/background-media-loop";
 import { getMediaItems, getSiteConfig } from "@/lib/queries";
 
 export default async function DonationsPage() {
@@ -13,12 +13,10 @@ export default async function DonationsPage() {
     <section className="dark bg-[#111312] text-white">
       <div className="shell grid gap-6 py-9 lg:grid-cols-[1.06fr_0.98fr] lg:items-stretch">
         <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5">
-          <MediaCollage
+          <BackgroundMediaLoop
             items={mediaItems}
-            title="Tu apoyo impulsa historias"
-            accent="en movimiento"
+            title="Tu apoyo impulsa historias en movimiento"
             description="Con tu donación, amplificamos voces, conectamos personas y creamos espacios de aprendizaje que fortalecen a la comunidad de Ingeniería Industrial."
-            className="!border-0 !bg-transparent !p-0 !shadow-none"
           />
         </div>
 

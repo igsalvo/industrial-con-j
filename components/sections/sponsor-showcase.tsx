@@ -23,6 +23,7 @@ function tierColor(tier?: string | null) {
 export function SponsorShowcase({ sponsors }: { sponsors: Sponsor[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = sponsors[activeIndex];
+  const rotationKey = sponsors.map((sponsor) => sponsor.id).join("|");
 
   useEffect(() => {
     if (sponsors.length < 2) {
@@ -31,10 +32,10 @@ export function SponsorShowcase({ sponsors }: { sponsors: Sponsor[] }) {
 
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % sponsors.length);
-    }, 5000);
+    }, 3000);
 
     return () => window.clearInterval(interval);
-  }, [sponsors.length]);
+  }, [rotationKey, sponsors.length]);
 
   if (!active) {
     return <p className="rounded-2xl border border-white/10 p-5 text-sm text-[color:var(--muted)]">Aún no hay aliados publicados.</p>;
@@ -42,7 +43,7 @@ export function SponsorShowcase({ sponsors }: { sponsors: Sponsor[] }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.82fr_1fr]">
-      <a href={active.websiteUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-white/10 bg-white/[0.035] p-7 transition hover:border-[color:var(--accent)]">
+      <a key={active.id} href={active.websiteUrl} target="_blank" rel="noreferrer" className="rounded-2xl border border-white/10 bg-white/[0.035] p-7 transition duration-500 hover:border-[color:var(--accent)]">
         <div className="flex h-44 items-center justify-center rounded-2xl bg-white p-8">
           {active.logoUrl ? <img src={active.logoUrl} alt={active.name} className="max-h-full w-full object-contain" /> : <Handshake className="text-[color:var(--accent)]" size={52} />}
         </div>

@@ -18,6 +18,11 @@ const tabs = [
   { id: "sponsors", label: "Aliados" }
 ] as const;
 
+function isFeaturedGuest(guest: { socialLinks: unknown }) {
+  const links = (guest.socialLinks ?? {}) as Record<string, unknown>;
+  return links.isFeatured === true || links.isFeatured === "true" || links.isFeatured === "on" || links.isFeatured === "1";
+}
+
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const params = await searchParams;
   const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
@@ -65,6 +70,8 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
     }
   } as const;
   const heading = headings[activeTab as keyof typeof headings];
+  const featuredGuests = guests.filter(isFeaturedGuest);
+  const regularGuests = guests.filter((guest) => !featuredGuests.some((featured) => featured.id === guest.id));
 
   return (
     <main className="shell space-y-8 py-10">
@@ -119,10 +126,21 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       ) : null}
 
       {activeTab === "guests" ? (
-        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {guests.map((guest) => (
-            <GuestCard key={guest.slug} guest={guest} />
-          ))}
+        <section className="space-y-6">
+          {featuredGuests.length ? (
+            <div className="grid gap-6 md:grid-cols-2">
+              {featuredGuests.map((guest) => (
+                <div key={guest.slug} className="rounded-[1.75rem] border border-[color:var(--accent)]/60 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.14),transparent_32%),rgba(255,255,255,0.04)] p-1 shadow-[0_0_36px_rgba(226,33,28,0.13)]">
+                  <GuestCard guest={guest} />
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {regularGuests.map((guest) => (
+              <GuestCard key={guest.slug} guest={guest} />
+            ))}
+          </div>
         </section>
       ) : null}
 

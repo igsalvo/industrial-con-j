@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, CalendarDays, Search, Tag, X } from "lucide-react";
+import { Building2, CalendarDays, Search, Star, X } from "lucide-react";
 import { getAllGuests, getSiteConfig } from "@/lib/queries";
 import { GuestCard } from "@/components/ui/guest-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -93,7 +93,7 @@ export default async function GuestsPage({
                     <img src={guest.profileImage} alt={guest.name} className="h-full min-h-72 w-full object-cover" style={{ objectPosition: `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}` }} />
                   ) : null}
                   <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full border border-[color:var(--accent)]/60 bg-black/45 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)] backdrop-blur">
-                    <Tag size={12} />Destacado
+                    <Star size={12} />Destacado
                   </span>
                 </div>
                 <div className="p-6">

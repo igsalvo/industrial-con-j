@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, BadgeDollarSign, Gift, Handshake, HeartHandshake, Landmark, Package, Sparkles, Target, Users } from "lucide-react";
+import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 
 const icons = {
   purpose: Target,
@@ -116,21 +117,11 @@ export function ProductGrid({
       {products.map((product) => {
         const extraPhotos = Array.isArray(product.photoUrls) ? product.photoUrls.filter((photo): photo is string => typeof photo === "string" && photo.length > 0) : [];
         const photos = [product.photoUrl, ...extraPhotos].filter((photo): photo is string => Boolean(photo));
+        const objectPosition = `${product.photoPositionX || "center"} ${product.photoPositionY || "center"}`;
 
         return (
         <article key={product.id} className="card overflow-hidden">
-          <div className="bg-[color:var(--surface-strong)]">
-            <div className="aspect-square">
-              {photos[0] ? <img src={photos[0]} alt={product.name} className="h-full w-full object-cover" style={{ objectPosition: `${product.photoPositionX || "center"} ${product.photoPositionY || "center"}` }} /> : null}
-            </div>
-            {photos.length > 1 ? (
-              <div className="grid grid-cols-3 gap-2 border-t border-[color:var(--line)] p-2">
-                {photos.slice(1, 4).map((photo, index) => (
-                  <img key={`${photo}-${index}`} src={photo} alt={`${product.name} ${index + 2}`} className="aspect-square rounded-lg object-cover" />
-                ))}
-              </div>
-            ) : null}
-          </div>
+          <ProductPhotoSlider name={product.name} photos={photos} objectPosition={objectPosition} />
           <div className="p-5">
             <h3 className="text-2xl font-bold">{product.name}</h3>
             <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">{product.description}</p>
@@ -143,7 +134,7 @@ export function ProductGrid({
                 <ArrowUpRight size={15} />
               </a>
             ) : (
-              <Link className="btn-secondary mt-5 w-full gap-2" href="/contact">
+              <Link className="btn-primary mt-5 w-full gap-2" href="/contact">
                 Consultar
                 <ArrowUpRight size={15} />
               </Link>

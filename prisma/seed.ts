@@ -169,6 +169,7 @@ async function main() {
     prisma.identityItem.deleteMany({ where: { title: { in: ["Proposito Industrial con J", "Vision Industrial con J", "Mision Industrial con J", "Valores Industrial con J"] } } }),
     prisma.honorMember.deleteMany({ where: { name: "Comunidad Industrial" } }),
     prisma.event.deleteMany({ where: { title: { in: ["Encuentro comunidad industrial", "Taller de operaciones"] } } }),
+    prisma.calendarSource.deleteMany({ where: { calendarIdOrUrl: "vinculacion.dii@uchile.cl" } }),
     prisma.participationItem.deleteMany({ where: { title: { in: ["Donar al proyecto", "Alianzas para episodios", "Sumarse a la comunidad"] } } }),
     prisma.product.deleteMany({ where: { slug: { in: ["polera-industrial-con-j", "sticker-pack-cein"] } } })
   ]);
@@ -221,12 +222,20 @@ async function main() {
         description: "Pack simple para probar categorias y busqueda.",
         price: 2990,
         stock: 50,
-        ctaText: "Reservar",
+        ctaText: "Consultar",
         ctaLink: "https://www.instagram.com/ingenieriaindustrialuchile/",
         categoryId: papeleria.id,
         order: 2
       }
     ]
+  });
+
+  await prisma.calendarSource.create({
+    data: {
+      name: "Vinculación DII",
+      calendarIdOrUrl: "vinculacion.dii@uchile.cl",
+      order: 1
+    }
   });
 
   await prisma.participationItem.createMany({

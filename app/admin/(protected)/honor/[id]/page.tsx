@@ -10,7 +10,7 @@ const fields = [
   { name: "photoPositionY", label: "Posición vertical de foto (0 arriba, 100 abajo)", type: "number" },
   { name: "description", label: "Descripción", type: "textarea", required: true },
   { name: "role", label: "Cargo / rol opcional" },
-  { name: "generation", label: "Generación / año opcional" },
+  { name: "generation", label: "Año de ingreso / generación" },
   { name: "externalLinks", label: "Links externos JSON", type: "json" },
   { name: "order", label: "Orden", type: "number" },
   { name: "isVisible", label: "Visible", type: "checkbox" }

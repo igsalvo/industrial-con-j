@@ -42,6 +42,7 @@ export function SiteHeader({
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAdminRoute = pathname.startsWith("/admin");
+  const isTiendiitaRoute = pathname.startsWith("/tiendiita");
   const visibleLinks = links.filter((link) => {
     if (link.href === "/podcast") {
       return showPodcastLink;
@@ -120,7 +121,7 @@ export function SiteHeader({
         ) : null}
 
         <div className="hidden items-center gap-3 lg:flex">
-          {!isAdminRoute ? (
+          {!isAdminRoute && !isTiendiitaRoute ? (
             <Link href="/search" className="btn-secondary gap-2 !px-4 !py-3 text-sm">
               <Search size={16} />
               Buscar
@@ -173,10 +174,12 @@ export function SiteHeader({
             </nav>
 
             <div className="flex flex-wrap items-center gap-3">
-              <Link href="/search" className="btn-secondary gap-2 !px-4 !py-3 text-sm">
-                <Search size={16} />
-                Buscar
-              </Link>
+              {!isTiendiitaRoute ? (
+                <Link href="/search" className="btn-secondary gap-2 !px-4 !py-3 text-sm">
+                  <Search size={16} />
+                  Buscar
+                </Link>
+              ) : null}
               <LanguageToggle />
               <ThemeToggle />
             </div>

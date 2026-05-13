@@ -73,6 +73,7 @@ type SiteConfigShape = {
   productsSectionTitle: string | null;
   productsSectionDescription: string | null;
   productsSectionOrder: number;
+  productQuoteEmail: string | null;
   eventsSectionEyebrow: string | null;
   eventsSectionTitle: string | null;
   eventsSectionDescription: string | null;
@@ -298,6 +299,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       productsSectionTitle: formData.get("productsSectionTitle"),
       productsSectionDescription: formData.get("productsSectionDescription"),
       productsSectionOrder: formData.get("productsSectionOrder"),
+      productQuoteEmail: formData.get("productQuoteEmail"),
       eventsSectionEyebrow: formData.get("eventsSectionEyebrow"),
       eventsSectionTitle: formData.get("eventsSectionTitle"),
       eventsSectionDescription: formData.get("eventsSectionDescription"),
@@ -533,6 +535,11 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
               </div>
             </div>
           ))}
+          <div className="rounded-2xl border border-[color:var(--line)] p-4">
+            <label className="mb-2 block text-sm font-semibold">Correo para cotizaciones TienDIIta</label>
+            <input className="field" name="productQuoteEmail" type="email" defaultValue={config.productQuoteEmail || ""} placeholder="cotizaciones@industrialconj.cl" />
+            <p className="mt-2 text-xs text-[color:var(--muted)]">Destino de las solicitudes enviadas desde el carrito de cotización.</p>
+          </div>
         </div>
       </div>
 

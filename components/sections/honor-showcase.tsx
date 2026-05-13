@@ -15,6 +15,15 @@ type HonorMember = {
   generation: string | null;
 };
 
+function formatGeneration(generation?: string | null) {
+  const normalized = generation?.trim();
+  if (!normalized) {
+    return null;
+  }
+
+  return /^gen\s*:/i.test(normalized) ? normalized.replace(/^gen/i, "GEN") : `GEN: ${normalized}`;
+}
+
 export function HonorShowcase({ members }: { members: HonorMember[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const featured = members[activeIndex];
@@ -48,8 +57,8 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
           <div className="relative max-w-lg">
             <p className="brand-kicker text-xs text-[color:var(--accent)]">Miembro destacado</p>
             <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.name}</h2>
-            {featured.generation ? <p className="mt-4 font-bold text-[color:var(--accent)]">{featured.generation}</p> : null}
-            <p className="mt-4 line-clamp-4 text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p>
+            {formatGeneration(featured.generation) ? <p className="mt-4 text-lg font-bold text-[color:var(--accent)]">{formatGeneration(featured.generation)}</p> : null}
+            <p className="mt-4 line-clamp-4 text-base leading-7 text-[color:var(--muted)]">{featured.description}</p>
             <Link href="/honor" className="btn-primary mt-6 gap-2 !px-5 !py-2 text-sm">
               Ver perfil
               <ArrowRight size={16} />
@@ -74,7 +83,7 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
               </div>
               <div className="p-4">
                 <h3 className="line-clamp-1 font-black">{member.name}</h3>
-                {member.generation ? <p className="mt-2 text-sm font-bold text-[color:var(--accent)]">{member.generation}</p> : null}
+                {formatGeneration(member.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(member.generation)}</p> : null}
                 <span className="mt-3 inline-flex items-center gap-2 text-sm text-white/80">Ver perfil <ArrowRight size={14} /></span>
               </div>
             </button>

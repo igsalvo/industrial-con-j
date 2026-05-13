@@ -1,14 +1,6 @@
-import { CalendarDays, HelpCircle, Mic2, Users } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { BackgroundMediaLoop } from "@/components/media/background-media-loop";
 import { getMediaItems, getSiteConfig } from "@/lib/queries";
-
-const helpItems = [
-  { title: "Propuestas de contenido", description: "Ideas para el podcast o colaboraciones.", icon: Mic2 },
-  { title: "Eventos y activaciones", description: "Participar, patrocinar o postular tu evento.", icon: CalendarDays },
-  { title: "Comunidad", description: "Alumni, alianzas o iniciativas conjuntas.", icon: Users },
-  { title: "Otros", description: "Dudas, sugerencias o comentarios.", icon: HelpCircle }
-];
 
 export default async function ContactPage() {
   const [config, mediaItems] = await Promise.all([getSiteConfig(), getMediaItems("contact.collage")]);
@@ -36,22 +28,6 @@ export default async function ContactPage() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.2)]">
             <ContactForm showSubject hideHeader submitLabel="Enviar mensaje" className="!border-0 !bg-transparent !p-0 !shadow-none" />
           </div>
-
-          <section>
-            <h2 className="text-sm font-bold">¿En qué podemos ayudarte?</h2>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {helpItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <article key={item.title} className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                    <Icon className="text-[color:var(--accent)]" size={20} />
-                    <h3 className="mt-4 text-sm font-black leading-tight">{item.title}</h3>
-                    <p className="mt-1 text-xs leading-4 text-[color:var(--muted)]">{item.description}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
         </div>
       </div>
     </section>

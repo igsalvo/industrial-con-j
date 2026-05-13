@@ -146,7 +146,12 @@ ADMIN_SEED_EMAIL="admin@industrialconj.com"
 ADMIN_SEED_PASSWORD="change-this-before-seeding"
 UPLOAD_DIR="./public/uploads"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+PRODUCT_QUOTE_EMAIL="cotizaciones@industrialconj.cl"
+RESEND_API_KEY=""
+QUOTE_EMAIL_FROM="Industrial con J <cotizaciones@industrialconj.cl>"
 ```
+
+`PRODUCT_QUOTE_EMAIL` is only a fallback. The preferred destination for TienDIIta quotes is editable in the admin site configuration. `RESEND_API_KEY` enables actual email delivery from `POST /api/tiendiita/quote`; without it, quote requests are still stored as contact messages.
 
 ## Local Setup
 

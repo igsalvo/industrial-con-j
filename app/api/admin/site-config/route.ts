@@ -128,6 +128,7 @@ export async function PATCH(request: Request) {
     productsSectionTitle: toNullableString(payload.productsSectionTitle),
     productsSectionDescription: toNullableString(payload.productsSectionDescription),
     productsSectionOrder: toNumber(payload.productsSectionOrder, 8),
+    productQuoteEmail: toNullableString(payload.productQuoteEmail),
     eventsSectionEyebrow: toNullableString(payload.eventsSectionEyebrow),
     eventsSectionTitle: toNullableString(payload.eventsSectionTitle),
     eventsSectionDescription: toNullableString(payload.eventsSectionDescription),

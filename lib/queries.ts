@@ -69,6 +69,7 @@ export const defaultSiteConfig = {
   productsSectionTitle: "Productos con identidad industrial",
   productsSectionDescription: "Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial.",
   productsSectionOrder: 8,
+  productQuoteEmail: null,
   eventsSectionEyebrow: "Eventos",
   eventsSectionTitle: "Próximas actividades",
   eventsSectionDescription: "Calendario de encuentros, hitos y actividades abiertas para la comunidad.",

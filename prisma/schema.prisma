@@ -251,6 +251,7 @@ model SiteConfig {
   productsSectionTitle        String?  @default("Productos con identidad industrial")
   productsSectionDescription  String?  @default("Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial.")
   productsSectionOrder        Int      @default(8)
+  productQuoteEmail           String?
   eventsSectionEyebrow        String?  @default("Eventos")
   eventsSectionTitle          String?  @default("Próximas actividades")
   eventsSectionDescription    String?  @default("Calendario de encuentros, hitos y actividades abiertas para la comunidad.")

@@ -14,6 +14,17 @@ const icons = {
   price: BadgeDollarSign
 };
 
+const ceinInstagramUrl = "https://www.instagram.com/cein_uchile/";
+
+function formatGeneration(generation?: string | null) {
+  const normalized = generation?.trim();
+  if (!normalized) {
+    return null;
+  }
+
+  return /^gen\s*:/i.test(normalized) ? normalized.replace(/^gen/i, "GEN") : `GEN: ${normalized}`;
+}
+
 function IconView({ name }: { name?: string | null }) {
   const key = (name || "").toLowerCase() as keyof typeof icons;
   const Icon = icons[key] || Sparkles;
@@ -79,7 +90,7 @@ export function HonorGrid({
             </div>
             <div className="p-5">
               <h3 className="text-2xl font-bold">{member.name}</h3>
-              {member.generation ? <p className="mt-2 text-sm font-semibold text-[color:var(--accent)]">{member.generation}</p> : null}
+              {formatGeneration(member.generation) ? <p className="mt-2 text-sm font-semibold text-[color:var(--accent)]">{formatGeneration(member.generation)}</p> : null}
               {member.role ? <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{member.role}</p> : null}
               <details className="group mt-4">
                 <summary className="cursor-pointer list-none text-sm font-semibold text-[color:var(--foreground)]">
@@ -129,15 +140,15 @@ export function ProductGrid({
               <p className="text-xl font-black">${Number(product.price).toLocaleString("es-CL")}</p>
             </div>
             {product.ctaLink ? (
-              <a className="btn-primary mt-5 w-full gap-2" href={product.ctaLink} target="_blank" rel="noreferrer">
+              <a className="btn-primary mt-5 w-full gap-2" href={ceinInstagramUrl} target="_blank" rel="noreferrer">
                 Consultar
                 <ArrowUpRight size={15} />
               </a>
             ) : (
-              <Link className="btn-primary mt-5 w-full gap-2" href="/contact">
+              <a className="btn-primary mt-5 w-full gap-2" href={ceinInstagramUrl} target="_blank" rel="noreferrer">
                 Consultar
                 <ArrowUpRight size={15} />
-              </Link>
+              </a>
             )}
           </div>
         </article>

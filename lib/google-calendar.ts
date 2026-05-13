@@ -5,9 +5,6 @@ export type CalendarEvent = {
   location: string;
   start: Date;
   end: Date | null;
-  sourceName?: string | null;
-  sourceLogoUrl?: string | null;
-  sourceCalendarUrl?: string | null;
 };
 
 type IcalEventLike = {
@@ -43,12 +40,8 @@ function toEventText(value: unknown, fallback = "") {
   return fallback;
 }
 
-function toGoogleCalendarIcsUrl(value: string) {
-  return `https://calendar.google.com/calendar/ical/${encodeURIComponent(value)}/public/basic.ics`;
-}
-
-export function getCalendarFeedUrl(calendarIdOrUrl?: string | null) {
-  const value = calendarIdOrUrl?.trim() || process.env.GOOGLE_CALENDAR_ID?.trim();
+function getCalendarFeedUrl() {
+  const value = process.env.GOOGLE_CALENDAR_ID?.trim();
 
   if (!value) {
     console.error("Missing GOOGLE_CALENDAR_ID. Using default Industrial con J calendar feed.");
@@ -56,50 +49,13 @@ export function getCalendarFeedUrl(calendarIdOrUrl?: string | null) {
   }
 
   if (value.startsWith("http")) {
-    try {
-      const url = new URL(value);
-      const src = url.searchParams.get("src");
-      if (url.hostname.includes("calendar.google.com") && src) {
-        return toGoogleCalendarIcsUrl(src);
-      }
-
-      if (url.hostname.includes("calendar.google.com") && url.pathname.includes("/calendar/embed")) {
-        console.error("Google Calendar embed URL is missing src parameter.", value);
-        return DEFAULT_CALENDAR_ICS_URL;
-      }
-    } catch {
-      return value;
-    }
-
     return value;
   }
 
-  return toGoogleCalendarIcsUrl(value);
+  return `https://calendar.google.com/calendar/ical/${encodeURIComponent(value)}/public/basic.ics`;
 }
 
-async function loadCalendarData(ical: any, url: string) {
-  try {
-    return await ical.async.fromURL(url);
-  } catch (fromUrlError) {
-    console.error("Google Calendar fromURL failed, retrying with fetch", fromUrlError);
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Calendar feed failed with ${response.status}`);
-    }
-    const body = await response.text();
-    if (!body.trim()) {
-      return {};
-    }
-    return await ical.async.parseICS(body);
-  }
-}
-
-function toCalendarEvent(
-  event: IcalEventLike,
-  start: Date | null,
-  end: Date | null,
-  source?: { name?: string | null; logoUrl?: string | null; calendarIdOrUrl?: string | null }
-): CalendarEvent | null {
+function toCalendarEvent(event: IcalEventLike, start: Date | null, end: Date | null): CalendarEvent | null {
   if (!start) {
     return null;
   }
@@ -110,9 +66,6 @@ function toCalendarEvent(
     location: toEventText(event.location),
     start,
     end,
-    sourceName: source?.name || null,
-    sourceLogoUrl: source?.logoUrl || null,
-    sourceCalendarUrl: source?.calendarIdOrUrl || null,
     uid: event.uid || `${start.toISOString()}-${toEventText(event.summary, "sin-titulo")}`
   };
 }
@@ -161,16 +114,13 @@ export function createIcsContent(event: {
     .join("\r\n");
 }
 
-export async function getEventsFromICS(
-  limit = 12,
-  source?: { name?: string | null; logoUrl?: string | null; calendarIdOrUrl?: string | null }
-): Promise<CalendarEvent[]> {
-  const url = getCalendarFeedUrl(source?.calendarIdOrUrl);
+export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
+  const url = getCalendarFeedUrl();
 
   try {
     const icalModule = await import("node-ical");
     const ical = icalModule.default ?? icalModule;
-    const data = await loadCalendarData(ical, url);
+    const data = await ical.async.fromURL(url);
     const now = new Date();
     const rangeEnd = new Date(now);
     rangeEnd.setMonth(rangeEnd.getMonth() + 18);
@@ -186,7 +136,7 @@ export async function getEventsFromICS(
         });
 
         for (const instance of instances) {
-          const instanceEvent = toCalendarEvent(instance.event as IcalEventLike, new Date(instance.start), instance.end ? new Date(instance.end) : null, source);
+          const instanceEvent = toCalendarEvent(instance.event as IcalEventLike, new Date(instance.start), instance.end ? new Date(instance.end) : null);
           if (instanceEvent) {
             parsedEvents.push({
               ...instanceEvent,
@@ -198,7 +148,7 @@ export async function getEventsFromICS(
         continue;
       }
 
-      const parsedEvent = toCalendarEvent(event, event.start ? new Date(event.start) : null, event.end ? new Date(event.end) : null, source);
+      const parsedEvent = toCalendarEvent(event, event.start ? new Date(event.start) : null, event.end ? new Date(event.end) : null);
       if (parsedEvent) {
         parsedEvents.push(parsedEvent);
       }

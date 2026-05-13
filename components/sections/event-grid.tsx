@@ -15,9 +15,6 @@ export type PublicCalendarEvent = {
   imageUrl?: string | null;
   imagePositionX?: string | null;
   imagePositionY?: string | null;
-  sourceName?: string | null;
-  sourceLogoUrl?: string | null;
-  sourceCalendarUrl?: string | null;
   ctaLink?: string | null;
   ctaText?: string | null;
 };
@@ -65,11 +62,6 @@ function getMonthDays(monthDate: Date) {
 
 function isSameMonth(date: Date, monthDate: Date) {
   return date.getFullYear() === monthDate.getFullYear() && date.getMonth() === monthDate.getMonth();
-}
-
-function getExternalEventLink(event: PublicCalendarEvent) {
-  if (event.ctaLink) return event.ctaLink;
-  return event.sourceCalendarUrl?.startsWith("http") ? event.sourceCalendarUrl : null;
 }
 
 export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEvent[]; fallbackImage?: PublicMediaItem }) {
@@ -147,12 +139,6 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
           </div>
           <div className="relative max-w-xl py-5">
             <p className="brand-kicker text-xs text-[color:var(--accent)]">Evento destacado</p>
-            {featured.sourceName || featured.sourceLogoUrl ? (
-              <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/20 px-3 py-2 text-xs font-semibold text-white">
-                {featured.sourceLogoUrl ? <img src={featured.sourceLogoUrl} alt={featured.sourceName || "Calendario"} className="h-8 w-8 rounded-full object-cover" /> : null}
-                {featured.sourceName ? <span>{featured.sourceName}</span> : null}
-              </div>
-            ) : null}
             <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.title}</h2>
             {featured.description ? <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p> : null}
             <div className="mt-6 grid gap-4 text-sm text-white sm:grid-cols-2">
@@ -164,8 +150,8 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 <CalendarPlus size={16} />
                 Agregar a mi calendario
               </a>
-              {getExternalEventLink(featured) ? (
-                <a className="btn-secondary gap-2 !px-4 !py-2 text-sm" href={getExternalEventLink(featured) || ""} target="_blank" rel="noreferrer">
+              {featured.ctaLink ? (
+                <a className="btn-secondary gap-2 !px-4 !py-2 text-sm" href={featured.ctaLink} target="_blank" rel="noreferrer">
                   {featured.ctaText || "Ver detalles"}
                   <ArrowRight size={15} />
                 </a>
@@ -191,17 +177,11 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">{event.title}</h3>
-                  {event.sourceName || event.sourceLogoUrl ? (
-                    <div className="mt-2 inline-flex items-center gap-2 text-xs font-semibold text-white/80">
-                      {event.sourceLogoUrl ? <img src={event.sourceLogoUrl} alt={event.sourceName || "Calendario"} className="h-6 w-6 rounded-full object-cover" /> : null}
-                      {event.sourceName ? <span>{event.sourceName}</span> : null}
-                    </div>
-                  ) : null}
                   {event.description ? <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
                   {event.location ? <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]"><MapPin size={16} />{event.location}</p> : null}
                 </div>
-                {getExternalEventLink(event) ? (
-                  <a className="btn-secondary !bg-transparent !p-3 text-sm" href={getExternalEventLink(event) || ""} target="_blank" rel="noreferrer" aria-label={`Ver detalles de ${event.title}`}><ArrowRight size={16} /></a>
+                {event.ctaLink ? (
+                  <a className="btn-secondary !bg-transparent !p-3 text-sm" href={event.ctaLink} target="_blank" rel="noreferrer" aria-label={`Ver detalles de ${event.title}`}><ArrowRight size={16} /></a>
                 ) : null}
               </article>
             ))

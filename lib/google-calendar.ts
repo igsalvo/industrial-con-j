@@ -5,6 +5,9 @@ export type CalendarEvent = {
   location: string;
   start: Date;
   end: Date | null;
+  sourceName?: string | null;
+  sourceLogoUrl?: string | null;
+  sourceCalendarUrl?: string | null;
 };
 
 type IcalEventLike = {
@@ -40,8 +43,8 @@ function toEventText(value: unknown, fallback = "") {
   return fallback;
 }
 
-function getCalendarFeedUrl() {
-  const value = process.env.GOOGLE_CALENDAR_ID?.trim();
+export function getCalendarFeedUrl(calendarIdOrUrl?: string | null) {
+  const value = calendarIdOrUrl?.trim() || process.env.GOOGLE_CALENDAR_ID?.trim();
 
   if (!value) {
     console.error("Missing GOOGLE_CALENDAR_ID. Using default Industrial con J calendar feed.");
@@ -55,7 +58,12 @@ function getCalendarFeedUrl() {
   return `https://calendar.google.com/calendar/ical/${encodeURIComponent(value)}/public/basic.ics`;
 }
 
-function toCalendarEvent(event: IcalEventLike, start: Date | null, end: Date | null): CalendarEvent | null {
+function toCalendarEvent(
+  event: IcalEventLike,
+  start: Date | null,
+  end: Date | null,
+  source?: { name?: string | null; logoUrl?: string | null; calendarIdOrUrl?: string | null }
+): CalendarEvent | null {
   if (!start) {
     return null;
   }
@@ -66,6 +74,9 @@ function toCalendarEvent(event: IcalEventLike, start: Date | null, end: Date | n
     location: toEventText(event.location),
     start,
     end,
+    sourceName: source?.name || null,
+    sourceLogoUrl: source?.logoUrl || null,
+    sourceCalendarUrl: source?.calendarIdOrUrl || null,
     uid: event.uid || `${start.toISOString()}-${toEventText(event.summary, "sin-titulo")}`
   };
 }
@@ -114,8 +125,11 @@ export function createIcsContent(event: {
     .join("\r\n");
 }
 
-export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
-  const url = getCalendarFeedUrl();
+export async function getEventsFromICS(
+  limit = 12,
+  source?: { name?: string | null; logoUrl?: string | null; calendarIdOrUrl?: string | null }
+): Promise<CalendarEvent[]> {
+  const url = getCalendarFeedUrl(source?.calendarIdOrUrl);
 
   try {
     const icalModule = await import("node-ical");
@@ -136,7 +150,7 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
         });
 
         for (const instance of instances) {
-          const instanceEvent = toCalendarEvent(instance.event as IcalEventLike, new Date(instance.start), instance.end ? new Date(instance.end) : null);
+          const instanceEvent = toCalendarEvent(instance.event as IcalEventLike, new Date(instance.start), instance.end ? new Date(instance.end) : null, source);
           if (instanceEvent) {
             parsedEvents.push({
               ...instanceEvent,
@@ -148,7 +162,7 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
         continue;
       }
 
-      const parsedEvent = toCalendarEvent(event, event.start ? new Date(event.start) : null, event.end ? new Date(event.end) : null);
+      const parsedEvent = toCalendarEvent(event, event.start ? new Date(event.start) : null, event.end ? new Date(event.end) : null, source);
       if (parsedEvent) {
         parsedEvents.push(parsedEvent);
       }

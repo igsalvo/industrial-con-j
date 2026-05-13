@@ -59,6 +59,11 @@ h6 {
   text-align: justify;
 }
 
+p,
+li {
+  text-align: justify;
+}
+
 .grain {
   position: relative;
 }

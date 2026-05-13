@@ -15,15 +15,22 @@ type AccessItem = {
 
 function isPlayableHeroVideoUrl(value: string) {
   if (value.startsWith("/")) {
-    return /\.mp4(?:\?.*)?$/i.test(value);
+    return /\.(mp4|webm|mov)(?:\?.*)?$/i.test(value);
   }
 
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+    return url.protocol === "https:" && /\.(mp4|webm|mov)$/i.test(url.pathname);
   } catch {
     return false;
   }
+}
+
+function getVideoMimeType(value: string) {
+  const path = value.split("?")[0]?.toLowerCase() || "";
+  if (path.endsWith(".webm")) return "video/webm";
+  if (path.endsWith(".mov")) return "video/quicktime";
+  return "video/mp4";
 }
 
 export function HeroSection({
@@ -53,7 +60,7 @@ export function HeroSection({
   const showVideo = Boolean(config.heroVideoEnabled);
   const configuredVideoUrl = config.heroVideoUrl?.trim();
   const youtubeEmbedUrl = getYouTubeEmbedUrl(configuredVideoUrl);
-  const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : youtubeEmbedUrl ? null : "/hero-video.mp4";
+  const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : null;
   const hasHeroMedia = showVideo && (youtubeEmbedUrl || videoUrl);
   const videoPosterUrl = config.heroVideoPosterUrl || config.heroImageUrl || undefined;
   const accessItems = ([
@@ -144,7 +151,7 @@ export function HeroSection({
             ) : showVideo && videoUrl ? (
               <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
                 <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={videoPosterUrl}>
-                  <source src={videoUrl} type="video/mp4" />
+                  <source src={videoUrl} type={getVideoMimeType(videoUrl)} />
                 </video>
               </div>
             ) : config.heroImageUrl ? (

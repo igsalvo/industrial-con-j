@@ -105,7 +105,7 @@ export function HonorGrid({
 export function ProductGrid({
   products
 }: {
-  products: Array<{ id: string; name: string; photoUrl: string | null; photoPositionX?: string | null; photoPositionY?: string | null; description: string; price: unknown; stock: number | null; ctaText: string | null; ctaLink: string | null; category: { name: string } }>;
+  products: Array<{ id: string; name: string; photoUrl: string | null; photoUrls?: unknown; photoPositionX?: string | null; photoPositionY?: string | null; description: string; price: unknown; ctaText: string | null; ctaLink: string | null; category: { name: string } }>;
 }) {
   if (products.length === 0) {
     return <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">No hay productos que coincidan con la búsqueda.</p>;
@@ -113,22 +113,33 @@ export function ProductGrid({
 
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-      {products.map((product) => (
+      {products.map((product) => {
+        const extraPhotos = Array.isArray(product.photoUrls) ? product.photoUrls.filter((photo): photo is string => typeof photo === "string" && photo.length > 0) : [];
+        const photos = [product.photoUrl, ...extraPhotos].filter((photo): photo is string => Boolean(photo));
+
+        return (
         <article key={product.id} className="card overflow-hidden">
-          <div className="aspect-square bg-[color:var(--surface-strong)]">
-            {product.photoUrl ? <img src={product.photoUrl} alt={product.name} className="h-full w-full object-cover" style={{ objectPosition: `${product.photoPositionX || "center"} ${product.photoPositionY || "center"}` }} /> : null}
+          <div className="bg-[color:var(--surface-strong)]">
+            <div className="aspect-square">
+              {photos[0] ? <img src={photos[0]} alt={product.name} className="h-full w-full object-cover" style={{ objectPosition: `${product.photoPositionX || "center"} ${product.photoPositionY || "center"}` }} /> : null}
+            </div>
+            {photos.length > 1 ? (
+              <div className="grid grid-cols-3 gap-2 border-t border-[color:var(--line)] p-2">
+                {photos.slice(1, 4).map((photo, index) => (
+                  <img key={`${photo}-${index}`} src={photo} alt={`${product.name} ${index + 2}`} className="aspect-square rounded-lg object-cover" />
+                ))}
+              </div>
+            ) : null}
           </div>
           <div className="p-5">
-            <p className="pill">{product.category.name}</p>
-            <h3 className="mt-4 text-2xl font-bold">{product.name}</h3>
+            <h3 className="text-2xl font-bold">{product.name}</h3>
             <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">{product.description}</p>
             <div className="mt-5 flex items-center justify-between gap-4">
               <p className="text-xl font-black">${Number(product.price).toLocaleString("es-CL")}</p>
-              {typeof product.stock === "number" ? <p className="text-xs text-[color:var(--muted)]">Stock: {product.stock}</p> : null}
             </div>
-            {product.ctaText && product.ctaLink ? (
+            {product.ctaLink ? (
               <a className="btn-primary mt-5 w-full gap-2" href={product.ctaLink} target="_blank" rel="noreferrer">
-                {["agregar al carrito", "comprar ahora", "comprar"].includes(product.ctaText.trim().toLowerCase()) ? "Consultar" : product.ctaText}
+                Consultar
                 <ArrowUpRight size={15} />
               </a>
             ) : (
@@ -139,7 +150,8 @@ export function ProductGrid({
             )}
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }

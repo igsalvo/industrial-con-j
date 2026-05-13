@@ -187,14 +187,21 @@ export const productInputSchema = z.object({
   name: z.string().trim().min(1),
   slug: z.string().trim().optional().or(z.literal("")),
   photoUrl: optionalUrl,
+  photoUrls: z.array(z.string().trim().url("Ingresa una URL valida.")).default([]),
   photoPositionX: objectPositionX,
   photoPositionY: objectPositionY,
   description: z.string().trim().min(1),
   price: z.coerce.number().min(0),
-  stock: z.coerce.number().int().optional().or(z.literal("")),
   categoryId: z.string().trim().min(1),
-  ctaText: z.string().trim().optional().or(z.literal("")),
   ctaLink: optionalUrl,
+  order: z.coerce.number().int().default(0),
+  isVisible: z.boolean().default(true)
+});
+
+export const calendarSourceInputSchema = z.object({
+  name: z.string().trim().min(1),
+  calendarIdOrUrl: z.string().trim().min(1),
+  logoUrl: optionalUrl,
   order: z.coerce.number().int().default(0),
   isVisible: z.boolean().default(true)
 });
@@ -220,6 +227,9 @@ export const eventInputSchema = z.object({
   imageUrl: optionalUrl,
   imagePositionX: objectPositionX,
   imagePositionY: objectPositionY,
+  sourceName: z.string().trim().optional().or(z.literal("")),
+  sourceLogoUrl: optionalUrl,
+  sourceCalendarUrl: z.string().trim().optional().or(z.literal("")),
   type: z.string().trim().optional().or(z.literal("")),
   ctaText: z.string().trim().optional().or(z.literal("")),
   ctaLink: optionalUrl,
@@ -346,14 +356,24 @@ export function toProductPayload(input: z.infer<typeof productInputSchema>) {
     name: input.name,
     slug: input.slug?.trim() || slugify(input.name),
     photoUrl: input.photoUrl,
+    photoUrls: input.photoUrls,
     photoPositionX: input.photoPositionX,
     photoPositionY: input.photoPositionY,
     description: input.description,
     price: input.price,
-    stock: input.stock === "" || input.stock === undefined ? undefined : input.stock,
     categoryId: input.categoryId,
-    ctaText: input.ctaText || undefined,
+    ctaText: "Consultar",
     ctaLink: input.ctaLink,
+    order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toCalendarSourcePayload(input: z.infer<typeof calendarSourceInputSchema>) {
+  return {
+    name: input.name,
+    calendarIdOrUrl: input.calendarIdOrUrl,
+    logoUrl: input.logoUrl,
     order: input.order,
     isVisible: input.isVisible
   };
@@ -383,6 +403,9 @@ export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
     imageUrl: input.imageUrl,
     imagePositionX: input.imagePositionX,
     imagePositionY: input.imagePositionY,
+    sourceName: input.sourceName || undefined,
+    sourceLogoUrl: input.sourceLogoUrl,
+    sourceCalendarUrl: input.sourceCalendarUrl || undefined,
     type: input.type || undefined,
     ctaText: input.ctaText || undefined,
     ctaLink: input.ctaLink,

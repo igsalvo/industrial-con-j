@@ -322,6 +322,21 @@ export async function getPublicSectionsData() {
   }
 }
 
+export async function getCalendarSources() {
+  if (!hasDatabase()) {
+    return [];
+  }
+
+  try {
+    return await prisma.calendarSource.findMany({
+      where: { isVisible: true },
+      orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function getEpisodeBySlug(slug: string) {
   if (!hasDatabase()) {
     return null;

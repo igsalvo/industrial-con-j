@@ -359,6 +359,7 @@ model Product {
   name        String
   slug        String           @unique
   photoUrl    String?
+  photoUrls   Json             @default("[]")
   photoPositionX String @default("center")
   photoPositionY String @default("center")
   description String
@@ -405,6 +406,9 @@ model Event {
   imageUrl    String?
   imagePositionX String @default("center")
   imagePositionY String @default("center")
+  sourceName  String?
+  sourceLogoUrl String?
+  sourceCalendarUrl String?
   type        String?
   ctaText     String?
   ctaLink     String?
@@ -415,4 +419,17 @@ model Event {
 
   @@index([isVisible, startsAt])
   @@index([startsAt])
+}
+
+model CalendarSource {
+  id              String   @id @default(cuid())
+  name            String
+  calendarIdOrUrl String
+  logoUrl         String?
+  order           Int      @default(0)
+  isVisible       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isVisible, order])
 }

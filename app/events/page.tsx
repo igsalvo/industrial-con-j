@@ -1,7 +1,7 @@
 import { EventGrid } from "@/components/sections/event-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getEventsFromICS } from "@/lib/google-calendar";
-import { getMediaItems, getPublicSectionsData, getSiteConfig } from "@/lib/queries";
+import { getCalendarSources, getMediaItems, getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
 type CalendarEventItem = {
@@ -14,6 +14,9 @@ type CalendarEventItem = {
   imageUrl?: string | null;
   imagePositionX?: string | null;
   imagePositionY?: string | null;
+  sourceName?: string | null;
+  sourceLogoUrl?: string | null;
+  sourceCalendarUrl?: string | null;
   ctaLink?: string | null;
   ctaText?: string | null;
 };
@@ -55,10 +58,13 @@ function mergeCalendarEvents(adminEvents: CalendarEventItem[], icsEvents: Calend
 }
 
 export default async function EventsPage() {
-  const [siteConfig, icsEvents, publicData, mediaItems] = await Promise.all([getSiteConfig(), getEventsFromICS(), getPublicSectionsData(), getMediaItems("events.featured")]);
+  const [siteConfig, publicData, mediaItems, calendarSources] = await Promise.all([getSiteConfig(), getPublicSectionsData(), getMediaItems("events.featured"), getCalendarSources()]);
   if (!siteConfig.showEventsSection) {
     notFound();
   }
+  const sourceEvents = calendarSources.length
+    ? (await Promise.all(calendarSources.map((source) => getEventsFromICS(50, source)))).flat()
+    : await getEventsFromICS(50);
   const adminEvents: CalendarEventItem[] = publicData.events.map((event) => ({
     uid: event.id,
     title: event.title,
@@ -69,10 +75,13 @@ export default async function EventsPage() {
     imageUrl: event.imageUrl,
     imagePositionX: event.imagePositionX,
     imagePositionY: event.imagePositionY,
+    sourceName: event.sourceName,
+    sourceLogoUrl: event.sourceLogoUrl,
+    sourceCalendarUrl: event.sourceCalendarUrl,
     ctaLink: event.ctaLink,
     ctaText: event.ctaText
   }));
-  const googleCalendarEvents: CalendarEventItem[] = icsEvents.map((event) => ({
+  const googleCalendarEvents: CalendarEventItem[] = sourceEvents.map((event) => ({
     ...event,
     start: event.start.toISOString(),
     end: event.end?.toISOString() || null

@@ -34,12 +34,12 @@ function isValidHeroVideoUrl(value: string | null) {
   }
 
   if (value.startsWith("/")) {
-    return /\.mp4(?:\?.*)?$/i.test(value);
+    return /\.(mp4|webm|mov)(?:\?.*)?$/i.test(value);
   }
 
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+    return url.protocol === "https:" && /\.(mp4|webm|mov)$/i.test(url.pathname);
   } catch {
     return false;
   }
@@ -60,7 +60,7 @@ export async function PATCH(request: Request) {
   const heroVideoEnabled = payload.heroVideoEnabled === true;
 
   if (heroVideoEnabled && !isValidHeroVideoUrl(heroVideoUrl)) {
-    return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS/local .mp4 o un link válido de YouTube." }, { status: 400 });
+    return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS/local .mp4, .webm, .mov o un link válido de YouTube." }, { status: 400 });
   }
 
   const siteConfigData = {

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UploadField } from "@/components/admin/upload-field";
 
 type Field =
-  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
+  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "images" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
 
 type ContentRecordFormProps = {
   mode: "create" | "edit";
@@ -20,6 +20,67 @@ function stringifyDefault(value: unknown) {
   if (value === null || value === undefined) return "";
   if (typeof value === "object") return JSON.stringify(value, null, 2);
   return String(value);
+}
+
+function toStringList(value: unknown) {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+  }
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+    } catch {
+      return value.trim() ? [value.trim()] : [];
+    }
+  }
+  return [];
+}
+
+function ImageListField({ name, label, defaultValue }: { name: string; label: string; defaultValue: unknown }) {
+  const [images, setImages] = useState(() => toStringList(defaultValue));
+  const [draft, setDraft] = useState("");
+
+  function addImage() {
+    const next = draft.trim();
+    if (!next) return;
+    setImages((current) => [...current, next]);
+    setDraft("");
+  }
+
+  function removeImage(index: number) {
+    setImages((current) => current.filter((_, currentIndex) => currentIndex !== index));
+  }
+
+  return (
+    <div className="space-y-3 md:col-span-2">
+      <input type="hidden" name={name} value={JSON.stringify(images)} />
+      <UploadField
+        name={`_${name}_draft`}
+        label={label}
+        value={draft}
+        onValueChange={setDraft}
+        accept="image/*"
+        uploadLabel="Subir foto"
+        hint="Sube o pega una URL y luego agrégala a la galería del producto."
+      />
+      <button type="button" className="btn-secondary !px-4 !py-2 text-sm" onClick={addImage}>
+        Agregar foto a la galería
+      </button>
+      {images.length ? (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {images.map((image, index) => (
+            <div key={`${image}-${index}`} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-3">
+              <img src={image} alt={`Foto ${index + 1}`} className="aspect-square w-full rounded-xl object-cover" />
+              <button type="button" className="btn-secondary mt-3 w-full !px-3 !py-2 text-xs" onClick={() => removeImage(index)}>
+                Quitar
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, record, fields }: ContentRecordFormProps) {
@@ -38,7 +99,7 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
     for (const field of fields) {
       if (field.type === "checkbox") {
         payload[field.name] = formData.get(field.name) === "on";
-      } else if (field.type === "json") {
+      } else if (field.type === "json" || field.type === "images") {
         try {
           payload[field.name] = JSON.parse(String(formData.get(field.name) || "[]"));
         } catch {
@@ -122,6 +183,9 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
           }
           if (field.type === "image") {
             return <UploadField key={field.name} name={field.name} label={field.label} defaultValue={defaultValue} accept="image/*" />;
+          }
+          if (field.type === "images") {
+            return <ImageListField key={field.name} name={field.name} label={field.label} defaultValue={record?.[field.name]} />;
           }
           return (
             <label key={field.name} className="space-y-2">

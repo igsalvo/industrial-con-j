@@ -209,12 +209,12 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     }
 
     if (normalized.startsWith("/")) {
-      return /\.mp4(?:\?.*)?$/i.test(normalized);
+      return /\.(mp4|webm|mov)(?:\?.*)?$/i.test(normalized);
     }
 
     try {
       const url = new URL(normalized);
-      return url.protocol === "https:" && /\.mp4$/i.test(url.pathname);
+      return url.protocol === "https:" && /\.(mp4|webm|mov)$/i.test(url.pathname);
     } catch {
       return false;
     }
@@ -228,7 +228,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     const normalizedHeroVideoUrl = heroVideoUrl.trim();
 
     if (heroVideoEnabled && !isValidHeroVideoUrl(normalizedHeroVideoUrl)) {
-      setError("La URL del video debe ser un .mp4 HTTPS/local o un enlace válido de YouTube.");
+      setError("La URL del video debe ser un .mp4, .webm, .mov HTTPS/local o un enlace válido de YouTube.");
       setLoading(false);
       return;
     }

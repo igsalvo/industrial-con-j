@@ -9,14 +9,13 @@ export default async function AdminProductNewPage() {
   const fields = [
     { name: "name", label: "Nombre", required: true },
     { name: "slug", label: "Slug opcional" },
-    { name: "photoUrl", label: "Foto", type: "image" },
+    { name: "photoUrl", label: "Foto principal", type: "image" },
+    { name: "photoUrls", label: "Fotos adicionales", type: "images" },
     { name: "photoPositionX", label: "Encuadre horizontal", type: "select", options: [{ label: "Izquierda", value: "left" }, { label: "Centro", value: "center" }, { label: "Derecha", value: "right" }] },
     { name: "photoPositionY", label: "Encuadre vertical", type: "select", options: [{ label: "Arriba", value: "top" }, { label: "Centro", value: "center" }, { label: "Abajo", value: "bottom" }] },
     { name: "description", label: "Descripción", type: "textarea", required: true },
     { name: "price", label: "Precio", type: "number", required: true },
     { name: "categoryId", label: "Categoría", type: "select", required: true, options: categories.map((item) => ({ label: item.name, value: item.id })) },
-    { name: "stock", label: "Stock opcional", type: "number" },
-    { name: "ctaText", label: "Texto CTA" },
     { name: "ctaLink", label: "Link CTA", type: "url" },
     { name: "order", label: "Orden", type: "number" },
     { name: "isVisible", label: "Visible", type: "checkbox" }

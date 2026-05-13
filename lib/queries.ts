@@ -326,7 +326,7 @@ export async function getCalendarSources() {
   const defaultSource = {
     id: "default-vinculacion-dii",
     name: "Vinculación DII",
-    calendarIdOrUrl: "vinculacion.dii@uchile.cl",
+    calendarIdOrUrl: "https://calendar.google.com/calendar/ical/vinculacion.dii%40uchile.cl/public/basic.ics",
     logoUrl: null,
     order: 0,
     isVisible: true,
@@ -343,8 +343,7 @@ export async function getCalendarSources() {
       where: { isVisible: true },
       orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
     });
-    const hasDefaultSource = sources.some((source) => source.calendarIdOrUrl.trim().toLowerCase().includes("vinculacion.dii"));
-    return hasDefaultSource ? sources : [defaultSource, ...sources];
+    return [defaultSource, ...sources.filter((source) => source.calendarIdOrUrl.trim() !== defaultSource.calendarIdOrUrl)];
   } catch {
     return [defaultSource];
   }

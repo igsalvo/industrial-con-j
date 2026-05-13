@@ -77,6 +77,23 @@ export function getCalendarFeedUrl(calendarIdOrUrl?: string | null) {
   return toGoogleCalendarIcsUrl(value);
 }
 
+async function loadCalendarData(ical: any, url: string) {
+  try {
+    return await ical.async.fromURL(url);
+  } catch (fromUrlError) {
+    console.error("Google Calendar fromURL failed, retrying with fetch", fromUrlError);
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Calendar feed failed with ${response.status}`);
+    }
+    const body = await response.text();
+    if (!body.trim()) {
+      return {};
+    }
+    return await ical.async.parseICS(body);
+  }
+}
+
 function toCalendarEvent(
   event: IcalEventLike,
   start: Date | null,
@@ -153,7 +170,7 @@ export async function getEventsFromICS(
   try {
     const icalModule = await import("node-ical");
     const ical = icalModule.default ?? icalModule;
-    const data = await ical.async.fromURL(url);
+    const data = await loadCalendarData(ical, url);
     const now = new Date();
     const rangeEnd = new Date(now);
     rangeEnd.setMonth(rangeEnd.getMonth() + 18);

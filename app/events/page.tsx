@@ -9,19 +9,22 @@ export default async function EventsPage() {
   if (!siteConfig.showEventsSection) {
     notFound();
   }
-  const adminEvents = publicData.events.map((event) => ({
-    uid: event.id,
-    title: event.title,
-    description: event.description,
-    location: event.location || undefined,
-    start: event.startsAt.toISOString(),
-    end: event.endsAt?.toISOString() || null,
-    imageUrl: event.imageUrl,
-    imagePositionX: event.imagePositionX,
-    imagePositionY: event.imagePositionY,
-    ctaLink: event.ctaLink,
-    ctaText: event.ctaText
-  }));
+  const now = new Date();
+  const adminEvents = publicData.events
+    .filter((event) => event.startsAt >= now || Boolean(event.endsAt && event.endsAt >= now))
+    .map((event) => ({
+      uid: event.id,
+      title: event.title,
+      description: event.description,
+      location: event.location || undefined,
+      start: event.startsAt.toISOString(),
+      end: event.endsAt?.toISOString() || null,
+      imageUrl: event.imageUrl,
+      imagePositionX: event.imagePositionX,
+      imagePositionY: event.imagePositionY,
+      ctaLink: event.ctaLink,
+      ctaText: event.ctaText
+    }));
   const calendarEvents = adminEvents.length
     ? adminEvents
     : icsEvents.map((event) => ({

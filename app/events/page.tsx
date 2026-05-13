@@ -4,6 +4,25 @@ import { getEventsFromICS } from "@/lib/google-calendar";
 import { getMediaItems, getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
+type CalendarEventItem = {
+  uid: string;
+  title: string;
+  description?: string;
+  location?: string;
+  start: string;
+  end: string | null;
+  imageUrl?: string | null;
+  imagePositionX?: string | null;
+  imagePositionY?: string | null;
+  ctaLink?: string | null;
+  ctaText?: string | null;
+};
+
+function getEventKey(event: Pick<CalendarEventItem, "title" | "start">) {
+  const start = new Date(event.start);
+  return `${event.title.trim().toLowerCase()}::${Number.isNaN(start.getTime()) ? event.start : start.toISOString()}`;
+}
+
 export default async function EventsPage() {
   const [siteConfig, icsEvents, publicData, mediaItems] = await Promise.all([getSiteConfig(), getEventsFromICS(), getPublicSectionsData(), getMediaItems("events.featured")]);
   if (!siteConfig.showEventsSection) {
@@ -25,13 +44,22 @@ export default async function EventsPage() {
       ctaLink: event.ctaLink,
       ctaText: event.ctaText
     }));
-  const calendarEvents = adminEvents.length
-    ? adminEvents
-    : icsEvents.map((event) => ({
-        ...event,
-        start: event.start.toISOString(),
-        end: event.end?.toISOString() || null
-      }));
+  const seen = new Set<string>();
+  const calendarEvents = [
+    ...adminEvents,
+    ...icsEvents.map((event) => ({
+      ...event,
+      start: event.start.toISOString(),
+      end: event.end?.toISOString() || null
+    }))
+  ].filter((event) => {
+    const key = getEventKey(event);
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 
   return (
     <main className="dark relative overflow-hidden bg-[#111312] py-9 text-white">

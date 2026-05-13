@@ -323,17 +323,30 @@ export async function getPublicSectionsData() {
 }
 
 export async function getCalendarSources() {
+  const defaultSource = {
+    id: "default-vinculacion-dii",
+    name: "Vinculación DII",
+    calendarIdOrUrl: "vinculacion.dii@uchile.cl",
+    logoUrl: null,
+    order: 0,
+    isVisible: true,
+    createdAt: new Date(0),
+    updatedAt: new Date(0)
+  };
+
   if (!hasDatabase()) {
-    return [];
+    return [defaultSource];
   }
 
   try {
-    return await prisma.calendarSource.findMany({
+    const sources = await prisma.calendarSource.findMany({
       where: { isVisible: true },
       orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
     });
+    const hasDefaultSource = sources.some((source) => source.calendarIdOrUrl.trim().toLowerCase().includes("vinculacion.dii"));
+    return hasDefaultSource ? sources : [defaultSource, ...sources];
   } catch {
-    return [];
+    return [defaultSource];
   }
 }
 

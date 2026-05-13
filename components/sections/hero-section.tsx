@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Play, Podcast, Store, type LucideIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { getYouTubeEmbedUrl } from "@/lib/youtube";
+import { getYouTubeEmbedUrl, getYouTubeThumbnailUrl, getYouTubeWatchUrl } from "@/lib/youtube";
 
 type AccessItem = {
   href: string;
@@ -60,9 +60,11 @@ export function HeroSection({
   const showVideo = Boolean(config.heroVideoEnabled);
   const configuredVideoUrl = config.heroVideoUrl?.trim();
   const youtubeEmbedUrl = getYouTubeEmbedUrl(configuredVideoUrl);
+  const youtubeWatchUrl = getYouTubeWatchUrl(configuredVideoUrl);
+  const youtubeThumbnailUrl = getYouTubeThumbnailUrl(configuredVideoUrl);
   const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : null;
   const hasHeroMedia = showVideo && (youtubeEmbedUrl || videoUrl);
-  const videoPosterUrl = config.heroVideoPosterUrl || config.heroImageUrl || undefined;
+  const videoPosterUrl = config.heroVideoPosterUrl || config.heroImageUrl || youtubeThumbnailUrl || undefined;
   const accessItems = ([
     config.showPodcastSection !== false
       ? {
@@ -124,30 +126,27 @@ export function HeroSection({
           </div>
 
           <div className="min-w-0 xl:pt-1">
-            {showVideo && youtubeEmbedUrl && videoPosterUrl ? (
+            {showVideo && youtubeWatchUrl ? (
               <a
-                href={youtubeEmbedUrl}
+                href={youtubeWatchUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="group relative block aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5"
                 aria-label="Ver video de Industrial con J en YouTube"
               >
-                <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
+                {videoPosterUrl ? (
+                  <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
+                ) : (
+                  <div className="h-full w-full bg-[radial-gradient(circle_at_35%_30%,rgba(226,33,28,0.45),transparent_32%),linear-gradient(135deg,#333,#111)]" />
+                )}
                 <span className="absolute inset-0 bg-black/20 transition group-hover:bg-black/10" />
                 <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[color:var(--accent)] text-white shadow-2xl shadow-black/40 transition group-hover:scale-105">
                   <Play size={28} fill="currentColor" />
                 </span>
+                <span className="absolute bottom-5 left-5 rounded-full bg-black/65 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+                  Ver video en YouTube
+                </span>
               </a>
-            ) : showVideo && youtubeEmbedUrl ? (
-              <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
-                <iframe
-                  src={youtubeEmbedUrl}
-                  title="Video de Industrial con J"
-                  className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
             ) : showVideo && videoUrl ? (
               <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
                 <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={videoPosterUrl}>

@@ -34,3 +34,23 @@ export function getYouTubeEmbedUrl(url?: string | null) {
 
   return null;
 }
+
+export function getYouTubeWatchUrl(url?: string | null) {
+  const embedUrl = getYouTubeEmbedUrl(url);
+  if (!embedUrl) {
+    return null;
+  }
+
+  const id = embedUrl.split("/embed/")[1]?.split(/[?&/]/)[0];
+  return id ? `https://www.youtube.com/watch?v=${id}` : null;
+}
+
+export function getYouTubeThumbnailUrl(url?: string | null) {
+  const embedUrl = getYouTubeEmbedUrl(url);
+  if (!embedUrl) {
+    return null;
+  }
+
+  const id = embedUrl.split("/embed/")[1]?.split(/[?&/]/)[0];
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}

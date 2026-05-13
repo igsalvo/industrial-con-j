@@ -40,6 +40,10 @@ function toEventText(value: unknown, fallback = "") {
   return fallback;
 }
 
+function toGoogleCalendarIcsUrl(calendarId: string) {
+  return `https://calendar.google.com/calendar/ical/${encodeURIComponent(calendarId)}/public/basic.ics`;
+}
+
 function getCalendarFeedUrl() {
   const value = process.env.GOOGLE_CALENDAR_ID?.trim();
 
@@ -49,10 +53,21 @@ function getCalendarFeedUrl() {
   }
 
   if (value.startsWith("http")) {
+    try {
+      const url = new URL(value);
+      const calendarId = url.searchParams.get("src") || url.searchParams.get("cid");
+
+      if (url.hostname.includes("calendar.google.com") && calendarId) {
+        return toGoogleCalendarIcsUrl(calendarId);
+      }
+    } catch {
+      return value;
+    }
+
     return value;
   }
 
-  return `https://calendar.google.com/calendar/ical/${encodeURIComponent(value)}/public/basic.ics`;
+  return toGoogleCalendarIcsUrl(value);
 }
 
 async function loadCalendarData(ical: any, url: string) {

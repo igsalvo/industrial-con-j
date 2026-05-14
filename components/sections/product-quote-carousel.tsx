@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, ShoppingCart, Trash2, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 
 type Product = {
@@ -36,7 +36,33 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const totalAmount = cartItems.reduce((total, item) => {
+    const price = Number(item.price);
+    return Number.isFinite(price) ? total + price * item.quantity : total;
+  }, 0);
+  const formattedTotal = formatPrice(totalAmount);
+
+  useEffect(() => {
+    try {
+      const storedItems = JSON.parse(window.localStorage.getItem("tiendiita-cart") || "[]") as CartItem[];
+      if (Array.isArray(storedItems)) {
+        setCartItems(storedItems.filter((item) => item && typeof item.id === "string" && Number(item.quantity) > 0));
+      }
+    } catch {
+      setCartItems([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("tiendiita-cart", JSON.stringify(cartItems));
+    window.dispatchEvent(new CustomEvent("tiendiita-cart-updated"));
+  }, [cartItems]);
+
+  useEffect(() => {
+    const toggleCart = () => setCartOpen((isOpen) => !isOpen);
+    window.addEventListener("tiendiita-cart-toggle", toggleCart);
+    return () => window.removeEventListener("tiendiita-cart-toggle", toggleCart);
+  }, []);
 
   const trackProducts = useMemo(() => {
     if (products.length <= 4) {
@@ -70,6 +96,16 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
 
   function removeFromCart(productId: string) {
     setCartItems((current) => current.filter((item) => item.id !== productId));
+  }
+
+  function updateQuantity(productId: string, nextQuantity: number) {
+    setCartItems((current) =>
+      current
+        .map((item) => (item.id === productId ? { ...item, quantity: Math.max(0, nextQuantity) } : item))
+        .filter((item) => item.quantity > 0)
+    );
+    setStatus("idle");
+    setMessage("");
   }
 
   async function submitQuote(event: React.FormEvent<HTMLFormElement>) {
@@ -119,19 +155,6 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
 
   return (
     <section className="relative space-y-5">
-      <div className="sticky top-24 z-20 flex justify-end">
-        <button
-          type="button"
-          className="btn-primary gap-2 shadow-[0_16px_40px_rgba(0,0,0,0.32)]"
-          onClick={() => setCartOpen((isOpen) => !isOpen)}
-          aria-expanded={cartOpen}
-        >
-          <ShoppingCart size={18} />
-          Carrito
-          <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{totalItems}</span>
-        </button>
-      </div>
-
       {cartOpen ? (
         <aside className="ml-auto max-w-xl rounded-2xl border border-white/10 bg-[#181a19] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
           <div className="flex items-center justify-between gap-3">
@@ -144,14 +167,30 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
           <div className="mt-5 space-y-3">
             {cartItems.length ? (
               cartItems.map((item) => (
-                <div key={item.id} className="grid grid-cols-[1fr_auto] gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                <div key={item.id} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div>
                     <p className="font-bold">{item.name}</p>
-                    <p className="mt-1 text-sm text-[color:var(--muted)]">Cantidad: {item.quantity}{formatPrice(item.price) ? ` · ${formatPrice(item.price)}` : ""}</p>
+                    <p className="mt-1 text-sm text-[color:var(--muted)]">{formatPrice(item.price) || "Precio por confirmar"}</p>
                   </div>
-                  <button type="button" className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => removeFromCart(item.id)} aria-label={`Eliminar ${item.name}`}>
-                    <Trash2 size={17} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label={`Disminuir cantidad de ${item.name}`}>
+                      <Minus size={15} />
+                    </button>
+                    <input
+                      className="field h-10 w-16 px-2 text-center"
+                      type="number"
+                      min={1}
+                      value={item.quantity}
+                      onChange={(event) => updateQuantity(item.id, Number(event.target.value) || 0)}
+                      aria-label={`Cantidad de ${item.name}`}
+                    />
+                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label={`Aumentar cantidad de ${item.name}`}>
+                      <Plus size={15} />
+                    </button>
+                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => removeFromCart(item.id)} aria-label={`Eliminar ${item.name}`}>
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
@@ -160,6 +199,10 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
           </div>
 
           <form onSubmit={submitQuote} className="mt-5 space-y-3">
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Monto a cotizar</p>
+              <p className="mt-2 text-2xl font-black">{formattedTotal || "$0"}</p>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <input className="field" name="name" placeholder="Nombre" required />
               <input className="field" name="email" type="email" placeholder="Correo" required />

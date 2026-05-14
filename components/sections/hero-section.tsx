@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, CalendarDays, GraduationCap, Podcast, Store, type LucideIcon } from "lucide-react";
+import { ArrowRight, CalendarDays, GraduationCap, Play, Podcast, Store, type LucideIcon } from "lucide-react";
+import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 
@@ -63,6 +66,7 @@ export function HeroSection({
     heroVideoUrl?: string | null;
     heroVideoPosterUrl?: string | null;
     heroVideoEnabled?: boolean;
+    showThemeToggle?: boolean;
     showPodcastSection?: boolean;
     showEventsSection?: boolean;
     showHonorSection?: boolean;
@@ -77,6 +81,7 @@ export function HeroSection({
   const videoUrl = configuredVideoUrl && isPlayableHeroVideoUrl(configuredVideoUrl) ? configuredVideoUrl : null;
   const hasHeroMedia = showVideo && (youtubePlayerUrl || videoUrl);
   const videoPosterUrl = config.heroVideoPosterUrl || config.heroImageUrl || undefined;
+  const [videoStarted, setVideoStarted] = useState(!videoPosterUrl);
   const accessItems = ([
     config.showPodcastSection !== false
       ? {
@@ -132,16 +137,29 @@ export function HeroSection({
               {config.heroDescription ||
                 "Un espacio para reunir historias, conversaciones, eventos e iniciativas que conectan a la comunidad de Ingeniería Industrial de la Universidad de Chile."}
             </p>
-            <div className="mt-8 sm:hidden">
+            {config.showThemeToggle ? <div className="mt-8 sm:hidden">
               <ThemeToggle />
-            </div>
+            </div> : null}
           </div>
 
           <div className="min-w-0 xl:pt-1">
-            {showVideo && youtubePlayerUrl ? (
+            {showVideo && youtubePlayerUrl && videoPosterUrl && !videoStarted ? (
+              <button
+                type="button"
+                className="group relative aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black text-left shadow-2xl shadow-black/40 ring-1 ring-white/5"
+                onClick={() => setVideoStarted(true)}
+                aria-label="Reproducir video de Industrial con J"
+              >
+                <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]" />
+                <span className="absolute inset-0 bg-black/25" />
+                <span className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_18px_48px_rgba(0,0,0,0.35)]">
+                  <Play size={26} fill="currentColor" />
+                </span>
+              </button>
+            ) : showVideo && youtubePlayerUrl ? (
               <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
                 <iframe
-                  src={youtubePlayerUrl}
+                  src={videoStarted ? `${youtubePlayerUrl}&autoplay=1` : youtubePlayerUrl}
                   title="Video de Industrial con J"
                   className="h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -149,6 +167,19 @@ export function HeroSection({
                   allowFullScreen
                 />
               </div>
+            ) : showVideo && videoUrl && videoPosterUrl && !videoStarted ? (
+              <button
+                type="button"
+                className="group relative aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black text-left shadow-2xl shadow-black/40 ring-1 ring-white/5"
+                onClick={() => setVideoStarted(true)}
+                aria-label="Reproducir video de Industrial con J"
+              >
+                <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]" />
+                <span className="absolute inset-0 bg-black/25" />
+                <span className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_18px_48px_rgba(0,0,0,0.35)]">
+                  <Play size={26} fill="currentColor" />
+                </span>
+              </button>
             ) : showVideo && videoUrl ? (
               <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black shadow-2xl shadow-black/40 ring-1 ring-white/5">
                 <video autoPlay muted loop playsInline controls className="aspect-video h-full w-full object-cover" poster={videoPosterUrl}>

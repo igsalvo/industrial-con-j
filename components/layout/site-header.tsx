@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -27,6 +27,7 @@ export function SiteHeader({
   showCommunityLink = true,
   showDonationsLink = true,
   showContactLink = true,
+  showThemeToggle = false,
   logoUrl
 }: {
   showPodcastLink?: boolean;
@@ -37,10 +38,12 @@ export function SiteHeader({
   showCommunityLink?: boolean;
   showDonationsLink?: boolean;
   showContactLink?: boolean;
+  showThemeToggle?: boolean;
   logoUrl?: string | null;
 }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const isAdminRoute = pathname.startsWith("/admin");
   const isTiendiitaRoute = pathname.startsWith("/tiendiita");
   const visibleLinks = links.filter((link) => {
@@ -84,11 +87,40 @@ export function SiteHeader({
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!isTiendiitaRoute) {
+      setCartCount(0);
+      return;
+    }
+
+    const readCartCount = () => {
+      try {
+        const cartItems = JSON.parse(window.localStorage.getItem("tiendiita-cart") || "[]") as Array<{ quantity?: number }>;
+        setCartCount(cartItems.reduce((total, item) => total + (Number(item.quantity) || 0), 0));
+      } catch {
+        setCartCount(0);
+      }
+    };
+
+    readCartCount();
+    window.addEventListener("storage", readCartCount);
+    window.addEventListener("tiendiita-cart-updated", readCartCount);
+
+    return () => {
+      window.removeEventListener("storage", readCartCount);
+      window.removeEventListener("tiendiita-cart-updated", readCartCount);
+    };
+  }, [isTiendiitaRoute]);
+
+  function toggleCart() {
+    window.dispatchEvent(new CustomEvent("tiendiita-cart-toggle"));
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--surface)]/90 backdrop-blur-xl">
       <div className="shell flex items-center justify-between gap-3 py-3">
         <Link href={isAdminRoute ? "/admin" : "/"} className="flex min-w-0 flex-1 items-center lg:max-w-[330px]">
-          <div className="relative h-14 w-full max-w-[210px] overflow-hidden rounded-2xl border border-[color:var(--line)] bg-white p-2 shadow-sm sm:h-20 sm:max-w-[330px]">
+          <div className="relative h-14 w-full max-w-[210px] overflow-hidden rounded-2xl border border-[color:var(--line)] bg-transparent p-2 shadow-sm sm:h-20 sm:max-w-[330px]">
             <Image src={resolvedLogo} alt="Industrial con J" fill className="object-contain p-2" sizes="(min-width: 1024px) 330px, 55vw" priority />
           </div>
         </Link>
@@ -127,11 +159,25 @@ export function SiteHeader({
               Buscar
             </Link>
           ) : null}
+          {!isAdminRoute && isTiendiitaRoute ? (
+            <button type="button" className="btn-primary gap-2 !px-4 !py-3 text-sm" onClick={toggleCart} aria-label="Abrir carrito de cotización">
+              <ShoppingCart size={17} />
+              Carrito
+              <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
+            </button>
+          ) : null}
           {!isAdminRoute ? <LanguageToggle /> : null}
-          <div className="hidden sm:block">
+          {showThemeToggle ? <div className="hidden sm:block">
             <ThemeToggle />
-          </div>
+          </div> : null}
         </div>
+
+        {!isAdminRoute && isTiendiitaRoute ? (
+          <button type="button" className="btn-primary gap-2 !px-3 !py-3 text-sm lg:hidden" onClick={toggleCart} aria-label="Abrir carrito de cotización">
+            <ShoppingCart size={17} />
+            <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
+          </button>
+        ) : null}
 
         {!isAdminRoute ? (
           <button
@@ -180,8 +226,15 @@ export function SiteHeader({
                   Buscar
                 </Link>
               ) : null}
+              {isTiendiitaRoute ? (
+                <button type="button" className="btn-primary gap-2 !px-4 !py-3 text-sm" onClick={toggleCart}>
+                  <ShoppingCart size={17} />
+                  Carrito
+                  <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
+                </button>
+              ) : null}
               <LanguageToggle />
-              <ThemeToggle />
+              {showThemeToggle ? <ThemeToggle /> : null}
             </div>
           </div>
         </div>

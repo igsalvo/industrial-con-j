@@ -17,6 +17,7 @@ const fields = [
   { name: "ctaText", label: "Texto CTA" },
   { name: "ctaLink", label: "Link CTA", type: "url" },
   { name: "order", label: "Orden", type: "number" },
+  { name: "isFeatured", label: "Destacar como evento predeterminado", type: "checkbox", defaultChecked: false },
   { name: "isVisible", label: "Visible", type: "checkbox" }
 ] as const;
 

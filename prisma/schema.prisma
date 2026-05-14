@@ -198,6 +198,7 @@ model SiteConfig {
   showParticipationSection    Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
   showContactLink             Boolean  @default(true)
+  showThemeToggle             Boolean  @default(false)
   showDonationsSection        Boolean  @default(true)
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Aliados")
@@ -414,6 +415,7 @@ model Event {
   ctaText     String?
   ctaLink     String?
   order       Int       @default(0)
+  isFeatured  Boolean   @default(false)
   isVisible   Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

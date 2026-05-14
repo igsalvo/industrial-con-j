@@ -42,7 +42,8 @@ export default async function EventsPage() {
       imagePositionX: event.imagePositionX,
       imagePositionY: event.imagePositionY,
       ctaLink: event.ctaLink,
-      ctaText: event.ctaText
+      ctaText: event.ctaText,
+      isFeatured: event.isFeatured
     }));
   const seen = new Set<string>();
   const calendarEvents = [

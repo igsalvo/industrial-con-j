@@ -29,7 +29,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
-        <Providers>
+        <Providers showThemeToggle={siteConfig.showThemeToggle}>
           <div className="grain min-h-screen">
             <SiteHeader
               showPodcastLink={siteConfig.showPodcastSection}
@@ -40,6 +40,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               showCommunityLink={siteConfig.showCommunityLink}
               showDonationsLink={siteConfig.showDonationsSection}
               showContactLink={siteConfig.showContactLink}
+              showThemeToggle={siteConfig.showThemeToggle}
               logoUrl={siteConfig.logoUrl}
             />
             <main>{children}</main>

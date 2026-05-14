@@ -41,7 +41,7 @@ export default async function CommunityPage() {
         ))}
       </nav>
 
-      <div className="mt-5 grid gap-4 xl:grid-cols-[0.82fr_1fr_0.95fr]">
+      <div className={`mt-5 grid gap-4 ${surveys.length === 0 ? "xl:grid-cols-[0.82fr_1.45fr]" : "xl:grid-cols-[0.82fr_1fr_0.95fr]"}`}>
         <aside className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
           <h2 className="text-xl font-black">Espacios de participación</h2>
           <p className="mt-2 text-sm text-[color:var(--muted)]">Elige cómo te gustaría contribuir a la comunidad.</p>
@@ -68,20 +68,9 @@ export default async function CommunityPage() {
           </div>
         </aside>
 
-        <div className="space-y-6">
-          {surveys.length === 0 ? (
-            <div className="grid min-h-[340px] place-items-center rounded-2xl border border-white/10 bg-white/[0.035] p-8 text-center">
-              <div>
-              <MessageCircle className="mx-auto text-white/45" size={82} />
-              <h2 className="mt-6 text-2xl font-bold">{config.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[color:var(--muted)]">{config.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}</p>
-              <Link href="/episodes" className="btn-secondary mt-5">
-                Explorar episodios <ArrowRight size={16} />
-              </Link>
-              </div>
-            </div>
-          ) : (
-            surveys.map((survey) => (
+        {surveys.length > 0 ? (
+          <div className="space-y-6">
+            {surveys.map((survey) => (
               <div key={survey.id} className="space-y-3">
                 {survey.episode ? (
                   <p className="text-sm text-[color:var(--muted)]">
@@ -93,9 +82,9 @@ export default async function CommunityPage() {
                 ) : null}
                 <PublicSurveyForm survey={survey} />
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        ) : null}
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
           <ContactForm

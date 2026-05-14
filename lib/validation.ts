@@ -234,6 +234,7 @@ export const eventInputSchema = z.object({
   ctaText: z.string().trim().optional().or(z.literal("")),
   ctaLink: optionalUrl,
   order: z.coerce.number().int().default(0),
+  isFeatured: z.boolean().default(false),
   isVisible: z.boolean().default(true)
 });
 
@@ -410,6 +411,7 @@ export function toEventPayload(input: z.infer<typeof eventInputSchema>) {
     ctaText: input.ctaText || undefined,
     ctaLink: input.ctaLink,
     order: input.order,
+    isFeatured: input.isFeatured,
     isVisible: input.isVisible
   };
 }

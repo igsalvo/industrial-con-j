@@ -16,6 +16,7 @@ export const defaultSiteConfig = {
   showParticipationSection: true,
   showCommunityLink: true,
   showContactLink: true,
+  showThemeToggle: false,
   showDonationsSection: true,
   showSponsorBanner: true,
   sponsorBannerTitle: "Aliados",
@@ -255,7 +256,7 @@ export async function getHomepageData() {
       }),
       prisma.event.findMany({
         where: { isVisible: true, startsAt: { gte: new Date() } },
-        orderBy: [{ startsAt: "asc" }, { order: "asc" }],
+        orderBy: [{ isFeatured: "desc" }, { startsAt: "asc" }, { order: "asc" }],
         take: 4
       }),
       prisma.participationItem.findMany({

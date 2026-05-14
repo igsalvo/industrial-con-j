@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Linkedin, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type HonorMember = {
@@ -13,6 +12,7 @@ type HonorMember = {
   description: string;
   role: string | null;
   generation: string | null;
+  externalLinks?: unknown;
 };
 
 function formatGeneration(generation?: string | null) {
@@ -21,11 +21,31 @@ function formatGeneration(generation?: string | null) {
     return null;
   }
 
-  return /^gen\s*:/i.test(normalized) ? normalized.replace(/^gen/i, "GEN") : `GEN: ${normalized}`;
+  const withoutPrefix = normalized.replace(/^gen(?:eraci[oó]n)?\s*:?\s*/i, "").trim();
+  return `Generación ${withoutPrefix || normalized}`;
+}
+
+function getLinkedInUrl(externalLinks: unknown) {
+  if (!Array.isArray(externalLinks)) {
+    return null;
+  }
+
+  const link = externalLinks.find((item): item is { label?: unknown; url?: unknown } => {
+    if (!item || typeof item !== "object") {
+      return false;
+    }
+
+    const label = "label" in item ? String(item.label || "") : "";
+    const url = "url" in item ? String(item.url || "") : "";
+    return /linkedin/i.test(label) || /linkedin\.com/i.test(url);
+  });
+
+  return typeof link?.url === "string" ? link.url : null;
 }
 
 export function HonorShowcase({ members }: { members: HonorMember[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [modalMember, setModalMember] = useState<HonorMember | null>(null);
   const featured = members[activeIndex];
 
   useEffect(() => {
@@ -45,6 +65,7 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
   }
 
   const featuredPosition = `${featured.photoPositionX ?? 50}% ${featured.photoPositionY ?? 50}%`;
+  const featuredLinkedInUrl = getLinkedInUrl(featured.externalLinks);
 
   return (
     <div className="space-y-5">
@@ -59,10 +80,11 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
             <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.name}</h2>
             {formatGeneration(featured.generation) ? <p className="mt-4 text-lg font-bold text-[color:var(--accent)]">{formatGeneration(featured.generation)}</p> : null}
             <p className="mt-4 line-clamp-4 text-base leading-7 text-[color:var(--muted)]">{featured.description}</p>
-            <Link href="/honor" className="btn-primary mt-6 gap-2 !px-5 !py-2 text-sm">
-              Ver perfil
-              <ArrowRight size={16} />
-            </Link>
+            {featuredLinkedInUrl ? (
+              <a href={featuredLinkedInUrl} target="_blank" rel="noreferrer" className="mt-6 inline-grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]" aria-label={`LinkedIn de ${featured.name}`}>
+                <Linkedin size={21} />
+              </a>
+            ) : null}
           </div>
         </div>
       </article>
@@ -71,25 +93,53 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         {members.map((member, index) => {
           const photoPosition = `${member.photoPositionX ?? 50}% ${member.photoPositionY ?? 50}%`;
+          const linkedInUrl = getLinkedInUrl(member.externalLinks);
           return (
-            <button
+            <article
               key={member.id}
-              type="button"
-              onClick={() => setActiveIndex(index)}
               className={`overflow-hidden rounded-xl border bg-white/[0.035] text-left transition ${index === activeIndex ? "border-[color:var(--accent)]" : "border-white/10 hover:border-white/25"}`}
             >
-              <div className="aspect-[4/3] bg-white/5">
+              <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
+                <div className="aspect-[4/3] bg-white/5">
                 {member.photoUrl ? <img src={member.photoUrl} alt={member.name} className="h-full w-full object-cover" style={{ objectPosition: photoPosition }} /> : null}
-              </div>
+                </div>
+              </button>
               <div className="p-4">
                 <h3 className="line-clamp-1 font-black">{member.name}</h3>
                 {formatGeneration(member.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(member.generation)}</p> : null}
-                <span className="mt-3 inline-flex items-center gap-2 text-sm text-white/80">Ver perfil <ArrowRight size={14} /></span>
+                <div className="mt-3 flex items-center gap-2">
+                  <button type="button" className="inline-flex items-center gap-2 text-sm text-white/80 transition hover:text-[color:var(--accent)]" onClick={() => setModalMember(member)}>
+                    Ver perfil <ArrowRight size={14} />
+                  </button>
+                  {linkedInUrl ? (
+                    <a href={linkedInUrl} target="_blank" rel="noreferrer" className="ml-auto grid h-8 w-8 place-items-center rounded-full border border-white/10 text-white/75 transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]" aria-label={`LinkedIn de ${member.name}`}>
+                      <Linkedin size={16} />
+                    </a>
+                  ) : null}
+                </div>
               </div>
-            </button>
+            </article>
           );
         })}
       </section>
+      {modalMember ? (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" role="dialog" aria-modal="true" aria-labelledby="honor-profile-title">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl border border-white/10 bg-[#181a19] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="brand-kicker text-xs text-[color:var(--accent)]">Perfil</p>
+                <h2 id="honor-profile-title" className="mt-3 text-3xl font-black">{modalMember.name}</h2>
+                {formatGeneration(modalMember.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(modalMember.generation)}</p> : null}
+              </div>
+              <button type="button" className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => setModalMember(null)} aria-label="Cerrar perfil">
+                <X size={18} />
+              </button>
+            </div>
+            {modalMember.role ? <p className="mt-4 text-sm font-semibold text-white/80">{modalMember.role}</p> : null}
+            <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{modalMember.description}</p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

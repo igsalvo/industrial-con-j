@@ -79,6 +79,7 @@ export async function PATCH(request: Request) {
     showParticipationSection: payload.showParticipationSection === true,
     showCommunityLink: payload.showCommunityLink === true,
     showContactLink: payload.showContactLink === true,
+    showThemeToggle: payload.showThemeToggle === true,
     showDonationsSection: payload.showDonationsSection === true,
     showSponsorBanner: payload.showSponsorBanner === true,
     sponsorBannerTitle: toNullableString(payload.sponsorBannerTitle) || "Aliados",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <GoogleTagManager gtmId="GTM-NZ6G5K2F" />
       <body>
         <Providers showThemeToggle={siteConfig.showThemeToggle}>
           <div className="grain min-h-screen">

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getGuestBySlug } from "@/lib/queries";
 import { EpisodeCard } from "@/components/ui/episode-card";
+import { TrackedAnchor } from "@/components/analytics/tracked-link";
 
 export default async function GuestDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -11,6 +12,12 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
   }
 
   const socialLinks = (guest.socialLinks ?? {}) as Record<string, string | undefined>;
+  const getSocialEventName = (key: string, url?: string) => {
+    const value = `${key} ${url || ""}`.toLowerCase();
+    if (value.includes("instagram")) return "click_instagram";
+    if (value.includes("linkedin")) return "click_linkedin";
+    return null;
+  };
 
   return (
     <section className="shell py-12">
@@ -31,11 +38,33 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
           <div className="mt-6 flex flex-wrap gap-3">
             {Object.entries(socialLinks)
               .filter(([, value]: [string, string | undefined]) => value)
-              .map(([key, value]: [string, string | undefined]) => (
-                <a key={key} href={value} target="_blank" rel="noreferrer" className="btn-secondary !px-4 !py-2 text-sm capitalize">
-                  {key}
-                </a>
-              ))}
+              .map(([key, value]: [string, string | undefined]) => {
+                const eventName = getSocialEventName(key, value);
+
+                return eventName ? (
+                  <TrackedAnchor
+                    key={key}
+                    href={value}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-secondary !px-4 !py-2 text-sm capitalize"
+                    eventName={eventName}
+                    eventParams={{
+                      link_text: key,
+                      social_network: eventName.replace("click_", ""),
+                      content_type: "guest",
+                      content_title: guest.name,
+                      section: "guest_profile"
+                    }}
+                  >
+                    {key}
+                  </TrackedAnchor>
+                ) : (
+                  <a key={key} href={value} target="_blank" rel="noreferrer" className="btn-secondary !px-4 !py-2 text-sm capitalize">
+                    {key}
+                  </a>
+                );
+              })}
           </div>
         </div>
 

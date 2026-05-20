@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
+import { trackEvent } from "@/lib/analytics";
 
 type Product = {
   id: string;
@@ -81,6 +82,12 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
   }
 
   function addToCart(product: Product) {
+    trackEvent("click_tiendita", {
+      link_text: "Agregar al carrito",
+      content_type: "product",
+      content_title: product.name,
+      section: "tiendita_products"
+    });
     setCartItems((current) => {
       const existing = current.find((item) => item.id === product.id);
       if (existing) {
@@ -110,6 +117,12 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
 
   async function submitQuote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    trackEvent("click_tiendita", {
+      link_text: "Cotizar",
+      content_type: "quote",
+      content_title: cartItems.map((item) => item.name).join(", "),
+      section: "tiendita_quote"
+    });
     setStatus("submitting");
     setMessage("");
 

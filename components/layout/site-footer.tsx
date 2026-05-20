@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Building2, Contact, Instagram, Linkedin, Youtube } from "lucide-react";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 
 export function SiteFooter({
   footerTitle = "Industrial con J",
@@ -23,22 +23,48 @@ export function SiteFooter({
         </div>
 
         <div className="flex flex-wrap gap-3 text-sm text-[color:var(--muted)]">
-          <Link className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="/contact">
+          <TrackedLink
+            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            href="/contact"
+            eventName="click_contact"
+            eventParams={{ link_text: "Contacto", section: "footer" }}
+          >
             <Contact size={16} />
             Contacto
-          </Link>
-          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.instagram.com/ingenieriaindustrialuchile/" target="_blank" rel="noreferrer">
+          </TrackedLink>
+          <TrackedAnchor
+            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            href="https://www.instagram.com/ingenieriaindustrialuchile/"
+            target="_blank"
+            rel="noreferrer"
+            eventName="click_instagram"
+            eventParams={{ link_text: "Instagram", social_network: "instagram", section: "footer" }}
+          >
             <Instagram size={16} />
             Instagram
-          </a>
-          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all" target="_blank" rel="noreferrer">
+          </TrackedAnchor>
+          <TrackedAnchor
+            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all"
+            target="_blank"
+            rel="noreferrer"
+            eventName="click_linkedin"
+            eventParams={{ link_text: "LinkedIn", social_network: "linkedin", section: "footer" }}
+          >
             <Linkedin size={16} />
             LinkedIn
-          </a>
-          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.youtube.com/channel/UCIk3G6moIvN8JzMt4p1H5wQ" target="_blank" rel="noreferrer">
+          </TrackedAnchor>
+          <TrackedAnchor
+            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            href="https://www.youtube.com/channel/UCIk3G6moIvN8JzMt4p1H5wQ"
+            target="_blank"
+            rel="noreferrer"
+            eventName="click_youtube"
+            eventParams={{ link_text: "YouTube", social_network: "youtube", section: "footer" }}
+          >
             <Youtube size={16} />
             YouTube
-          </a>
+          </TrackedAnchor>
           <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.dii.uchile.cl/" target="_blank" rel="noreferrer">
             <Building2 size={16} />
             Sitio web ingeniería industrial

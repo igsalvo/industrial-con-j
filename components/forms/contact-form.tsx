@@ -2,6 +2,7 @@
 
 import { Send } from "lucide-react";
 import { useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 type ContactFormProps = {
   type?: "CONTACT" | "DONATION" | "SPONSORSHIP" | "PARTICIPATION";
@@ -29,6 +30,11 @@ export function ContactForm({
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    trackEvent(type === "DONATION" ? "click_donation" : "click_contact", {
+      link_text: submitLabel,
+      content_type: "form",
+      section: type === "DONATION" ? "donations" : "contact"
+    });
     setStatus("submitting");
     setMessage("");
 

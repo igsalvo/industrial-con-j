@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ExternalLink, PlayCircle } from "lucide-react";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 
 function isDirectVideoUrl(url: string | null) {
   if (!url) {
@@ -96,15 +96,37 @@ export function ShortClipCard({
         <p className="mt-3 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
         <div className="mt-6 flex flex-wrap gap-3">
           {episode.clipVideoUrl ? (
-            <a href={episode.clipVideoUrl} target="_blank" rel="noreferrer" className="btn-primary gap-2 !px-4 !py-2 text-sm">
+            <TrackedAnchor
+              href={episode.clipVideoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-primary gap-2 !px-4 !py-2 text-sm"
+              eventName="click_youtube"
+              eventParams={{
+                link_text: "Ver short",
+                content_type: "episode",
+                content_title: episode.title,
+                section: "short_clip_card"
+              }}
+            >
               Ver short
               <ExternalLink size={14} />
-            </a>
+            </TrackedAnchor>
           ) : null}
-          <Link href={`/episodes/${episode.slug}`} className="btn-secondary gap-2 !px-4 !py-2 text-sm">
+          <TrackedLink
+            href={`/episodes/${episode.slug}`}
+            className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+            eventName="click_episode"
+            eventParams={{
+              link_text: "Ver episodio",
+              content_type: "episode",
+              content_title: episode.title,
+              section: "short_clip_card"
+            }}
+          >
             Ver episodio
             <ExternalLink size={14} />
-          </Link>
+          </TrackedLink>
         </div>
       </div>
     </article>

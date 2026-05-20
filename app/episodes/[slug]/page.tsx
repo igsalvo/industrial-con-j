@@ -5,6 +5,7 @@ import { getEpisodeBySlug, getRelatedEpisodes, getSiteConfig } from "@/lib/queri
 import { formatDate } from "@/lib/utils";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { EpisodeCard } from "@/components/ui/episode-card";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 
 type ResourceLink = {
   label: string;
@@ -80,14 +81,38 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             <h2 className="text-2xl font-bold">Links externos</h2>
             <div className="mt-4 flex flex-wrap gap-3">
               {episode.spotifyUrl ? (
-                <a className="btn-primary" href={episode.spotifyUrl} target="_blank" rel="noreferrer">
+                <TrackedAnchor
+                  className="btn-primary"
+                  href={episode.spotifyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  eventName="click_spotify"
+                  eventParams={{
+                    link_text: "Spotify",
+                    content_type: "episode",
+                    content_title: episode.title,
+                    section: "episode_external_links"
+                  }}
+                >
                   Spotify
-                </a>
+                </TrackedAnchor>
               ) : null}
               {episode.youtubeUrl ? (
-                <a className="btn-secondary" href={episode.youtubeUrl} target="_blank" rel="noreferrer">
+                <TrackedAnchor
+                  className="btn-secondary"
+                  href={episode.youtubeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  eventName="click_youtube"
+                  eventParams={{
+                    link_text: "YouTube",
+                    content_type: "episode",
+                    content_title: episode.title,
+                    section: "episode_external_links"
+                  }}
+                >
                   YouTube
-                </a>
+                </TrackedAnchor>
               ) : null}
               {episode.applePodcastsUrl ? (
                 <a className="btn-secondary" href={episode.applePodcastsUrl} target="_blank" rel="noreferrer">
@@ -126,9 +151,19 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                   <div key={guest.slug} className="rounded-2xl border border-[color:var(--line)] p-4">
                     <p className="font-semibold">{guest.name}</p>
                     <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>
-                    <Link href={`/guests/${guest.slug}`} className="mt-3 inline-block text-sm font-semibold text-[color:var(--accent)]">
+                    <TrackedLink
+                      href={`/guests/${guest.slug}`}
+                      className="mt-3 inline-block text-sm font-semibold text-[color:var(--accent)]"
+                      eventName="click_episode"
+                      eventParams={{
+                        link_text: "Ver perfil",
+                        content_type: "episode",
+                        content_title: episode.title,
+                        section: "episode_guest_profile"
+                      }}
+                    >
                       Ver perfil
-                    </Link>
+                    </TrackedLink>
                   </div>
                 ))
               ) : (

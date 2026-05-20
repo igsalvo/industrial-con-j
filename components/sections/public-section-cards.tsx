@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, BadgeDollarSign, Gift, Handshake, HeartHandshake, Landmark, Package, Sparkles, Target, Users } from "lucide-react";
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
+import { TrackedAnchor } from "@/components/analytics/tracked-link";
 
 const icons = {
   purpose: Target,
@@ -140,15 +141,41 @@ export function ProductGrid({
               <p className="text-xl font-black">${Number(product.price).toLocaleString("es-CL")}</p>
             </div>
             {product.ctaLink ? (
-              <a className="btn-primary mt-5 w-full gap-2" href={ceinInstagramUrl} target="_blank" rel="noreferrer">
+              <TrackedAnchor
+                className="btn-primary mt-5 w-full gap-2"
+                href={ceinInstagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                eventName="click_tiendita"
+                eventParams={{
+                  link_text: "Consultar",
+                  link_url: ceinInstagramUrl,
+                  content_type: "product",
+                  content_title: product.name,
+                  section: "product_grid"
+                }}
+              >
                 Consultar
                 <ArrowUpRight size={15} />
-              </a>
+              </TrackedAnchor>
             ) : (
-              <a className="btn-primary mt-5 w-full gap-2" href={ceinInstagramUrl} target="_blank" rel="noreferrer">
+              <TrackedAnchor
+                className="btn-primary mt-5 w-full gap-2"
+                href={ceinInstagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                eventName="click_tiendita"
+                eventParams={{
+                  link_text: "Consultar",
+                  link_url: ceinInstagramUrl,
+                  content_type: "product",
+                  content_title: product.name,
+                  section: "product_grid"
+                }}
+              >
                 Consultar
                 <ArrowUpRight size={15} />
-              </a>
+              </TrackedAnchor>
             )}
           </div>
         </article>

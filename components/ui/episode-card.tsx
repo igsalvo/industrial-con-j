@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 
 const episodePlaceholder = "/logo-podcast.jpg";
 
@@ -40,7 +40,18 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
           ))}
         </div>
         <h3 className="mt-4 text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
-          <Link href={`/episodes/${episode.slug}`}>{episode.title}</Link>
+          <TrackedLink
+            href={`/episodes/${episode.slug}`}
+            eventName="click_episode"
+            eventParams={{
+              link_text: episode.title,
+              content_type: "episode",
+              content_title: episode.title,
+              section: "episode_card"
+            }}
+          >
+            {episode.title}
+          </TrackedLink>
         </h3>
         <p className="mt-3 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
         <div className="mt-6 flex items-center justify-between gap-4 text-sm text-[color:var(--muted)]">
@@ -48,10 +59,20 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             <p>{formatDate(episode.publishedAt)}</p>
             <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitado"}</p>
           </div>
-          <Link href={`/episodes/${episode.slug}`} className="btn-secondary gap-2 !px-4 !py-2 text-xs">
+          <TrackedLink
+            href={`/episodes/${episode.slug}`}
+            className="btn-secondary gap-2 !px-4 !py-2 text-xs"
+            eventName="click_episode"
+            eventParams={{
+              link_text: "Ver episodio",
+              content_type: "episode",
+              content_title: episode.title,
+              section: "episode_card"
+            }}
+          >
             Ver episodio
             <ExternalLink size={14} />
-          </Link>
+          </TrackedLink>
         </div>
         {episode.sponsor ? <p className="mt-3 text-xs text-[color:var(--muted)]">Aliado: {episode.sponsor.name}</p> : null}
       </div>

@@ -7,6 +7,7 @@ import { Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { trackEvent } from "@/lib/analytics";
 
 const links = [
   { href: "/podcast", label: "Podcast" },
@@ -17,6 +18,14 @@ const links = [
   { href: "/donations", label: "Donaciones", cta: true },
   { href: "/contact", label: "Contacto" }
 ];
+
+function getNavigationEvent(href: string) {
+  if (href === "/events") return "click_event";
+  if (href === "/tiendiita") return "click_tiendita";
+  if (href === "/donations") return "click_donation";
+  if (href === "/contact") return "click_contact";
+  return null;
+}
 
 export function SiteHeader({
   showPodcastLink = true,
@@ -113,7 +122,24 @@ export function SiteHeader({
   }, [isTiendiitaRoute]);
 
   function toggleCart() {
+    trackEvent("click_tiendita", {
+      link_text: "Carrito",
+      section: "tiendita_cart"
+    });
     window.dispatchEvent(new CustomEvent("tiendiita-cart-toggle"));
+  }
+
+  function trackNavigation(href: string, label: string, section: string) {
+    const eventName = getNavigationEvent(href);
+    if (!eventName) {
+      return;
+    }
+
+    trackEvent(eventName, {
+      link_url: href,
+      link_text: label,
+      section
+    });
   }
 
   return (
@@ -144,6 +170,7 @@ export function SiteHeader({
                   translate={link.label === "TienDIIta" ? "no" : undefined}
                   aria-current={isActive ? "page" : undefined}
                   style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                  onClick={() => trackNavigation(link.href, link.label, "header_nav")}
                 >
                   {link.label}
                 </Link>
@@ -154,7 +181,11 @@ export function SiteHeader({
 
         <div className="hidden items-center gap-3 lg:flex">
           {!isAdminRoute && !isTiendiitaRoute ? (
-            <Link href="/search" className="btn-secondary gap-2 !px-4 !py-3 text-sm">
+            <Link
+              href="/search"
+              className="btn-secondary gap-2 !px-4 !py-3 text-sm"
+              onClick={() => trackEvent("click_search", { link_url: "/search", link_text: "Buscar", section: "header" })}
+            >
               <Search size={16} />
               Buscar
             </Link>
@@ -212,6 +243,7 @@ export function SiteHeader({
                     } ${link.label === "TienDIIta" ? "notranslate" : ""}`}
                     translate={link.label === "TienDIIta" ? "no" : undefined}
                     aria-current={isActive ? "page" : undefined}
+                    onClick={() => trackNavigation(link.href, link.label, "mobile_nav")}
                   >
                     {link.label}
                   </Link>
@@ -221,7 +253,11 @@ export function SiteHeader({
 
             <div className="flex flex-wrap items-center gap-3">
               {!isTiendiitaRoute ? (
-                <Link href="/search" className="btn-secondary gap-2 !px-4 !py-3 text-sm">
+                <Link
+                  href="/search"
+                  className="btn-secondary gap-2 !px-4 !py-3 text-sm"
+                  onClick={() => trackEvent("click_search", { link_url: "/search", link_text: "Buscar", section: "mobile_header" })}
+                >
                   <Search size={16} />
                   Buscar
                 </Link>

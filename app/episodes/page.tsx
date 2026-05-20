@@ -5,6 +5,7 @@ import { getAllEpisodes, getSiteConfig } from "@/lib/queries";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { formatDate } from "@/lib/utils";
+import { TrackedAnchor, TrackedLink, TrackedSubmitButton } from "@/components/analytics/tracked-link";
 
 const tabs = [
   { href: "/podcast?tab=episodes", label: "Episodios" },
@@ -55,7 +56,9 @@ export default async function EpisodesPage({ searchParams }: { searchParams: Pro
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted)]" size={18} />
           <input className="field pl-11" name="q" placeholder="Buscar episodios, invitados o temas" defaultValue={params.q || ""} />
         </label>
-        <button className="btn-primary" type="submit">Buscar</button>
+        <TrackedSubmitButton className="btn-primary" eventName="click_search" eventParams={{ link_text: "Buscar", section: "episodes_search" }}>
+          Buscar
+        </TrackedSubmitButton>
       </form>
 
       {filtered.length === 0 ? (
@@ -89,8 +92,36 @@ export default async function EpisodesPage({ searchParams }: { searchParams: Pro
               </div>
               <p className="mt-4 text-sm font-semibold">{featured.guests.map((guest) => guest.name).join(", ") || "Invitados por confirmar"}</p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href={`/episodes/${featured.slug}`} className="btn-primary">Ver episodio</Link>
-                {featured.spotifyUrl ? <a href={featured.spotifyUrl} target="_blank" rel="noreferrer" className="btn-secondary">Escuchar ahora</a> : null}
+                <TrackedLink
+                  href={`/episodes/${featured.slug}`}
+                  className="btn-primary"
+                  eventName="click_episode"
+                  eventParams={{
+                    link_text: "Ver episodio",
+                    content_type: "episode",
+                    content_title: featured.title,
+                    section: "episodes_featured"
+                  }}
+                >
+                  Ver episodio
+                </TrackedLink>
+                {featured.spotifyUrl ? (
+                  <TrackedAnchor
+                    href={featured.spotifyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-secondary"
+                    eventName="click_spotify"
+                    eventParams={{
+                      link_text: "Escuchar ahora",
+                      content_type: "episode",
+                      content_title: featured.title,
+                      section: "episodes_featured"
+                    }}
+                  >
+                    Escuchar ahora
+                  </TrackedAnchor>
+                ) : null}
               </div>
             </div>
           </article>

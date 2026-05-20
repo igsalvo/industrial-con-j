@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Play, Podcast, Store, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
+import { trackEvent } from "@/lib/analytics";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 
 type AccessItem = {
   href: string;
@@ -48,6 +49,14 @@ function getYouTubePlayerUrl(value: string | null) {
   url.searchParams.set("playsinline", "1");
 
   return url.toString();
+}
+
+function getCtaEventName(href: string) {
+  if (href.startsWith("/events")) return "click_event";
+  if (href.startsWith("/tiendiita")) return "click_tiendita";
+  if (href.startsWith("/donations")) return "click_donation";
+  if (href.startsWith("/contact")) return "click_contact";
+  return "click_episode";
 }
 
 export function HeroSection({
@@ -147,7 +156,15 @@ export function HeroSection({
               <button
                 type="button"
                 className="group relative aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-black text-left shadow-2xl shadow-black/40 ring-1 ring-white/5"
-                onClick={() => setVideoStarted(true)}
+                onClick={() => {
+                  trackEvent("click_youtube", {
+                    link_url: configuredVideoUrl,
+                    link_text: "Reproducir video de Industrial con J",
+                    content_type: "video",
+                    section: "hero"
+                  });
+                  setVideoStarted(true);
+                }}
                 aria-label="Reproducir video de Industrial con J"
               >
                 <img src={videoPosterUrl} alt="Portada del video de Industrial con J" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]" />
@@ -192,13 +209,23 @@ export function HeroSection({
               </div>
             ) : null}
             <div className={`${hasHeroMedia || config.heroImageUrl ? "mt-6" : ""} flex flex-wrap gap-4`}>
-              <Link href={config.heroPrimaryCtaHref || "/podcast"} className="btn-primary gap-2">
+              <TrackedLink
+                href={config.heroPrimaryCtaHref || "/podcast"}
+                className="btn-primary gap-2"
+                eventName={getCtaEventName(config.heroPrimaryCtaHref || "/podcast")}
+                eventParams={{ link_text: config.heroPrimaryCtaLabel || "Explorar Industrial con J", section: "hero_primary" }}
+              >
                 {config.heroPrimaryCtaLabel || "Explorar Industrial con J"}
                 <ArrowRight size={16} />
-              </Link>
-              <Link href={secondaryHref} className="btn-secondary">
+              </TrackedLink>
+              <TrackedLink
+                href={secondaryHref}
+                className="btn-secondary"
+                eventName={getCtaEventName(secondaryHref)}
+                eventParams={{ link_text: secondaryLabel, section: "hero_secondary" }}
+              >
                 {secondaryLabel}
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { formatChileEventDate, formatChileEventTime, formatChileMonth } from "@/lib/date-time";
 import type { PublicMediaItem } from "@/lib/queries";
+import { trackEvent } from "@/lib/analytics";
 
 export type PublicCalendarEvent = {
   uid: string;
@@ -175,12 +176,40 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
               {featured.location ? <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-white/70"><MapPin size={18} /></span>{featured.location}</span> : null}
             </div>
             <div className="mt-6 flex flex-wrap gap-2">
-              <a className="btn-primary gap-2 !px-4 !py-2 text-sm" href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })} target="_blank" rel="noreferrer">
+              <a
+                className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(clickEvent) =>
+                  trackEvent("click_event", {
+                    link_url: clickEvent.currentTarget.href,
+                    link_text: "Agregar a mi calendario",
+                    content_type: "event",
+                    content_title: featured.title,
+                    section: "events_calendar"
+                  })
+                }
+              >
                 <CalendarPlus size={16} />
                 Agregar a mi calendario
               </a>
               {featured.ctaLink ? (
-                <a className="btn-secondary gap-2 !px-4 !py-2 text-sm" href={featured.ctaLink} target="_blank" rel="noreferrer">
+                <a
+                  className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                  href={featured.ctaLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(clickEvent) =>
+                    trackEvent("click_event", {
+                      link_url: clickEvent.currentTarget.href,
+                      link_text: featured.ctaText || "Ver detalles",
+                      content_type: "event",
+                      content_title: featured.title,
+                      section: "events_featured"
+                    })
+                  }
+                >
                   {featured.ctaText || "Ver detalles"}
                   <ArrowRight size={15} />
                 </a>
@@ -214,7 +243,22 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 {event.location ? <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]"><MapPin size={16} />{event.location}</p> : null}
               </div>
               {event.ctaLink ? (
-                <a className="btn-secondary !bg-transparent !p-3 text-sm" href={event.ctaLink} target="_blank" rel="noreferrer" aria-label={`Ver detalles de ${event.title}`}><ArrowRight size={16} /></a>
+                <a
+                  className="btn-secondary !bg-transparent !p-3 text-sm"
+                  href={event.ctaLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Ver detalles de ${event.title}`}
+                  onClick={(clickEvent) =>
+                    trackEvent("click_event", {
+                      link_url: clickEvent.currentTarget.href,
+                      link_text: event.ctaText || "Ver detalles",
+                      content_type: "event",
+                      content_title: event.title,
+                      section: "events_list"
+                    })
+                  }
+                ><ArrowRight size={16} /></a>
               ) : null}
             </article>
           ))

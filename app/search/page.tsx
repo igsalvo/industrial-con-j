@@ -3,6 +3,7 @@ import { getSearchResults } from "@/lib/queries";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { GuestCard } from "@/components/ui/guest-card";
+import { TrackedLink, TrackedSubmitButton } from "@/components/analytics/tracked-link";
 
 export default async function SearchPage({
   searchParams
@@ -48,9 +49,13 @@ export default async function SearchPage({
               </option>
             ))}
           </select>
-          <button className="btn-primary lg:col-span-4 lg:w-fit" type="submit">
+          <TrackedSubmitButton
+            className="btn-primary lg:col-span-4 lg:w-fit"
+            eventName="click_search"
+            eventParams={{ link_text: "Filtrar resultados", section: "search_page" }}
+          >
             Filtrar resultados
-          </button>
+          </TrackedSubmitButton>
         </form>
       </div>
 
@@ -79,9 +84,14 @@ export default async function SearchPage({
       <div className="mt-10 card p-8">
         <h2 className="text-2xl font-bold">Exploracion rapida</h2>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link className="btn-secondary" href="/episodes">
+          <TrackedLink
+            className="btn-secondary"
+            href="/episodes"
+            eventName="click_episode"
+            eventParams={{ link_text: "Ver todos los episodios", content_type: "episode", section: "search_quick_links" }}
+          >
             Ver todos los episodios
-          </Link>
+          </TrackedLink>
           <Link className="btn-secondary" href="/guests">
             Ver todos los invitados
           </Link>

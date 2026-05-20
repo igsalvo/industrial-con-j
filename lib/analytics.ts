@@ -1,4 +1,4 @@
-type AnalyticsEventParams = Record<string, unknown>;
+export type AnalyticsEventParams = Record<string, unknown>;
 
 declare global {
   interface Window {
@@ -14,6 +14,8 @@ export function trackEvent(eventName: string, params: AnalyticsEventParams = {})
   window.dataLayer = window.dataLayer ?? [];
   window.dataLayer.push({
     event: eventName,
+    page_path: window.location.pathname,
+    page_title: document.title,
     ...params
   });
 }

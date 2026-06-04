@@ -142,6 +142,8 @@ Copy `.env.example` to `.env` and fill in secure values:
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/industrial_con_j?schema=public"
 JWT_SECRET="replace-with-a-long-random-secret"
+ADMIN_LOGIN_EMAIL="ignacio.alarcon.s@uchile.cl"
+ADMIN_LOGIN_PASSWORD="12345678"
 ADMIN_SEED_EMAIL="admin@industrialconj.com"
 ADMIN_SEED_PASSWORD="change-this-before-seeding"
 UPLOAD_DIR="./public/uploads"

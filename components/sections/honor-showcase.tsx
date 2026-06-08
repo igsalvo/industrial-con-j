@@ -124,7 +124,7 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
       </section>
       {modalMember ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" role="dialog" aria-modal="true" aria-labelledby="honor-profile-title">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl border border-white/10 bg-[#181a19] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+          <div className="max-h-[90vh] w-full max-w-5xl overflow-auto rounded-2xl border border-white/10 bg-[#181a19] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="brand-kicker text-xs text-[color:var(--accent)]">Perfil</p>
@@ -135,8 +135,24 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
                 <X size={18} />
               </button>
             </div>
-            {modalMember.role ? <p className="mt-4 text-sm font-semibold text-white/80">{modalMember.role}</p> : null}
-            <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{modalMember.description}</p>
+            <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(260px,0.9fr)_1fr] lg:items-start">
+              <div className="overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                {modalMember.photoUrl ? (
+                  <img
+                    src={modalMember.photoUrl}
+                    alt={modalMember.name}
+                    className="max-h-[70vh] w-full object-contain"
+                    style={{ objectPosition: `${modalMember.photoPositionX ?? 50}% ${modalMember.photoPositionY ?? 50}%` }}
+                  />
+                ) : (
+                  <div className="grid min-h-[280px] place-items-center px-6 text-center text-sm text-[color:var(--muted)]">Sin foto disponible</div>
+                )}
+              </div>
+              <div>
+                {modalMember.role ? <p className="text-sm font-semibold text-white/80">{modalMember.role}</p> : null}
+                <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{modalMember.description}</p>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

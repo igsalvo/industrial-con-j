@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UploadField } from "@/components/admin/upload-field";
 
 type Field =
-  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "images" | "checkbox" | "json"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
+  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "images" | "checkbox" | "json" | "linkedin"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
 
 type ContentRecordFormProps = {
   mode: "create" | "edit";
@@ -35,6 +35,24 @@ function toStringList(value: unknown) {
     }
   }
   return [];
+}
+
+function getLinkedInDefault(value: unknown) {
+  if (!Array.isArray(value)) {
+    return "";
+  }
+
+  const link = value.find((item): item is { label?: unknown; url?: unknown } => {
+    if (!item || typeof item !== "object") {
+      return false;
+    }
+
+    const label = "label" in item ? String(item.label || "") : "";
+    const url = "url" in item ? String(item.url || "") : "";
+    return /linkedin/i.test(label) || /linkedin\.com/i.test(url);
+  });
+
+  return typeof link?.url === "string" ? link.url : "";
 }
 
 function ImageListField({ name, label, defaultValue }: { name: string; label: string; defaultValue: unknown }) {
@@ -99,6 +117,9 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
     for (const field of fields) {
       if (field.type === "checkbox") {
         payload[field.name] = formData.get(field.name) === "on";
+      } else if (field.type === "linkedin") {
+        const url = String(formData.get(field.name) || "").trim();
+        payload[field.name] = url ? [{ label: "LinkedIn", url }] : [];
       } else if (field.type === "json" || field.type === "images") {
         try {
           payload[field.name] = JSON.parse(String(formData.get(field.name) || "[]"));
@@ -186,6 +207,14 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
           }
           if (field.type === "images") {
             return <ImageListField key={field.name} name={field.name} label={field.label} defaultValue={record?.[field.name]} />;
+          }
+          if (field.type === "linkedin") {
+            return (
+              <label key={field.name} className="space-y-2 md:col-span-2">
+                <span className="block text-sm font-semibold">{field.label}</span>
+                <input className="field" name={field.name} type="url" placeholder="https://www.linkedin.com/in/..." defaultValue={getLinkedInDefault(record?.[field.name])} required={field.required} />
+              </label>
+            );
           }
           return (
             <label key={field.name} className="space-y-2">

@@ -11,7 +11,7 @@ const fields = [
   { name: "description", label: "Descripción", type: "textarea", required: true },
   { name: "role", label: "Cargo / rol opcional" },
   { name: "generation", label: "Año de ingreso / generación" },
-  { name: "externalLinks", label: "Links externos JSON", type: "json" },
+  { name: "externalLinks", label: "LinkedIn URL", type: "linkedin" },
   { name: "order", label: "Orden", type: "number" },
   { name: "isVisible", label: "Visible", type: "checkbox" }
 ] as const;

@@ -80,11 +80,16 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
             <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.name}</h2>
             {formatGeneration(featured.generation) ? <p className="mt-4 text-lg font-bold text-[color:var(--accent)]">{formatGeneration(featured.generation)}</p> : null}
             <p className="mt-4 line-clamp-4 text-base leading-7 text-[color:var(--muted)]">{featured.description}</p>
-            {featuredLinkedInUrl ? (
-              <a href={featuredLinkedInUrl} target="_blank" rel="noreferrer" className="mt-6 inline-grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]" aria-label={`LinkedIn de ${featured.name}`}>
-                <Linkedin size={21} />
-              </a>
-            ) : null}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button type="button" className="btn-primary !px-5 !py-3 text-sm" onClick={() => setModalMember(featured)}>
+                Ver perfil
+              </button>
+              {featuredLinkedInUrl ? (
+                <a href={featuredLinkedInUrl} target="_blank" rel="noreferrer" className="inline-grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]" aria-label={`LinkedIn de ${featured.name}`}>
+                  <Linkedin size={21} />
+                </a>
+              ) : null}
+            </div>
           </div>
         </div>
       </article>
@@ -150,6 +155,11 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
               </div>
               <div>
                 {modalMember.role ? <p className="text-sm font-semibold text-white/80">{modalMember.role}</p> : null}
+                {getLinkedInUrl(modalMember.externalLinks) ? (
+                  <a href={getLinkedInUrl(modalMember.externalLinks) || ""} target="_blank" rel="noreferrer" className="mt-4 inline-grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]" aria-label={`LinkedIn de ${modalMember.name}`}>
+                    <Linkedin size={18} />
+                  </a>
+                ) : null}
                 <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{modalMember.description}</p>
               </div>
             </div>

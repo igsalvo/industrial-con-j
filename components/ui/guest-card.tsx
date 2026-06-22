@@ -27,6 +27,9 @@ export function GuestCard({
         </h3>
         <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>
         <p className="mt-4 line-clamp-4 text-sm text-[color:var(--muted)]">{guest.bio}</p>
+        <Link href={`/guests/${guest.slug}`} className="btn-secondary mt-5 !px-4 !py-2 text-sm">
+          Ver +
+        </Link>
       </div>
     </article>
   );

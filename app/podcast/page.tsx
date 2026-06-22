@@ -1,20 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ContactForm } from "@/components/forms/contact-form";
-import { PublicSurveyForm } from "@/components/forms/public-survey-form";
-import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig, hasDatabase } from "@/lib/queries";
-import { prisma } from "@/lib/prisma";
+import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
-import { EpisodeCard } from "@/components/ui/episode-card";
+import { TrackedAnchor } from "@/components/analytics/tracked-link";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorShowcase } from "@/components/sections/sponsor-showcase";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { Lightbulb, Mic2, MessageCircle, Star } from "lucide-react";
+import { ExternalLink, Star } from "lucide-react";
 
 const tabs = [
   { id: "episodes", label: "Episodios" },
   { id: "guests", label: "Invitados" },
-  { id: "community", label: "Comunidad" },
   { id: "sponsors", label: "Aliados" }
 ] as const;
 
@@ -27,19 +23,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
-  const surveys =
-    activeTab === "community" && hasDatabase()
-      ? await prisma.survey.findMany({
-          where: { status: "PUBLISHED" },
-          include: {
-            episode: true,
-            questions: {
-              orderBy: { position: "asc" }
-            }
-          },
-          orderBy: { updatedAt: "desc" }
-        })
-      : [];
   if (!siteConfig.showPodcastSection) {
     notFound();
   }
@@ -55,13 +38,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       eyebrow: siteConfig.guestsPageEyebrow || "Invitados",
       title: siteConfig.guestsPageTitle || "Personas que construyen industria",
       description: siteConfig.guestsPageDescription || "Perfiles, empresas, enlaces sociales y episodios donde participan."
-    },
-    community: {
-      eyebrow: siteConfig.communityPageEyebrow || "Comunidad",
-      title: siteConfig.communityPageTitle || "Participa en Industrial con J",
-      description:
-        siteConfig.communityPageDescription ||
-        "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad."
     },
     sponsors: {
       eyebrow: siteConfig.sponsorsPageEyebrow || "ALIADOS",
@@ -101,8 +77,14 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
             <div className="space-y-8">
               {episodes.map((episode) => {
                 const embedUrl = episode.videoEmbedUrl || getYouTubeEmbedUrl(episode.youtubeUrl);
+                const platformLinks = [
+                  { label: "Spotify", href: episode.spotifyUrl, eventName: "click_spotify" },
+                  { label: "YouTube", href: episode.youtubeUrl, eventName: "click_youtube" },
+                  { label: "Apple Podcasts", href: episode.applePodcastsUrl, eventName: "click_apple_podcasts" }
+                ].filter((platform): platform is { label: string; href: string; eventName: string } => Boolean(platform.href));
+
                 return (
-                  <article key={episode.id} className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                  <article key={episode.id} className="card overflow-hidden">
                     <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
                       {embedUrl ? (
                         <iframe
@@ -116,7 +98,32 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                         <div className="flex aspect-video items-center justify-center p-6 text-sm text-white/70">Sin video embebido</div>
                       )}
                     </div>
-                    <EpisodeCard episode={episode} />
+                    <div className="p-6 md:p-8">
+                      <p className="whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
+                      {platformLinks.length ? (
+                        <div className="mt-6 flex flex-wrap gap-3">
+                          {platformLinks.map((platform) => (
+                            <TrackedAnchor
+                              key={platform.label}
+                              href={platform.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                              eventName={platform.eventName}
+                              eventParams={{
+                                link_text: platform.label,
+                                content_type: "episode",
+                                content_title: episode.title,
+                                section: "podcast_episode"
+                              }}
+                            >
+                              {platform.label}
+                              <ExternalLink size={14} />
+                            </TrackedAnchor>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
                   </article>
                 );
               })}
@@ -144,67 +151,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
               <GuestCard key={guest.slug} guest={guest} />
             ))}
           </div>
-        </section>
-      ) : null}
-
-      {activeTab === "community" ? (
-        <section className="grid gap-8 xl:grid-cols-[0.82fr_1fr_0.95fr]">
-          <aside className="card p-6">
-            <h2 className="text-2xl font-black">Espacios de participación</h2>
-            <div className="mt-5 space-y-4">
-              {[
-                { title: "Propón un tema", text: "Sugiere un tema que te gustaría que conversemos en el podcast.", icon: Lightbulb },
-                { title: "Sugiere un invitado", text: "Recomienda a alguien que aporte valor a nuestra audiencia.", icon: Mic2 },
-                { title: "Cuéntanos tu idea", text: "Comparte tu idea, proyecto o iniciativa con la comunidad.", icon: MessageCircle }
-              ].map((item) => {
-                const Icon = item.icon;
-                return (
-                  <article key={item.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
-                    <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
-                      <Icon size={18} />
-                    </div>
-                    <h3 className="font-bold">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[color:var(--muted)]">{item.text}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </aside>
-
-          <div className="space-y-6">
-            {surveys.length === 0 ? (
-              <div className="card p-8">
-                <h2 className="text-2xl font-bold">{siteConfig.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
-                <p className="text-content mt-3 text-sm text-[color:var(--muted)]">
-                  {siteConfig.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}
-                </p>
-                <Link href="/podcast?tab=episodes" className="btn-secondary mt-5">
-                  Explorar episodios
-                </Link>
-              </div>
-            ) : (
-              surveys.map((survey) => (
-                <div key={survey.id} className="space-y-3">
-                  {survey.episode ? (
-                    <p className="text-sm text-[color:var(--muted)]">
-                      Capitulo:{" "}
-                      <Link href={`/episodes/${survey.episode.slug}`} className="font-semibold text-[color:var(--foreground)]">
-                        {survey.episode.title}
-                      </Link>
-                    </p>
-                  ) : null}
-                  <PublicSurveyForm survey={survey} />
-                </div>
-              ))
-            )}
-          </div>
-
-          <ContactForm
-            type="CONTACT"
-            title={siteConfig.communityContactTitle || "Queremos escucharte"}
-            description={siteConfig.communityContactDescription || "Déjanos tu comentario, idea o propuesta."}
-            submitLabel={siteConfig.communityContactSubmitLabel || "Enviar mensaje"}
-          />
         </section>
       ) : null}
 

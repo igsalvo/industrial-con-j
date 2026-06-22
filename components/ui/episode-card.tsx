@@ -17,7 +17,7 @@ type EpisodeCardProps = {
     thumbnailPositionX?: string | null;
     thumbnailPositionY?: string | null;
     clipThumbnailUrl: string | null;
-    guests: Array<{ id: string; name: string }>;
+    guests: Array<{ id: string; name: string; slug: string }>;
     sponsor: { name: string } | null;
   };
 };
@@ -57,7 +57,18 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
         <div className="mt-6 flex items-center justify-between gap-4 text-sm text-[color:var(--muted)]">
           <div>
             <p>{formatDate(episode.publishedAt)}</p>
-            <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitado"}</p>
+            <p>
+              {episode.guests.length
+                ? episode.guests.map((guest, index) => (
+                    <span key={guest.id}>
+                      {index > 0 ? ", " : null}
+                      <TrackedLink href={`/guests/${guest.slug}`} eventName="click_guest" eventParams={{ link_text: guest.name, content_type: "guest", content_title: guest.name, section: "episode_card" }} className="hover:text-[color:var(--accent)] hover:underline">
+                        {guest.name}
+                      </TrackedLink>
+                    </span>
+                  ))
+                : "Sin invitado"}
+            </p>
           </div>
           <TrackedLink
             href={`/episodes/${episode.slug}`}

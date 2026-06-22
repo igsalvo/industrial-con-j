@@ -99,7 +99,20 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                       )}
                     </div>
                     <div className="p-6 md:p-8">
-                      <p className="whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
+                      <h2 className="text-3xl font-black">
+                        <Link href={`/episodes/${episode.slug}`} className="hover:text-[color:var(--accent)]">{episode.title}</Link>
+                      </h2>
+                      {episode.guests.length ? (
+                        <p className="mt-3 text-sm font-semibold text-[color:var(--muted)]">
+                          {episode.guests.map((guest, index) => (
+                            <span key={guest.id}>
+                              {index > 0 ? ", " : null}
+                              <Link href={`/guests/${guest.slug}`} className="hover:text-[color:var(--accent)] hover:underline">{guest.name}</Link>
+                            </span>
+                          ))}
+                        </p>
+                      ) : null}
+                      <p className="mt-4 whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
                       {platformLinks.length ? (
                         <div className="mt-6 flex flex-wrap gap-3">
                           {platformLinks.map((platform) => (

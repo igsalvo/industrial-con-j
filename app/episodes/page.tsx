@@ -90,7 +90,16 @@ export default async function EpisodesPage({ searchParams }: { searchParams: Pro
                 <span className="inline-flex items-center gap-2"><Clock3 size={16} />Duración por definir</span>
                 <span className="inline-flex items-center gap-2 sm:col-span-2"><Headphones size={16} />Video + Audio</span>
               </div>
-              <p className="mt-4 text-sm font-semibold">{featured.guests.map((guest) => guest.name).join(", ") || "Invitados por confirmar"}</p>
+              <p className="mt-4 text-sm font-semibold">
+                {featured.guests.length
+                  ? featured.guests.map((guest, index) => (
+                      <span key={guest.id}>
+                        {index > 0 ? ", " : null}
+                        <Link className="hover:text-[color:var(--accent)] hover:underline" href={`/guests/${guest.slug}`}>{guest.name}</Link>
+                      </span>
+                    ))
+                  : "Invitados por confirmar"}
+              </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <TrackedLink
                   href={`/episodes/${featured.slug}`}

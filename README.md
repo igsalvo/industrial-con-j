@@ -148,12 +148,12 @@ ADMIN_SEED_EMAIL="admin@industrialconj.com"
 ADMIN_SEED_PASSWORD="change-this-before-seeding"
 UPLOAD_DIR="./public/uploads"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
-PRODUCT_QUOTE_EMAIL="cotizaciones@industrialconj.cl"
 RESEND_API_KEY=""
-QUOTE_EMAIL_FROM="Industrial con J <cotizaciones@industrialconj.cl>"
+FORM_EMAIL_TO="vinculacion.dii@uchile.cl"
+FORM_EMAIL_FROM="Industrial con J <contacto@dominio-verificado.cl>"
 ```
 
-`PRODUCT_QUOTE_EMAIL` is only a fallback. The preferred destination for TienDIIta quotes is editable in the admin site configuration. `RESEND_API_KEY` enables actual email delivery from `POST /api/tiendiita/quote`; without it, quote requests are still stored as contact messages.
+`FORM_EMAIL_TO` defaults to `vinculacion.dii@uchile.cl`. `FORM_EMAIL_FROM` must use a domain verified in Resend. Contact, donation, and quote forms use the visitor's email as `Reply-To`; without `RESEND_API_KEY`, requests are still stored as contact messages.
 
 ## Local Setup
 

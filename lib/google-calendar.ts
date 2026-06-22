@@ -20,6 +20,15 @@ type IcalEventLike = {
 
 const DEFAULT_CALENDAR_ICS_URL = "https://calendar.google.com/calendar/ical/vinculacion.dii%40uchile.cl/public/basic.ics";
 
+function decodeGoogleCalendarCid(value: string) {
+  try {
+    const decoded = Buffer.from(value, "base64url").toString("utf8").trim();
+    return decoded.includes("@") ? decoded : value;
+  } catch {
+    return value;
+  }
+}
+
 export function toGoogleCalendarDate(date: Date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 }
@@ -139,7 +148,9 @@ function getCalendarFeedUrl() {
   if (value.startsWith("http")) {
     try {
       const url = new URL(value);
-      const calendarId = url.searchParams.get("src") || url.searchParams.get("cid");
+      const src = url.searchParams.get("src");
+      const cid = url.searchParams.get("cid");
+      const calendarId = src || (cid ? decodeGoogleCalendarCid(cid) : null);
 
       if (url.hostname.includes("calendar.google.com") && calendarId) {
         return toGoogleCalendarIcsUrl(calendarId);

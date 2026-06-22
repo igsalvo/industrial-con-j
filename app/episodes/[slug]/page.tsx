@@ -44,7 +44,16 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
               <p className="mt-4 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
               <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
                 <p>{formatDate(episode.publishedAt)}</p>
-                <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitados asociados"}</p>
+                <p>
+                  {episode.guests.length
+                    ? episode.guests.map((guest: (typeof episode.guests)[number], index: number) => (
+                        <span key={guest.id}>
+                          {index > 0 ? ", " : null}
+                          <Link className="hover:text-[color:var(--accent)] hover:underline" href={`/guests/${guest.slug}`}>{guest.name}</Link>
+                        </span>
+                      ))
+                    : "Sin invitados asociados"}
+                </p>
                 <p>{episode.sponsor ? `Aliado: ${episode.sponsor.name}` : "Sin aliado"}</p>
               </div>
             </div>

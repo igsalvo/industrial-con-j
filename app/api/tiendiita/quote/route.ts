@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
+import { sendFormEmail } from "@/lib/email";
 
 const quoteSchema = z.object({
   name: z.string().trim().min(1, "Ingresa tu nombre."),
@@ -51,36 +52,6 @@ function buildEmailText(payload: z.infer<typeof quoteSchema>) {
     .join("\n");
 }
 
-async function sendQuoteEmail({ to, subject, text }: { to: string; subject: string; text: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.QUOTE_EMAIL_FROM || "Industrial con J <onboarding@resend.dev>";
-
-  if (!apiKey) {
-    return { skipped: true };
-  }
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from,
-      to,
-      subject,
-      text
-    })
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(body || "No se pudo enviar el correo.");
-  }
-
-  return { skipped: false };
-}
-
 export async function POST(request: Request) {
   if (!hasDatabase()) {
     return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
@@ -88,13 +59,6 @@ export async function POST(request: Request) {
 
   try {
     const payload = quoteSchema.parse(await request.json());
-    const config = await prisma.siteConfig.findUnique({ where: { id: "default" } });
-    const quoteEmail = config?.productQuoteEmail || process.env.PRODUCT_QUOTE_EMAIL;
-
-    if (!quoteEmail) {
-      return NextResponse.json({ error: "El correo de cotizaciones no está configurado." }, { status: 503 });
-    }
-
     const emailText = buildEmailText(payload);
     const id = randomUUID();
 
@@ -102,8 +66,8 @@ export async function POST(request: Request) {
       Prisma.sql`INSERT INTO "ContactMessage" ("id", "type", "name", "email", "subject", "motive", "message", "createdAt") VALUES (${id}, ${"PARTICIPATION"}, ${payload.name}, ${payload.email}, ${"Cotización TienDIIta"}, ${"TienDIIta CEIN"}, ${emailText}, NOW())`
     );
 
-    const result = await sendQuoteEmail({
-      to: quoteEmail,
+    const result = await sendFormEmail({
+      replyTo: payload.email,
       subject: "Nueva cotización TienDIIta",
       text: emailText
     });

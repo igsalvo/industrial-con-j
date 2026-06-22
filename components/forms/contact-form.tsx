@@ -81,13 +81,7 @@ export function ContactForm({
         <input className="field" name="name" placeholder="Nombre" required />
         <input className="field" name="email" type="email" placeholder="Correo" required />
         {showSubject ? (
-          <select className="field sm:col-span-2" name="subject" defaultValue="" required>
-            <option value="" disabled>Asunto</option>
-            <option value="Propuesta de contenido">Propuesta de contenido</option>
-            <option value="Eventos y activaciones">Eventos y activaciones</option>
-            <option value="Comunidad">Comunidad</option>
-            <option value="Otro">Otro</option>
-          </select>
+          <input className="field sm:col-span-2" name="subject" placeholder="Asunto" required />
         ) : null}
         {showMotive ? (
           <select className="field" name="motive" defaultValue="">

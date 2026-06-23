@@ -1,12 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
-import { getYouTubeEmbedUrl } from "@/lib/youtube";
-import { TrackedAnchor } from "@/components/analytics/tracked-link";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorShowcase } from "@/components/sections/sponsor-showcase";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink, Play, Star } from "lucide-react";
 
 const tabs = [
   { id: "episodes", label: "Episodios" },
@@ -76,7 +76,8 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
           ) : (
             <div className="space-y-8">
               {episodes.map((episode) => {
-                const embedUrl = episode.videoEmbedUrl || getYouTubeEmbedUrl(episode.youtubeUrl);
+                const thumbnailUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || "/logo-podcast.jpg";
+                const imagePosition = `${episode.thumbnailPositionX || "center"} ${episode.thumbnailPositionY || "center"}`;
                 const platformLinks = [
                   { label: "Spotify", href: episode.spotifyUrl, eventName: "click_spotify" },
                   { label: "YouTube", href: episode.youtubeUrl, eventName: "click_youtube" },
@@ -84,56 +85,92 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                 ].filter((platform): platform is { label: string; href: string; eventName: string } => Boolean(platform.href));
 
                 return (
-                  <article key={episode.id} className="card overflow-hidden">
-                    <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
-                      {embedUrl ? (
-                        <iframe
-                          src={embedUrl}
-                          title={episode.title}
-                          className="aspect-video w-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <div className="flex aspect-video items-center justify-center p-6 text-sm text-white/70">Sin video embebido</div>
-                      )}
-                    </div>
-                    <div className="p-6 md:p-8">
-                      <h2 className="text-3xl font-black">
-                        <Link href={`/episodes/${episode.slug}`} className="hover:text-[color:var(--accent)]">{episode.title}</Link>
-                      </h2>
+                  <article key={episode.id} className="card grid overflow-hidden lg:grid-cols-[0.95fr_1.05fr]">
+                    <TrackedLink
+                      href={`/episodes/${episode.slug}`}
+                      className="group relative block min-h-[260px] overflow-hidden bg-[linear-gradient(135deg,#d70904,#2b2b2b)] sm:min-h-[360px]"
+                      eventName="click_episode"
+                      eventParams={{
+                        link_text: "Play",
+                        content_type: "episode",
+                        content_title: episode.title,
+                        section: "podcast_episode_thumbnail"
+                      }}
+                    >
+                      <Image
+                        src={thumbnailUrl}
+                        alt={episode.title}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        style={{ objectPosition: imagePosition }}
+                        sizes="(min-width: 1024px) 42vw, 100vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+                      <div className="absolute bottom-6 left-6 grid h-16 w-16 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_0_36px_rgba(226,33,28,0.42)] transition group-hover:scale-105">
+                        <Play size={26} fill="currentColor" />
+                      </div>
+                    </TrackedLink>
+                    <div className="flex flex-col justify-between p-6 md:p-8">
+                      <div>
+                        <h2 className="text-3xl font-black">
+                          <Link href={`/episodes/${episode.slug}`} className="hover:text-[color:var(--accent)]">{episode.title}</Link>
+                        </h2>
+                        <p className="mt-4 line-clamp-3 leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
+                      </div>
                       {episode.guests.length ? (
-                        <p className="mt-3 text-sm font-semibold text-[color:var(--muted)]">
-                          {episode.guests.map((guest, index) => (
-                            <span key={guest.id}>
-                              {index > 0 ? ", " : null}
-                              <Link href={`/guests/${guest.slug}`} className="hover:text-[color:var(--accent)] hover:underline">{guest.name}</Link>
-                            </span>
-                          ))}
-                        </p>
+                        <div className="mt-6">
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted)]">Invitados</p>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {episode.guests.map((guest) => (
+                              <Link
+                                key={guest.id}
+                                href={`/guests/${guest.slug}`}
+                                className="rounded-full border border-[color:var(--line)] px-3 py-1.5 text-sm font-semibold hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                              >
+                                {guest.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ) : null}
-                      <p className="mt-4 whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
                       {platformLinks.length ? (
-                        <div className="mt-6 flex flex-wrap gap-3">
-                          {platformLinks.map((platform) => (
-                            <TrackedAnchor
-                              key={platform.label}
-                              href={platform.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="btn-secondary gap-2 !px-4 !py-2 text-sm"
-                              eventName={platform.eventName}
+                        <div className="mt-7">
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted)]">Dónde verlo o escucharlo</p>
+                          <div className="mt-3 flex flex-wrap gap-3">
+                            {platformLinks.map((platform) => (
+                              <TrackedAnchor
+                                key={platform.label}
+                                href={platform.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                                eventName={platform.eventName}
+                                eventParams={{
+                                  link_text: platform.label,
+                                  content_type: "episode",
+                                  content_title: episode.title,
+                                  section: "podcast_episode"
+                                }}
+                              >
+                                {platform.label}
+                                <ExternalLink size={14} />
+                              </TrackedAnchor>
+                            ))}
+                            <TrackedLink
+                              href={`/episodes/${episode.slug}`}
+                              className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                              eventName="click_episode"
                               eventParams={{
-                                link_text: platform.label,
+                                link_text: "Ver episodio",
                                 content_type: "episode",
                                 content_title: episode.title,
                                 section: "podcast_episode"
                               }}
                             >
-                              {platform.label}
-                              <ExternalLink size={14} />
-                            </TrackedAnchor>
-                          ))}
+                              <Play size={15} fill="currentColor" />
+                              Ver episodio
+                            </TrackedLink>
+                          </div>
                         </div>
                       ) : null}
                     </div>

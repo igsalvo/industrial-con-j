@@ -1,11 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Music2, Youtube } from "lucide-react";
-import { getEpisodeBySlug, getRelatedEpisodes, getSiteConfig } from "@/lib/queries";
+import { getEpisodeBySlug, getSiteConfig } from "@/lib/queries";
+import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { formatDate } from "@/lib/utils";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
-import { EpisodeCard } from "@/components/ui/episode-card";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 
 type ResourceLink = {
@@ -21,10 +20,8 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  const relatedEpisodes = await getRelatedEpisodes(episode.tags, episode.id);
   const resourceLinks = Array.isArray(episode.resourceLinks) ? (episode.resourceLinks as ResourceLink[]) : [];
-  const thumbnailUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || "/logo-podcast.jpg";
-  const thumbnailPosition = `${episode.thumbnailPositionX || "center"} ${episode.thumbnailPositionY || "center"}`;
+  const videoUrl = episode.videoEmbedUrl || getYouTubeEmbedUrl(episode.youtubeUrl);
   const platformLinks = [
     episode.spotifyUrl
       ? {
@@ -59,50 +56,31 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
     <section className="shell py-12">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="space-y-8">
-          <div className="card overflow-hidden">
-            <div className="relative h-72 bg-[color:var(--surface-strong)] sm:h-[420px]">
-              <Image
-                src={thumbnailUrl}
-                alt={episode.title}
-                fill
-                className="object-cover"
-                style={{ objectPosition: thumbnailPosition }}
-                sizes="(min-width: 1024px) 55vw, 100vw"
-                priority
-              />
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/65 to-transparent" />
+          <div className="card p-7 md:p-8">
+            <div className="flex flex-wrap gap-2">
+              {episode.tags.map((tag: string) => (
+                <span key={tag} className="pill">
+                  {tag}
+                </span>
+              ))}
             </div>
-            <div className="p-8">
-              <div className="flex flex-wrap gap-2">
-                {episode.tags.map((tag: string) => (
-                  <span key={tag} className="pill">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <h1 className="mt-5 text-4xl font-black">{episode.title}</h1>
-              <p className="mt-4 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
-              <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
-                <p>{formatDate(episode.publishedAt)}</p>
-                <p>
-                  {episode.guests.length
-                    ? episode.guests.map((guest: (typeof episode.guests)[number], index: number) => (
-                        <span key={guest.id}>
-                          {index > 0 ? ", " : null}
-                          <Link className="hover:text-[color:var(--accent)] hover:underline" href={`/guests/${guest.slug}`}>{guest.name}</Link>
-                        </span>
-                      ))
-                    : "Sin invitados asociados"}
-                </p>
-                <p>{episode.sponsor ? `Aliado: ${episode.sponsor.name}` : "Sin aliado"}</p>
-              </div>
+            <h1 className="mt-5 text-4xl font-black md:text-5xl">{episode.title}</h1>
+            <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
+              <p>{formatDate(episode.publishedAt)}</p>
+              <p>{episode.sponsor ? `Aliado: ${episode.sponsor.name}` : "Sin aliado"}</p>
             </div>
           </div>
 
           <div className="space-y-6">
-            {episode.videoEmbedUrl ? (
-              <div className="card overflow-hidden">
-                <iframe className="aspect-video w-full" src={episode.videoEmbedUrl} title={episode.title} allowFullScreen />
+            {videoUrl ? (
+              <div className="card overflow-hidden bg-black">
+                <iframe
+                  className="aspect-video w-full"
+                  src={videoUrl}
+                  title={episode.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
             ) : null}
             {episode.audioEmbedUrl ? (
@@ -142,13 +120,6 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
               </div>
             ) : null}
           </div>
-
-          {episode.longDescription ? (
-            <div className="card p-8">
-              <h2 className="text-2xl font-bold">Descripción</h2>
-              <p className="mt-4 whitespace-pre-line leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
-            </div>
-          ) : null}
 
           {episode.timestamps.length > 0 ? (
             <div className="card p-8">
@@ -233,15 +204,6 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             </div>
           ) : null}
         </aside>
-      </div>
-
-      <div className="mt-12">
-        <h2 className="text-3xl font-black">Episodios relacionados</h2>
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {relatedEpisodes.map((item: (typeof relatedEpisodes)[number]) => (
-            <EpisodeCard key={item.slug} episode={item} />
-          ))}
-        </div>
       </div>
     </section>
   );

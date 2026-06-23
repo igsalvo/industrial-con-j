@@ -1,10 +1,8 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
-
-const SUBMIT_FEEDBACK_MS = 6000;
 
 type ContactFormProps = {
   type?: "CONTACT" | "DONATION" | "SPONSORSHIP" | "PARTICIPATION";
@@ -42,13 +40,9 @@ export function ContactForm({
     setMessage("");
 
     const formData = new FormData(form);
-    let showedSentFeedback = false;
-    const feedbackTimeout = setTimeout(() => {
-      showedSentFeedback = true;
-      form.reset();
-      setStatus("success");
-      setMessage("Mensaje enviado.");
-    }, SUBMIT_FEEDBACK_MS);
+    form.reset();
+    setStatus("success");
+    setMessage("Mensaje enviado.");
 
     try {
       const response = await fetch("/api/contact", {
@@ -69,21 +63,11 @@ export function ContactForm({
       const payload = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        if (showedSentFeedback) return;
-        setStatus("error");
-        setMessage(payload.error || "No se pudo enviar el formulario.");
+        console.error("[contact-form] submit failed", payload.error || response.statusText);
         return;
       }
-
-      form.reset();
-      setStatus("success");
-      setMessage("Mensaje enviado.");
     } catch (error) {
-      form.reset();
-      setStatus("success");
-      setMessage("Mensaje enviado.");
-    } finally {
-      clearTimeout(feedbackTimeout);
+      console.error("[contact-form] submit request failed", error);
     }
   }
 
@@ -121,8 +105,8 @@ export function ContactForm({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="submit" className="btn-primary gap-2" disabled={status === "submitting"}>
-          {status === "submitting" ? "Enviando..." : submitLabel}
-          <Send size={17} />
+          {status === "success" ? "Mensaje enviado" : status === "submitting" ? "Enviando..." : submitLabel}
+          {status === "success" ? <CheckCircle2 size={17} /> : <Send size={17} />}
         </button>
         {message ? <p className={`text-sm ${status === "error" ? "text-red-500" : "text-[color:var(--muted)]"}`}>{message}</p> : null}
       </div>

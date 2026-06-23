@@ -5,8 +5,6 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Tra
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 import { trackEvent } from "@/lib/analytics";
 
-const SUBMIT_FEEDBACK_MS = 6000;
-
 type Product = {
   id: string;
   name: string;
@@ -136,14 +134,10 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
     }
 
     const formData = new FormData(form);
-    let showedSentFeedback = false;
-    const feedbackTimeout = setTimeout(() => {
-      showedSentFeedback = true;
-      form.reset();
-      setCartItems([]);
-      setStatus("success");
-      setMessage("Cotización enviada.");
-    }, SUBMIT_FEEDBACK_MS);
+    form.reset();
+    setCartItems([]);
+    setStatus("success");
+    setMessage("Cotización enviada.");
 
     try {
       const response = await fetch("/api/tiendiita/quote", {
@@ -164,23 +158,11 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       const payload = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        if (showedSentFeedback) return;
-        setStatus("error");
-        setMessage(payload.error || "No se pudo enviar la cotización.");
+        console.error("[product-quote-carousel] submit failed", payload.error || response.statusText);
         return;
       }
-
-      form.reset();
-      setCartItems([]);
-      setStatus("success");
-      setMessage(payload.message || "Cotización enviada.");
     } catch (error) {
-      form.reset();
-      setCartItems([]);
-      setStatus("success");
-      setMessage("Cotización enviada.");
-    } finally {
-      clearTimeout(feedbackTimeout);
+      console.error("[product-quote-carousel] submit request failed", error);
     }
   }
 
@@ -245,7 +227,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
             <textarea className="field min-h-24" name="note" placeholder="Mensaje opcional" />
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <button className="btn-primary gap-2" type="submit" disabled={status === "submitting" || cartItems.length === 0}>
-                {status === "submitting" ? "Enviando..." : "Cotizar"}
+                {status === "success" ? "Cotización enviada" : status === "submitting" ? "Enviando..." : "Cotizar"}
                 <CheckCircle2 size={17} />
               </button>
               {message ? <p className={`text-sm ${status === "error" ? "text-red-400" : "text-[color:var(--muted)]"}`}>{message}</p> : null}

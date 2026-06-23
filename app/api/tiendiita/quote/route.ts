@@ -6,6 +6,10 @@ import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { sendFormEmail } from "@/lib/email";
 
+export const maxDuration = 15;
+
+const DB_TIMEOUT_MS = 5000;
+
 const quoteSchema = z.object({
   name: z.string().trim().min(1, "Ingresa tu nombre."),
   email: z.string().trim().email("Ingresa un correo válido."),
@@ -21,6 +25,17 @@ const quoteSchema = z.object({
     )
     .min(1, "Agrega al menos un producto.")
 });
+
+function withTimeout<T>(promise: Promise<T>, ms: number, errorMessage: string) {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => reject(new Error(errorMessage)), ms);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    if (timeout) clearTimeout(timeout);
+  });
+}
 
 function formatPrice(value: number | undefined) {
   return typeof value === "number" && Number.isFinite(value) ? `$${value.toLocaleString("es-CL")}` : "Sin precio";
@@ -53,18 +68,10 @@ function buildEmailText(payload: z.infer<typeof quoteSchema>) {
 }
 
 export async function POST(request: Request) {
-  if (!hasDatabase()) {
-    return NextResponse.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
-  }
-
   try {
     const payload = quoteSchema.parse(await request.json());
     const emailText = buildEmailText(payload);
     const id = randomUUID();
-
-    await prisma.$executeRaw(
-      Prisma.sql`INSERT INTO "ContactMessage" ("id", "type", "name", "email", "subject", "motive", "message", "createdAt") VALUES (${id}, ${"PARTICIPATION"}, ${payload.name}, ${payload.email}, ${"Cotización TienDIIta"}, ${"TienDIIta CEIN"}, ${emailText}, NOW())`
-    );
 
     const result = await sendFormEmail({
       replyTo: payload.email,
@@ -72,11 +79,29 @@ export async function POST(request: Request) {
       text: emailText
     });
 
+    let storageSkipped = !hasDatabase();
+    if (hasDatabase()) {
+      try {
+        await withTimeout(
+          prisma.$executeRaw(
+            Prisma.sql`INSERT INTO "ContactMessage" ("id", "type", "name", "email", "subject", "motive", "message", "createdAt") VALUES (${id}, ${"PARTICIPATION"}, ${payload.name}, ${payload.email}, ${"Cotización TienDIIta"}, ${"TienDIIta CEIN"}, ${emailText}, NOW())`
+          ),
+          DB_TIMEOUT_MS,
+          "Timeout guardando la cotización en la base de datos."
+        );
+        storageSkipped = false;
+      } catch (storageError) {
+        storageSkipped = true;
+        console.error("[api/tiendiita/quote] quote storage failed", storageError);
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       id,
+      storageSkipped,
       emailSkipped: result.skipped,
-      message: result.skipped ? "Cotización registrada. Falta configurar RESEND_API_KEY para enviar el correo." : "Cotización enviada correctamente."
+      message: result.skipped ? "Recibimos tu cotización. Falta configurar RESEND_API_KEY para enviar el correo." : "Cotización enviada correctamente."
     });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "No se pudo enviar la cotización." }, { status: 400 });

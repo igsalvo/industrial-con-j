@@ -4,6 +4,8 @@ import { Send } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 
+const REQUEST_TIMEOUT_MS = 15000;
+
 type ContactFormProps = {
   type?: "CONTACT" | "DONATION" | "SPONSORSHIP" | "PARTICIPATION";
   title?: string;
@@ -39,32 +41,45 @@ export function ContactForm({
     setMessage("");
 
     const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type,
-        name: formData.get("name"),
-        email: formData.get("email"),
-        subject: formData.get("subject") || "",
-        motive: formData.get("motive") || "",
-        phone: formData.get("phone") || "",
-        company: formData.get("company") || "",
-        message: formData.get("message")
-      })
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-    const payload = await response.json();
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        signal: controller.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          name: formData.get("name"),
+          email: formData.get("email"),
+          subject: formData.get("subject") || "",
+          motive: formData.get("motive") || "",
+          phone: formData.get("phone") || "",
+          company: formData.get("company") || "",
+          message: formData.get("message")
+        })
+      });
 
-    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setStatus("error");
+        setMessage(payload.error || "No se pudo enviar el formulario.");
+        return;
+      }
+
+      event.currentTarget.reset();
+      setStatus("success");
+      setMessage(payload.message || "Mensaje enviado.");
+    } catch (error) {
       setStatus("error");
-      setMessage(payload.error || "No se pudo enviar el formulario.");
-      return;
+      setMessage(error instanceof DOMException && error.name === "AbortError"
+        ? "El envío tardó demasiado. Inténtalo nuevamente."
+        : "No se pudo conectar con el servidor. Inténtalo nuevamente.");
+    } finally {
+      clearTimeout(timeout);
     }
-
-    event.currentTarget.reset();
-    setStatus("success");
-    setMessage(payload.message || "Mensaje enviado.");
   }
 
   return (

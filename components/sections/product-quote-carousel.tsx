@@ -5,6 +5,8 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Tra
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 import { trackEvent } from "@/lib/analytics";
 
+const REQUEST_TIMEOUT_MS = 15000;
+
 type Product = {
   id: string;
   name: string;
@@ -133,33 +135,46 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
     }
 
     const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/tiendiita/quote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        note: formData.get("note"),
-        items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: Number(item.price)
-        }))
-      })
-    });
-    const payload = await response.json().catch(() => ({}));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-    if (!response.ok) {
+    try {
+      const response = await fetch("/api/tiendiita/quote", {
+        method: "POST",
+        signal: controller.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          note: formData.get("note"),
+          items: cartItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: Number(item.price)
+          }))
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setStatus("error");
+        setMessage(payload.error || "No se pudo enviar la cotización.");
+        return;
+      }
+
+      event.currentTarget.reset();
+      setCartItems([]);
+      setStatus("success");
+      setMessage(payload.message || "Cotización enviada.");
+    } catch (error) {
       setStatus("error");
-      setMessage(payload.error || "No se pudo enviar la cotización.");
-      return;
+      setMessage(error instanceof DOMException && error.name === "AbortError"
+        ? "El envío tardó demasiado. Inténtalo nuevamente."
+        : "No se pudo conectar con el servidor. Inténtalo nuevamente.");
+    } finally {
+      clearTimeout(timeout);
     }
-
-    event.currentTarget.reset();
-    setCartItems([]);
-    setStatus("success");
-    setMessage(payload.message || "Cotización enviada.");
   }
 
   if (products.length === 0) {

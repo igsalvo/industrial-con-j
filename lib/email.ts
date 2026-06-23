@@ -1,4 +1,5 @@
 const DEFAULT_RECIPIENT = "vinculacion.dii@uchile.cl";
+const EMAIL_TIMEOUT_MS = 10000;
 
 type SendFormEmailInput = {
   replyTo: string;
@@ -15,8 +16,12 @@ export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInp
     return { skipped: true };
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), EMAIL_TIMEOUT_MS);
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
+    signal: controller.signal,
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json"
@@ -28,7 +33,14 @@ export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInp
       subject,
       text
     })
-  });
+  })
+    .catch((error) => {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        throw new Error("Timeout enviando el correo. Revisa la configuración de Resend e inténtalo nuevamente.");
+      }
+      throw error;
+    })
+    .finally(() => clearTimeout(timeout));
 
   if (!response.ok) {
     const body = await response.text();

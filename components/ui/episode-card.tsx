@@ -28,9 +28,22 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
 
   return (
     <article className="card overflow-hidden">
-      <div className="relative h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64">
-        <Image src={imageUrl} alt={episode.title} fill className="object-cover" style={{ objectPosition: imagePosition }} sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
-      </div>
+      <TrackedLink
+        href={`/episodes/${episode.slug}`}
+        className="relative block h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64"
+        eventName="click_episode"
+        eventParams={{
+          link_text: episode.title,
+          content_type: "episode",
+          content_title: episode.title,
+          section: "episode_card_thumbnail"
+        }}
+      >
+        <Image src={imageUrl} alt={episode.title} fill className="object-cover transition duration-300 hover:scale-[1.03]" style={{ objectPosition: imagePosition }} sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-5">
+          <p className="line-clamp-2 text-2xl font-black leading-tight text-white">{episode.title}</p>
+        </div>
+      </TrackedLink>
       <div className="p-6">
         <div className="flex flex-wrap gap-2">
           {episode.tags.slice(0, 3).map((tag: string) => (
@@ -39,20 +52,6 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             </span>
           ))}
         </div>
-        <h3 className="mt-4 text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
-          <TrackedLink
-            href={`/episodes/${episode.slug}`}
-            eventName="click_episode"
-            eventParams={{
-              link_text: episode.title,
-              content_type: "episode",
-              content_title: episode.title,
-              section: "episode_card"
-            }}
-          >
-            {episode.title}
-          </TrackedLink>
-        </h3>
         <p className="mt-3 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
         <div className="mt-6 flex items-center justify-between gap-4 text-sm text-[color:var(--muted)]">
           <div>

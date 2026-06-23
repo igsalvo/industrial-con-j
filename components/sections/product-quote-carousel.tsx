@@ -5,8 +5,6 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Tra
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 import { trackEvent } from "@/lib/analytics";
 
-const REQUEST_TIMEOUT_MS = 15000;
-
 type Product = {
   id: string;
   name: string;
@@ -135,13 +133,10 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
     }
 
     const formData = new FormData(event.currentTarget);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
       const response = await fetch("/api/tiendiita/quote", {
         method: "POST",
-        signal: controller.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.get("name"),
@@ -169,11 +164,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       setMessage(payload.message || "Cotización enviada.");
     } catch (error) {
       setStatus("error");
-      setMessage(error instanceof DOMException && error.name === "AbortError"
-        ? "El envío tardó demasiado. Inténtalo nuevamente."
-        : "No se pudo conectar con el servidor. Inténtalo nuevamente.");
-    } finally {
-      clearTimeout(timeout);
+      setMessage("No pudimos confirmar la respuesta del servidor. Revisa tu conexión e inténtalo nuevamente.");
     }
   }
 

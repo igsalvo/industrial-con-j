@@ -5,6 +5,7 @@ import { hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { contactMessageSchema } from "@/lib/validation";
 import { sendFormEmail } from "@/lib/email";
+import { ZodError } from "zod";
 
 const FORM_LABELS = {
   CONTACT: "Contacto",
@@ -56,6 +57,11 @@ export async function POST(request: Request) {
         : "Gracias. Recibimos tu mensaje."
     });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "No se pudo guardar el mensaje." }, { status: 400 });
+    const message = error instanceof ZodError
+      ? error.issues[0]?.message || "Revisa los datos del formulario."
+      : error instanceof Error
+        ? error.message
+        : "No se pudo guardar el mensaje.";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

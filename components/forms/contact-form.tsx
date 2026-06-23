@@ -46,10 +46,10 @@ export function ContactForm({
         type,
         name: formData.get("name"),
         email: formData.get("email"),
-        subject: formData.get("subject"),
-        motive: formData.get("motive"),
-        phone: formData.get("phone"),
-        company: formData.get("company"),
+        subject: formData.get("subject") || "",
+        motive: formData.get("motive") || "",
+        phone: formData.get("phone") || "",
+        company: formData.get("company") || "",
         message: formData.get("message")
       })
     });

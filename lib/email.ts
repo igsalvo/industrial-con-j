@@ -7,6 +7,18 @@ type SendFormEmailInput = {
   text: string;
 };
 
+function getResendErrorMessage(body: string) {
+  try {
+    const payload = JSON.parse(body) as { message?: string; name?: string };
+    if (payload.message?.includes("You can only send testing emails")) {
+      return "Resend está en modo prueba: falta verificar el dominio de envío para mandar correos a vinculacion.dii@uchile.cl.";
+    }
+    return payload.message || body;
+  } catch {
+    return body;
+  }
+}
+
 export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInput) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.FORM_EMAIL_FROM || process.env.QUOTE_EMAIL_FROM || "Industrial con J <onboarding@resend.dev>";
@@ -44,7 +56,7 @@ export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInp
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(body || "No se pudo enviar el correo.");
+    throw new Error(body ? getResendErrorMessage(body) : "No se pudo enviar el correo.");
   }
 
   return { skipped: false };

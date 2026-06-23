@@ -13,6 +13,9 @@ function getResendErrorMessage(body: string) {
     if (payload.message?.includes("You can only send testing emails")) {
       return "Resend está en modo prueba: falta verificar el dominio de envío para mandar correos a vinculacion.dii@uchile.cl.";
     }
+    if (payload.message?.includes("domain is not verified")) {
+      return "Falta verificar industrialconj.cl en Resend antes de poder enviar correos desde contacto@industrialconj.cl.";
+    }
     return payload.message || body;
   } catch {
     return body;

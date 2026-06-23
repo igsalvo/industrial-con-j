@@ -64,11 +64,6 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                 />
               </div>
             ) : null}
-            {episode.longDescription ? (
-              <div className="card p-6">
-                <p className="whitespace-pre-line text-base leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
-              </div>
-            ) : null}
             {episode.audioEmbedUrl ? (
               <div className="card overflow-hidden">
                 <iframe className="h-80 w-full" src={episode.audioEmbedUrl} title={`${episode.title} audio`} />
@@ -190,6 +185,12 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             </div>
           ) : null}
         </aside>
+
+        {episode.longDescription ? (
+          <div className="card p-6 lg:col-span-2 lg:p-8">
+            <p className="whitespace-pre-line text-base leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
+          </div>
+        ) : null}
       </div>
     </section>
   );

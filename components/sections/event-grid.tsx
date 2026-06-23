@@ -186,7 +186,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                   onClick={(clickEvent) =>
                     trackEvent("click_event", {
                       link_url: clickEvent.currentTarget.href,
-                      link_text: "Agregar a mi calendario",
+                      link_text: "Agregar a Google Calendar",
                       content_type: "event",
                       content_title: featured.title,
                       section: "events_calendar"
@@ -194,7 +194,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                   }
                 >
                   <CalendarPlus size={16} />
-                  Agregar a mi calendario
+                  Agregar a Google Calendar
                 </a>
               ) : null}
               {featured.ctaLink ? (
@@ -245,6 +245,25 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 {event.description ? <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
                 {event.location ? <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]"><MapPin size={16} />{event.location}</p> : null}
               </div>
+              <a
+                className="btn-secondary !bg-transparent !p-3 text-sm"
+                href={createGoogleCalendarUrl({ ...event, start: event.startDate, end: event.endDate })}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Agregar ${event.title} a Google Calendar`}
+                title="Agregar a Google Calendar"
+                onClick={(clickEvent) =>
+                  trackEvent("click_event", {
+                    link_url: clickEvent.currentTarget.href,
+                    link_text: "Agregar a Google Calendar",
+                    content_type: "event",
+                    content_title: event.title,
+                    section: "events_list_calendar"
+                  })
+                }
+              >
+                <CalendarPlus size={16} />
+              </a>
               {event.ctaLink ? (
                 <a
                   className="btn-secondary !bg-transparent !p-3 text-sm"

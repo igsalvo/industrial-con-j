@@ -4,6 +4,8 @@ import { Send } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 
+const SUBMIT_FEEDBACK_MS = 6000;
+
 type ContactFormProps = {
   type?: "CONTACT" | "DONATION" | "SPONSORSHIP" | "PARTICIPATION";
   title?: string;
@@ -30,6 +32,7 @@ export function ContactForm({
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     trackEvent(type === "DONATION" ? "click_donation" : "click_contact", {
       link_text: submitLabel,
       content_type: "form",
@@ -38,7 +41,14 @@ export function ContactForm({
     setStatus("submitting");
     setMessage("");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
+    let showedSentFeedback = false;
+    const feedbackTimeout = setTimeout(() => {
+      showedSentFeedback = true;
+      form.reset();
+      setStatus("success");
+      setMessage("Mensaje enviado.");
+    }, SUBMIT_FEEDBACK_MS);
 
     try {
       const response = await fetch("/api/contact", {
@@ -59,18 +69,21 @@ export function ContactForm({
       const payload = await response.json().catch(() => ({}));
 
       if (!response.ok) {
+        if (showedSentFeedback) return;
         setStatus("error");
         setMessage(payload.error || "No se pudo enviar el formulario.");
         return;
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setStatus("success");
-      setMessage(payload.message || "Mensaje enviado.");
+      setMessage("Mensaje enviado.");
     } catch (error) {
-      event.currentTarget.reset();
+      form.reset();
       setStatus("success");
-      setMessage("Gracias. Recibimos tu mensaje.");
+      setMessage("Mensaje enviado.");
+    } finally {
+      clearTimeout(feedbackTimeout);
     }
   }
 

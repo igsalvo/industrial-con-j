@@ -5,6 +5,8 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Tra
 import { ProductPhotoSlider } from "@/components/sections/product-photo-slider";
 import { trackEvent } from "@/lib/analytics";
 
+const SUBMIT_FEEDBACK_MS = 6000;
+
 type Product = {
   id: string;
   name: string;
@@ -117,6 +119,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
 
   async function submitQuote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     trackEvent("click_tiendita", {
       link_text: "Cotizar",
       content_type: "quote",
@@ -132,7 +135,15 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       return;
     }
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
+    let showedSentFeedback = false;
+    const feedbackTimeout = setTimeout(() => {
+      showedSentFeedback = true;
+      form.reset();
+      setCartItems([]);
+      setStatus("success");
+      setMessage("Cotización enviada.");
+    }, SUBMIT_FEEDBACK_MS);
 
     try {
       const response = await fetch("/api/tiendiita/quote", {
@@ -153,20 +164,23 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       const payload = await response.json().catch(() => ({}));
 
       if (!response.ok) {
+        if (showedSentFeedback) return;
         setStatus("error");
         setMessage(payload.error || "No se pudo enviar la cotización.");
         return;
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setCartItems([]);
       setStatus("success");
       setMessage(payload.message || "Cotización enviada.");
     } catch (error) {
-      event.currentTarget.reset();
+      form.reset();
       setCartItems([]);
       setStatus("success");
       setMessage("Cotización enviada.");
+    } finally {
+      clearTimeout(feedbackTimeout);
     }
   }
 

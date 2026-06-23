@@ -200,6 +200,13 @@ model SiteConfig {
   showContactLink             Boolean  @default(true)
   showThemeToggle             Boolean  @default(false)
   showDonationsSection        Boolean  @default(true)
+  showHomePopup               Boolean  @default(false)
+  homePopupTitle              String?  @default("¡Ayúdanos a elegir nuestra mascota!")
+  homePopupBody               String?  @default("Estamos buscando a la mascota que mejor represente los valores, la identidad y la esencia de Ingeniería Industrial.\n\nConoce las propuestas, elige tu favorita y sé parte de esta importante decisión.")
+  homePopupButtonLabel        String?  @default("Vota aquí")
+  homePopupButtonHref         String?
+  homePopupVideoUrl           String?
+  homePopupPlacement          String   @default("center")
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Aliados")
   heroEyebrow                 String?  @default("Comunidad industrial en movimiento")

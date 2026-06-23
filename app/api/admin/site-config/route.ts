@@ -45,6 +45,10 @@ function isValidHeroVideoUrl(value: string | null) {
   }
 }
 
+function isValidPopupPlacement(value: unknown) {
+  return ["center", "fullscreen", "right", "left", "top", "bottom"].includes(typeof value === "string" ? value : "");
+}
+
 export async function PATCH(request: Request) {
   const session = await ensureAdminApiSession();
   if (!session) {
@@ -58,9 +62,15 @@ export async function PATCH(request: Request) {
   const payload = (await request.json()) as Record<string, unknown>;
   const heroVideoUrl = toNullableString(payload.heroVideoUrl);
   const heroVideoEnabled = payload.heroVideoEnabled === true;
+  const homePopupVideoUrl = toNullableString(payload.homePopupVideoUrl);
+  const homePopupPlacement = isValidPopupPlacement(payload.homePopupPlacement) ? String(payload.homePopupPlacement) : "center";
 
   if (heroVideoEnabled && !isValidHeroVideoUrl(heroVideoUrl)) {
     return NextResponse.json({ error: "La URL del video debe ser un enlace público HTTPS/local .mp4, .webm, .mov o un link válido de YouTube." }, { status: 400 });
+  }
+
+  if (homePopupVideoUrl && !isValidHeroVideoUrl(homePopupVideoUrl)) {
+    return NextResponse.json({ error: "La URL del video del pop-up debe ser un enlace público HTTPS/local .mp4, .webm, .mov o un link válido de YouTube." }, { status: 400 });
   }
 
   const siteConfigData = {
@@ -81,6 +91,13 @@ export async function PATCH(request: Request) {
     showContactLink: payload.showContactLink === true,
     showThemeToggle: payload.showThemeToggle === true,
     showDonationsSection: payload.showDonationsSection === true,
+    showHomePopup: payload.showHomePopup === true,
+    homePopupTitle: toNullableString(payload.homePopupTitle),
+    homePopupBody: toNullableString(payload.homePopupBody),
+    homePopupButtonLabel: toNullableString(payload.homePopupButtonLabel),
+    homePopupButtonHref: toNullableString(payload.homePopupButtonHref),
+    homePopupVideoUrl,
+    homePopupPlacement,
     showSponsorBanner: payload.showSponsorBanner === true,
     sponsorBannerTitle: toNullableString(payload.sponsorBannerTitle) || "Aliados",
     heroEyebrow: toNullableString(payload.heroEyebrow),

@@ -27,8 +27,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           href: episode.spotifyUrl,
           label: "Spotify",
           eventName: "click_spotify",
-          icon: Music2,
-          className: "btn-primary"
+          icon: Music2
         }
       : null,
     episode.youtubeUrl
@@ -36,8 +35,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           href: episode.youtubeUrl,
           label: "YouTube",
           eventName: "click_youtube",
-          icon: Youtube,
-          className: "btn-secondary"
+          icon: Youtube
         }
       : null,
     episode.applePodcastsUrl
@@ -45,8 +43,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           href: episode.applePodcastsUrl,
           label: "Apple Podcasts",
           eventName: "click_apple_podcasts",
-          icon: Music2,
-          className: "btn-secondary"
+          icon: Music2
         }
       : null
   ].filter(Boolean);
@@ -67,6 +64,11 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                 />
               </div>
             ) : null}
+            {episode.longDescription ? (
+              <div className="card p-6">
+                <p className="whitespace-pre-line text-base leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
+              </div>
+            ) : null}
             {episode.audioEmbedUrl ? (
               <div className="card overflow-hidden">
                 <iframe className="h-80 w-full" src={episode.audioEmbedUrl} title={`${episode.title} audio`} />
@@ -74,8 +76,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             ) : null}
             {platformLinks.length > 0 ? (
               <div className="card p-6">
-                <h2 className="text-2xl font-bold">Escuchar o ver el episodio</h2>
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3">
                   {platformLinks.map((platform) => {
                     if (!platform) return null;
                     const Icon = platform.icon;
@@ -83,10 +84,12 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                     return (
                       <TrackedAnchor
                         key={platform.label}
-                        className={`${platform.className} gap-2`}
+                        className="grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:bg-[color:var(--accent)] hover:text-white"
                         href={platform.href}
                         target="_blank"
                         rel="noreferrer"
+                        aria-label={platform.label}
+                        title={platform.label}
                         eventName={platform.eventName}
                         eventParams={{
                           link_text: platform.label,
@@ -95,8 +98,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                           section: "episode_external_links"
                         }}
                       >
-                        <Icon size={18} />
-                        {platform.label}
+                        <Icon size={22} />
                       </TrackedAnchor>
                     );
                   })}

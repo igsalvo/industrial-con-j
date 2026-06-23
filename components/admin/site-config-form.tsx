@@ -22,6 +22,13 @@ type SiteConfigShape = {
   showContactLink: boolean;
   showThemeToggle: boolean;
   showDonationsSection: boolean;
+  showHomePopup: boolean;
+  homePopupTitle: string | null;
+  homePopupBody: string | null;
+  homePopupButtonLabel: string | null;
+  homePopupButtonHref: string | null;
+  homePopupVideoUrl: string | null;
+  homePopupPlacement: string;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
   heroEyebrow: string | null;
@@ -228,9 +235,16 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     setSuccess("");
     const formData = new FormData(event.currentTarget);
     const normalizedHeroVideoUrl = heroVideoUrl.trim();
+    const normalizedPopupVideoUrl = String(formData.get("homePopupVideoUrl") || "").trim();
 
     if (heroVideoEnabled && !isValidHeroVideoUrl(normalizedHeroVideoUrl)) {
       setError("La URL del video debe ser un .mp4, .webm, .mov HTTPS/local o un enlace válido de YouTube.");
+      setLoading(false);
+      return;
+    }
+
+    if (normalizedPopupVideoUrl && !isValidHeroVideoUrl(normalizedPopupVideoUrl)) {
+      setError("La URL del video del pop-up debe ser un .mp4, .webm, .mov HTTPS/local o un enlace válido de YouTube.");
       setLoading(false);
       return;
     }
@@ -253,6 +267,13 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       showContactLink: formData.get("showContactLink") === "on",
       showThemeToggle: formData.get("showThemeToggle") === "on",
       showDonationsSection: formData.get("showDonationsSection") === "on",
+      showHomePopup: formData.get("showHomePopup") === "on",
+      homePopupTitle: formData.get("homePopupTitle"),
+      homePopupBody: formData.get("homePopupBody"),
+      homePopupButtonLabel: formData.get("homePopupButtonLabel"),
+      homePopupButtonHref: formData.get("homePopupButtonHref"),
+      homePopupVideoUrl: normalizedPopupVideoUrl,
+      homePopupPlacement: formData.get("homePopupPlacement"),
       showSponsorBanner: formData.get("showSponsorBanner") === "on",
       sponsorBannerTitle: formData.get("sponsorBannerTitle"),
       heroEyebrow: formData.get("heroEyebrow"),
@@ -377,6 +398,70 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-8">
+      <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
+        <div>
+          <p className="pill">Pop-up inicio</p>
+          <h3 className="mt-3 text-2xl font-black">Aviso editable en la portada</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">
+            Aparece solo al entrar al inicio. Puedes activarlo, ocultarlo, cambiar el texto, agregar link y video.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+          <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+            <input defaultChecked={config.showHomePopup} name="showHomePopup" type="checkbox" />
+            Mostrar pop-up en inicio
+          </label>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Ubicación / formato</label>
+            <select className="field" name="homePopupPlacement" defaultValue={config.homePopupPlacement || "center"}>
+              <option value="center">Centro</option>
+              <option value="fullscreen">Pantalla completa</option>
+              <option value="right">Costado derecho</option>
+              <option value="left">Costado izquierdo</option>
+              <option value="top">Arriba</option>
+              <option value="bottom">Abajo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Título</label>
+          <input className="field" name="homePopupTitle" defaultValue={config.homePopupTitle || ""} placeholder="¡Ayúdanos a elegir nuestra mascota!" />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Texto</label>
+          <textarea
+            className="field min-h-32"
+            name="homePopupBody"
+            defaultValue={config.homePopupBody || ""}
+            placeholder="Escribe el contenido del aviso. Si pegas URLs completas, se mostrarán como links."
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Texto botón</label>
+            <input className="field" name="homePopupButtonLabel" defaultValue={config.homePopupButtonLabel || ""} placeholder="Vota aquí" />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Link botón</label>
+            <input className="field" name="homePopupButtonHref" defaultValue={config.homePopupButtonHref || ""} placeholder="https://..." />
+          </div>
+        </div>
+
+        <UploadField
+          name="homePopupVideoUrl"
+          label="Video del pop-up"
+          defaultValue={config.homePopupVideoUrl || ""}
+          accept="video/mp4"
+          uploadLabel="Subir video .mp4"
+          urlPlaceholder="URL .mp4 o link de YouTube"
+          hint="Opcional. Si lo completas, se muestra un reproductor dentro del pop-up."
+        />
+      </div>
+
       <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
         <div>
           <p className="pill">Video visible del inicio</p>

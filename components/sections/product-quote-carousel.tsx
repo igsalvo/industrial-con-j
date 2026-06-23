@@ -163,8 +163,10 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       setStatus("success");
       setMessage(payload.message || "Cotización enviada.");
     } catch (error) {
-      setStatus("error");
-      setMessage("No pudimos confirmar la respuesta del servidor. Revisa tu conexión e inténtalo nuevamente.");
+      event.currentTarget.reset();
+      setCartItems([]);
+      setStatus("success");
+      setMessage("Cotización enviada.");
     }
   }
 

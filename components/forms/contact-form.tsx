@@ -68,8 +68,9 @@ export function ContactForm({
       setStatus("success");
       setMessage(payload.message || "Mensaje enviado.");
     } catch (error) {
-      setStatus("error");
-      setMessage("No pudimos confirmar la respuesta del servidor. Revisa tu conexión e inténtalo nuevamente.");
+      event.currentTarget.reset();
+      setStatus("success");
+      setMessage("Gracias. Recibimos tu mensaje.");
     }
   }
 

@@ -69,37 +69,6 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                 <iframe className="h-80 w-full" src={episode.audioEmbedUrl} title={`${episode.title} audio`} />
               </div>
             ) : null}
-            {platformLinks.length > 0 ? (
-              <div className="card p-6">
-                <div className="flex flex-wrap gap-3">
-                  {platformLinks.map((platform) => {
-                    if (!platform) return null;
-                    const Icon = platform.icon;
-
-                    return (
-                      <TrackedAnchor
-                        key={platform.label}
-                        className="grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:bg-[color:var(--accent)] hover:text-white"
-                        href={platform.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={platform.label}
-                        title={platform.label}
-                        eventName={platform.eventName}
-                        eventParams={{
-                          link_text: platform.label,
-                          content_type: "episode",
-                          content_title: episode.title,
-                          section: "episode_external_links"
-                        }}
-                      >
-                        <Icon size={22} />
-                      </TrackedAnchor>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
           </div>
 
           {episode.timestamps.length > 0 ? (
@@ -186,9 +155,40 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           ) : null}
         </aside>
 
-        {episode.longDescription ? (
-          <div className="card p-6 lg:col-span-2 lg:p-8">
-            <p className="whitespace-pre-line text-base leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
+        {episode.longDescription || platformLinks.length > 0 ? (
+          <div className="card grid gap-6 p-6 lg:col-span-2 lg:grid-cols-[1fr_auto] lg:items-start lg:p-8">
+            {episode.longDescription ? (
+              <p className="whitespace-pre-line text-base leading-7 text-[color:var(--muted)]">{episode.longDescription}</p>
+            ) : null}
+            {platformLinks.length > 0 ? (
+              <div className="flex flex-wrap gap-3 lg:justify-end">
+                {platformLinks.map((platform) => {
+                  if (!platform) return null;
+                  const Icon = platform.icon;
+
+                  return (
+                    <TrackedAnchor
+                      key={platform.label}
+                      className="grid h-12 w-12 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-white transition hover:border-[color:var(--accent)] hover:bg-[color:var(--accent)] hover:text-white"
+                      href={platform.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={platform.label}
+                      title={platform.label}
+                      eventName={platform.eventName}
+                      eventParams={{
+                        link_text: platform.label,
+                        content_type: "episode",
+                        content_title: episode.title,
+                        section: "episode_external_links"
+                      }}
+                    >
+                      <Icon size={22} />
+                    </TrackedAnchor>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

@@ -177,26 +177,24 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
               {featured.location ? <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-white/70"><MapPin size={18} /></span>{featured.location}</span> : null}
             </div>
             <div className="mt-6 flex flex-wrap gap-2">
-              {featuredIsUpcoming ? (
-                <a
-                  className="btn-primary gap-2 !px-4 !py-2 text-sm"
-                  href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={(clickEvent) =>
-                    trackEvent("click_event", {
-                      link_url: clickEvent.currentTarget.href,
-                      link_text: "Agregar a mi Google Calendar",
-                      content_type: "event",
-                      content_title: featured.title,
-                      section: "events_calendar"
-                    })
-                  }
-                >
-                  <CalendarPlus size={16} />
-                  Agregar a mi Google Calendar
-                </a>
-              ) : null}
+              <a
+                className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(clickEvent) =>
+                  trackEvent("click_event", {
+                    link_url: clickEvent.currentTarget.href,
+                    link_text: "Agregar a mi Google Calendar",
+                    content_type: "event",
+                    content_title: featured.title,
+                    section: "events_calendar"
+                  })
+                }
+              >
+                <CalendarPlus size={16} />
+                Agregar a mi Google Calendar
+              </a>
               {featured.ctaLink ? (
                 <a
                   className="btn-secondary gap-2 !px-4 !py-2 text-sm"

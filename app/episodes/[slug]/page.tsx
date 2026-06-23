@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Music2, Youtube } from "lucide-react";
 import { getEpisodeBySlug, getSiteConfig } from "@/lib/queries";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
-import { formatDate } from "@/lib/utils";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 
@@ -56,21 +55,6 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
     <section className="shell py-12">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="space-y-8">
-          <div className="card p-7 md:p-8">
-            <div className="flex flex-wrap gap-2">
-              {episode.tags.map((tag: string) => (
-                <span key={tag} className="pill">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <h1 className="mt-5 text-4xl font-black md:text-5xl">{episode.title}</h1>
-            <div className="mt-6 flex flex-wrap gap-6 text-sm text-[color:var(--muted)]">
-              <p>{formatDate(episode.publishedAt)}</p>
-              <p>{episode.sponsor ? `Aliado: ${episode.sponsor.name}` : "Sin aliado"}</p>
-            </div>
-          </div>
-
           <div className="space-y-6">
             {videoUrl ? (
               <div className="card overflow-hidden bg-black">

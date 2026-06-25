@@ -230,25 +230,29 @@ export function SiteHeader({
         </div>
 
         {!isAdminRoute && isTiendiitaRoute ? (
-          <button type="button" className="btn-primary shrink-0 gap-2 !px-3 !py-3 text-sm lg:hidden" onClick={toggleCart} aria-label="Abrir carrito de cotización">
-            <ShoppingCart size={17} />
-            <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
-          </button>
+          <div className="lg:hidden">
+            <button type="button" className="btn-primary shrink-0 gap-2 !px-3 !py-3 text-sm" onClick={toggleCart} aria-label="Abrir carrito de cotización">
+              <ShoppingCart size={17} />
+              <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
+            </button>
+          </div>
         ) : null}
 
         {!isAdminRoute ? (
-          <button
-            ref={mobileMenuButtonRef}
-            type="button"
-            className="btn-secondary shrink-0 gap-2 !px-3 !py-3 text-sm font-semibold lg:hidden"
-            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
-            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-navigation"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            <span>{mobileMenuOpen ? "Cerrar" : "Menú"}</span>
-          </button>
+          <div className="lg:hidden">
+            <button
+              ref={mobileMenuButtonRef}
+              type="button"
+              className="btn-secondary shrink-0 gap-2 !px-3 !py-3 text-sm font-semibold"
+              onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+              aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              <span>{mobileMenuOpen ? "Cerrar" : "Menú"}</span>
+            </button>
+          </div>
         ) : null}
       </div>
 

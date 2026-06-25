@@ -77,8 +77,10 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
   const placementClasses = getPlacementClasses(placement);
 
   const closePopup = useCallback(() => {
-    const storage = isSidePanel ? window.localStorage : window.sessionStorage;
-    storage.setItem(storageKey, contentKey);
+    if (!isSidePanel) {
+      window.sessionStorage.setItem(storageKey, contentKey);
+    }
+
     setIsVisible(false);
     setIsExpanded(false);
   }, [contentKey, isSidePanel, storageKey]);
@@ -108,9 +110,13 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
       return;
     }
 
-    const storage = isSidePanel ? window.localStorage : window.sessionStorage;
+    if (isSidePanel) {
+      window.localStorage.removeItem(storageKey);
+      setIsVisible(true);
+      return;
+    }
 
-    if (storage.getItem(storageKey) !== contentKey) {
+    if (window.sessionStorage.getItem(storageKey) !== contentKey) {
       setIsVisible(true);
     }
   }, [body, contentKey, isSidePanel, normalizedImageUrl, normalizedVideoUrl, storageKey, title]);

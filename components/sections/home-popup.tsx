@@ -67,6 +67,7 @@ function getPlacementClasses(placement: string | null | undefined) {
 
 export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode = "modal" }: HomePopupProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isSidePanel = mode === "side-panel";
   const storageKey = isSidePanel ? "industrialconj-home-side-panel-dismissed" : "industrialconj-home-popup-dismissed";
   const contentKey = useMemo(() => encodeURIComponent([title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode].filter(Boolean).join("|")), [title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode]);
@@ -79,6 +80,7 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
     const storage = isSidePanel ? window.localStorage : window.sessionStorage;
     storage.setItem(storageKey, contentKey);
     setIsVisible(false);
+    setIsExpanded(false);
   }, [contentKey, isSidePanel, storageKey]);
 
   useEffect(() => {
@@ -88,13 +90,18 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        if (isSidePanel && isExpanded) {
+          setIsExpanded(false);
+          return;
+        }
+
         closePopup();
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closePopup, isVisible]);
+  }, [closePopup, isExpanded, isSidePanel, isVisible]);
 
   useEffect(() => {
     if (!title && !body && !normalizedImageUrl && !normalizedVideoUrl) {
@@ -113,25 +120,64 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
   }
 
   if (isSidePanel) {
+    const previewText = body?.replace(/\s+/g, " ").trim();
+
     return (
-      <aside
-        className="fixed bottom-4 right-4 z-[70] w-[calc(100vw-2rem)] max-w-sm rounded-3xl border border-white/15 bg-[color:var(--panel)] p-5 shadow-2xl sm:bottom-6 sm:right-6"
-        aria-label={title || "Aviso destacado"}
-      >
+      <aside className="fixed right-0 top-1/2 z-[70] flex -translate-y-1/2 items-center" aria-label={title || "Aviso destacado"}>
+        {!isExpanded ? (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(true)}
+            className="group flex max-w-[78vw] items-center gap-3 rounded-l-2xl border border-r-0 border-white/15 bg-[#181a19] px-3 py-3 text-left text-white shadow-2xl transition hover:border-[color:var(--accent)] sm:max-w-xs sm:px-4"
+            aria-expanded={isExpanded}
+            aria-controls="home-side-panel-content"
+          >
+            {normalizedImageUrl ? (
+              <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white">
+                <img src={normalizedImageUrl} alt="" className="h-full w-full object-contain p-1" />
+              </span>
+            ) : (
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-[color:var(--accent)] text-xl font-black">
+                J
+              </span>
+            )}
+            <span className="min-w-0">
+              {title ? <span className="line-clamp-2 block text-sm font-black leading-tight">{title}</span> : null}
+              {previewText ? <span className="mt-1 line-clamp-1 block text-xs text-white/68">Presiona para ver el mensaje completo</span> : null}
+            </span>
+          </button>
+        ) : null}
+
+        {isExpanded ? (
+          <div
+            id="home-side-panel-content"
+            className="relative mr-3 max-h-[calc(100svh-2rem)] w-[calc(100vw-1.5rem)] max-w-sm overflow-y-auto rounded-2xl border border-white/15 bg-[#181a19] p-4 text-white shadow-2xl sm:mr-6 sm:max-w-md sm:p-5"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby={title ? "home-side-panel-title" : undefined}
+          >
+        <button
+          type="button"
+          onClick={() => setIsExpanded(false)}
+          className="absolute right-14 top-3 grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/10 text-xl leading-none text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+          aria-label="Contraer aviso"
+        >
+          ‹
+        </button>
         <button
           type="button"
           onClick={closePopup}
-          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-xl leading-none text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+          className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/10 text-xl leading-none text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
           aria-label="Cerrar aviso"
         >
           ×
         </button>
 
-        <div className="pr-9">
-          {title ? <h2 className="text-xl font-black leading-tight">{title}</h2> : null}
+        <div className="pr-20">
+          {title ? <h2 id="home-side-panel-title" className="text-xl font-black leading-tight sm:text-2xl">{title}</h2> : null}
           {normalizedImageUrl ? (
             <div className="mt-4 rounded-2xl border border-white/10 bg-white p-3">
-              <img src={normalizedImageUrl} alt={title || "Imagen del aviso"} className="mx-auto max-h-56 w-full object-contain" />
+              <img src={normalizedImageUrl} alt={title || "Imagen del aviso"} className="mx-auto max-h-48 w-full object-contain sm:max-h-56" />
             </div>
           ) : null}
           {body ? (
@@ -143,10 +189,28 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
           ) : null}
         </div>
 
+        {normalizedVideoUrl ? (
+          <div className="mt-5 overflow-hidden rounded-2xl border border-white/10 bg-black">
+            {youtubeEmbedUrl ? (
+              <iframe
+                className="aspect-video w-full"
+                src={youtubeEmbedUrl}
+                title={title || "Video del aviso"}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <video className="aspect-video w-full object-cover" src={normalizedVideoUrl} controls playsInline />
+            )}
+          </div>
+        ) : null}
+
         {buttonLabel && buttonHref ? (
           <a href={buttonHref} target={buttonHref.startsWith("/") ? undefined : "_blank"} rel={buttonHref.startsWith("/") ? undefined : "noreferrer"} className="btn-primary mt-5 w-full justify-center">
             {buttonLabel}
           </a>
+        ) : null}
+          </div>
         ) : null}
       </aside>
     );

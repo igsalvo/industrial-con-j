@@ -240,13 +240,14 @@ export function SiteHeader({
           <button
             ref={mobileMenuButtonRef}
             type="button"
-            className="btn-secondary shrink-0 !p-3 lg:hidden"
+            className="btn-secondary shrink-0 gap-2 !px-3 !py-3 text-sm font-semibold lg:hidden"
             onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
             aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            <span>{mobileMenuOpen ? "Cerrar" : "Menú"}</span>
           </button>
         ) : null}
       </div>

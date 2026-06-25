@@ -129,7 +129,44 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
     const previewText = body?.replace(/\s+/g, " ").trim();
 
     return (
-      <aside className="fixed right-0 top-1/2 z-[70] flex -translate-y-1/2 items-center" aria-label={title || "Aviso destacado"}>
+      <>
+      <aside
+        className="fixed bottom-4 right-4 z-[70] hidden w-[calc(100vw-2rem)] max-w-sm rounded-3xl border border-white/15 bg-[#181a19] p-5 text-white shadow-2xl md:block lg:bottom-6 lg:right-6"
+        aria-label={title || "Aviso destacado"}
+      >
+        <button
+          type="button"
+          onClick={closePopup}
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-xl leading-none text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+          aria-label="Cerrar aviso"
+        >
+          ×
+        </button>
+
+        <div className="pr-9">
+          {title ? <h2 className="text-xl font-black leading-tight">{title}</h2> : null}
+          {normalizedImageUrl ? (
+            <div className="mt-4 rounded-2xl border border-white/10 bg-white p-3">
+              <img src={normalizedImageUrl} alt={title || "Imagen del aviso"} className="mx-auto max-h-56 w-full object-contain" />
+            </div>
+          ) : null}
+          {body ? (
+            <div className="mt-4 space-y-3 text-sm leading-6 text-[color:var(--muted)]">
+              {body.split(/\n{2,}/).map((paragraph, index) => (
+                <p key={`${paragraph}-${index}`}>{textWithLinks(paragraph)}</p>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {buttonLabel && buttonHref ? (
+          <a href={buttonHref} target={buttonHref.startsWith("/") ? undefined : "_blank"} rel={buttonHref.startsWith("/") ? undefined : "noreferrer"} className="btn-primary mt-5 w-full justify-center">
+            {buttonLabel}
+          </a>
+        ) : null}
+      </aside>
+
+      <aside className="fixed right-0 top-1/2 z-[70] flex -translate-y-1/2 items-center md:hidden" aria-label={title || "Aviso destacado"}>
         {!isExpanded ? (
           <button
             type="button"
@@ -219,6 +256,7 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
           </div>
         ) : null}
       </aside>
+      </>
     );
   }
 

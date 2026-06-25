@@ -208,6 +208,7 @@ model SiteConfig {
   homePopupImageUrl           String?
   homePopupVideoUrl           String?
   homePopupPlacement          String   @default("center")
+  homePopupMode               String   @default("modal")
   showSponsorBanner           Boolean  @default(true)
   sponsorBannerTitle          String?  @default("Aliados")
   heroEyebrow                 String?  @default("Comunidad industrial en movimiento")

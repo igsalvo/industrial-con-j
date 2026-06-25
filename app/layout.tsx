@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { HomePopup } from "@/components/sections/home-popup";
 import { Providers } from "@/components/ui/providers";
 import { getSiteConfig } from "@/lib/queries";
 
@@ -50,6 +51,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               footerTitle={siteConfig.footerTitle}
               footerDescription={siteConfig.footerDescription}
             />
+            {siteConfig.showHomePopup && siteConfig.homePopupMode === "side-panel" ? (
+              <HomePopup
+                title={siteConfig.homePopupTitle}
+                body={siteConfig.homePopupBody}
+                buttonLabel={siteConfig.homePopupButtonLabel}
+                buttonHref={siteConfig.homePopupButtonHref}
+                imageUrl={siteConfig.homePopupImageUrl}
+                videoUrl={siteConfig.homePopupVideoUrl}
+                placement={siteConfig.homePopupPlacement}
+                mode={siteConfig.homePopupMode}
+              />
+            ) : null}
           </div>
         </Providers>
       </body>

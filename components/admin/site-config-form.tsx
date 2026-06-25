@@ -30,6 +30,7 @@ type SiteConfigShape = {
   homePopupImageUrl: string | null;
   homePopupVideoUrl: string | null;
   homePopupPlacement: string;
+  homePopupMode: string;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
   heroEyebrow: string | null;
@@ -276,6 +277,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       homePopupImageUrl: formData.get("homePopupImageUrl"),
       homePopupVideoUrl: normalizedPopupVideoUrl,
       homePopupPlacement: formData.get("homePopupPlacement"),
+      homePopupMode: formData.get("homePopupMode"),
       showSponsorBanner: formData.get("showSponsorBanner") === "on",
       sponsorBannerTitle: formData.get("sponsorBannerTitle"),
       heroEyebrow: formData.get("heroEyebrow"),
@@ -403,27 +405,36 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
         <div>
           <p className="pill">Pop-up inicio</p>
-          <h3 className="mt-3 text-2xl font-black">Aviso editable en la portada</h3>
+          <h3 className="mt-3 text-2xl font-black">Aviso emergente editable</h3>
           <p className="mt-2 text-sm text-[color:var(--muted)]">
-            Aparece solo al entrar al inicio. Puedes activarlo, ocultarlo, cambiar el texto, agregar link, imagen y video.
+            Elige si aparece como pop-up al entrar al inicio o como ventana lateral visible en todo el sitio hasta que se cierre.
           </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-[220px_1fr]">
           <label className="card flex items-center gap-3 p-4 text-sm font-medium">
             <input defaultChecked={config.showHomePopup} name="showHomePopup" type="checkbox" />
-            Mostrar pop-up en inicio
+            Mostrar aviso
           </label>
-          <div>
-            <label className="mb-2 block text-sm font-semibold">Ubicación / formato</label>
-            <select className="field" name="homePopupPlacement" defaultValue={config.homePopupPlacement || "center"}>
-              <option value="center">Centro</option>
-              <option value="fullscreen">Pantalla completa</option>
-              <option value="right">Costado derecho</option>
-              <option value="left">Costado izquierdo</option>
-              <option value="top">Arriba</option>
-              <option value="bottom">Abajo</option>
-            </select>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Tipo de aviso</label>
+              <select className="field" name="homePopupMode" defaultValue={config.homePopupMode || "modal"}>
+                <option value="modal">Pop-up de inicio</option>
+                <option value="side-panel">Ventana lateral en todo el sitio</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Ubicación / formato del pop-up</label>
+              <select className="field" name="homePopupPlacement" defaultValue={config.homePopupPlacement || "center"}>
+                <option value="center">Centro</option>
+                <option value="fullscreen">Pantalla completa</option>
+                <option value="right">Costado derecho</option>
+                <option value="left">Costado izquierdo</option>
+                <option value="top">Arriba</option>
+                <option value="bottom">Abajo</option>
+              </select>
+            </div>
           </div>
         </div>
 

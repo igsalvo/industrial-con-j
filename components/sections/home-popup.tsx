@@ -11,6 +11,7 @@ type HomePopupProps = {
   imageUrl?: string | null;
   videoUrl?: string | null;
   placement?: string | null;
+  mode?: string | null;
 };
 
 const urlPattern = /(https?:\/\/[^\s]+)/g;
@@ -64,18 +65,21 @@ function getPlacementClasses(placement: string | null | undefined) {
   }
 }
 
-export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement }: HomePopupProps) {
+export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode = "modal" }: HomePopupProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const contentKey = useMemo(() => encodeURIComponent([title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement].filter(Boolean).join("|")), [title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement]);
+  const isSidePanel = mode === "side-panel";
+  const storageKey = isSidePanel ? "industrialconj-home-side-panel-dismissed" : "industrialconj-home-popup-dismissed";
+  const contentKey = useMemo(() => encodeURIComponent([title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode].filter(Boolean).join("|")), [title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement, mode]);
   const normalizedImageUrl = imageUrl?.trim();
   const youtubeEmbedUrl = getYouTubeEmbedUrl(videoUrl);
   const normalizedVideoUrl = videoUrl?.trim();
   const placementClasses = getPlacementClasses(placement);
 
   const closePopup = useCallback(() => {
-    window.sessionStorage.setItem("industrialconj-home-popup-dismissed", contentKey);
+    const storage = isSidePanel ? window.localStorage : window.sessionStorage;
+    storage.setItem(storageKey, contentKey);
     setIsVisible(false);
-  }, [contentKey]);
+  }, [contentKey, isSidePanel, storageKey]);
 
   useEffect(() => {
     if (!isVisible) {
@@ -97,13 +101,55 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, vide
       return;
     }
 
-    if (window.sessionStorage.getItem("industrialconj-home-popup-dismissed") !== contentKey) {
+    const storage = isSidePanel ? window.localStorage : window.sessionStorage;
+
+    if (storage.getItem(storageKey) !== contentKey) {
       setIsVisible(true);
     }
-  }, [body, contentKey, normalizedImageUrl, normalizedVideoUrl, title]);
+  }, [body, contentKey, isSidePanel, normalizedImageUrl, normalizedVideoUrl, storageKey, title]);
 
   if (!isVisible) {
     return null;
+  }
+
+  if (isSidePanel) {
+    return (
+      <aside
+        className="fixed bottom-4 right-4 z-[70] w-[calc(100vw-2rem)] max-w-sm rounded-3xl border border-white/15 bg-[color:var(--panel)] p-5 shadow-2xl sm:bottom-6 sm:right-6"
+        aria-label={title || "Aviso destacado"}
+      >
+        <button
+          type="button"
+          onClick={closePopup}
+          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-xl leading-none text-white transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+          aria-label="Cerrar aviso"
+        >
+          ×
+        </button>
+
+        <div className="pr-9">
+          {title ? <h2 className="text-xl font-black leading-tight">{title}</h2> : null}
+          {normalizedImageUrl ? (
+            <div className="mt-4 rounded-2xl border border-white/10 bg-white p-3">
+              <img src={normalizedImageUrl} alt={title || "Imagen del aviso"} className="mx-auto max-h-56 w-full object-contain" />
+            </div>
+          ) : null}
+          {body ? (
+            <div className="mt-4 space-y-3 text-sm leading-6 text-[color:var(--muted)]">
+              {body.split(/\n{2,}/).map((paragraph, index) => (
+                <p key={`${paragraph}-${index}`}>{textWithLinks(paragraph)}</p>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {buttonLabel && buttonHref ? (
+          <a href={buttonHref} target={buttonHref.startsWith("/") ? undefined : "_blank"} rel={buttonHref.startsWith("/") ? undefined : "noreferrer"} className="btn-primary mt-5 w-full justify-center">
+            {buttonLabel}
+          </a>
+        ) : null}
+      </aside>
+    );
   }
 
   return (

@@ -7,7 +7,7 @@ export default async function HomePage() {
 
   return (
     <div className="pb-10">
-      {siteConfig.showHomePopup ? (
+      {siteConfig.showHomePopup && siteConfig.homePopupMode !== "side-panel" ? (
         <HomePopup
           title={siteConfig.homePopupTitle}
           body={siteConfig.homePopupBody}
@@ -16,6 +16,7 @@ export default async function HomePage() {
           imageUrl={siteConfig.homePopupImageUrl}
           videoUrl={siteConfig.homePopupVideoUrl}
           placement={siteConfig.homePopupPlacement}
+          mode={siteConfig.homePopupMode}
         />
       ) : null}
       {siteConfig.showHeroSection ? <HeroSection config={siteConfig} /> : null}

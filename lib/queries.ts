@@ -27,6 +27,7 @@ export const defaultSiteConfig = {
   homePopupImageUrl: null,
   homePopupVideoUrl: null,
   homePopupPlacement: "center",
+  homePopupMode: "modal",
   showSponsorBanner: true,
   sponsorBannerTitle: "Aliados",
   heroEyebrow: "Comunidad industrial en movimiento",

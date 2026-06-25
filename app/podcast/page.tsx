@@ -186,14 +186,51 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
         <section className="space-y-6">
           {featuredGuests.length ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {featuredGuests.map((guest) => (
-                <div key={guest.slug} className="relative rounded-[1.75rem] border border-[color:var(--accent)]/60 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.14),transparent_32%),rgba(255,255,255,0.04)] p-1 shadow-[0_0_36px_rgba(226,33,28,0.13)] [&_.card]:grid [&_.card]:overflow-hidden [&_.card]:md:grid-cols-[0.9fr_1fr] [&_.card>div:first-child]:h-[260px] [&_.card>div:first-child]:border-b-0 [&_.guest-card-image]:object-contain">
-                  <span className="absolute left-5 top-5 z-10 inline-flex items-center gap-1 rounded-full border border-[color:var(--accent)]/60 bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)] backdrop-blur">
-                    <Star size={12} />Destacado
-                  </span>
-                  <GuestCard guest={guest} />
-                </div>
-              ))}
+              {featuredGuests.map((guest) => {
+                const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
+                const latestEpisode = guest.episodes?.[0];
+
+                return (
+                  <article
+                    key={guest.slug}
+                    className="grid min-w-0 overflow-hidden rounded-[1.75rem] border border-[color:var(--accent)]/60 bg-[radial-gradient(circle_at_18%_0%,rgba(226,33,28,0.14),transparent_32%),rgba(255,255,255,0.04)] p-1 shadow-[0_0_36px_rgba(226,33,28,0.13)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]"
+                  >
+                    <div className="relative aspect-[4/3] min-w-0 overflow-hidden rounded-[1.45rem] bg-[#242424] lg:aspect-auto lg:min-h-[260px]">
+                      <span className="absolute left-4 top-4 z-10 inline-flex items-center gap-1 rounded-full border border-[color:var(--accent)]/60 bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--accent)] backdrop-blur">
+                        <Star size={12} />Destacado
+                      </span>
+                      {guest.profileImage ? (
+                        <Image
+                          src={guest.profileImage}
+                          alt={guest.name}
+                          fill
+                          className="object-cover"
+                          style={{ objectPosition: imagePosition }}
+                          sizes="(min-width: 1024px) 24vw, (min-width: 768px) 45vw, 100vw"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="flex min-w-0 flex-col p-5 sm:p-6">
+                      <h3 className="text-2xl font-black leading-tight">
+                        <Link href={`/guests/${guest.slug}`} className="hover:text-[color:var(--accent)]">
+                          {guest.name}
+                        </Link>
+                      </h3>
+                      <p className="mt-2 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>
+                      <p className="mt-4 line-clamp-4 text-sm leading-6 text-[color:var(--muted)]">{guest.bio}</p>
+                      {latestEpisode ? (
+                        <Link href={`/episodes/${latestEpisode.slug}`} className="btn-secondary mt-auto !px-4 !py-2 text-sm" aria-label={`Ver episodio ${latestEpisode.title}`}>
+                          Ver episodio
+                        </Link>
+                      ) : (
+                        <Link href={`/guests/${guest.slug}`} className="btn-secondary mt-auto !px-4 !py-2 text-sm">
+                          Ver perfil
+                        </Link>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           ) : null}
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

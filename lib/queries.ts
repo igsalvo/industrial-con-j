@@ -24,6 +24,7 @@ export const defaultSiteConfig = {
     "Estamos buscando a la mascota que mejor represente los valores, la identidad y la esencia de Ingeniería Industrial.\n\nConoce las propuestas, elige tu favorita y sé parte de esta importante decisión.",
   homePopupButtonLabel: "Vota aquí",
   homePopupButtonHref: null,
+  homePopupImageUrl: null,
   homePopupVideoUrl: null,
   homePopupPlacement: "center",
   showSponsorBanner: true,

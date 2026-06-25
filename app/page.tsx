@@ -13,6 +13,7 @@ export default async function HomePage() {
           body={siteConfig.homePopupBody}
           buttonLabel={siteConfig.homePopupButtonLabel}
           buttonHref={siteConfig.homePopupButtonHref}
+          imageUrl={siteConfig.homePopupImageUrl}
           videoUrl={siteConfig.homePopupVideoUrl}
           placement={siteConfig.homePopupPlacement}
         />

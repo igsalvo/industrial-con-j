@@ -96,6 +96,7 @@ export async function PATCH(request: Request) {
     homePopupBody: toNullableString(payload.homePopupBody),
     homePopupButtonLabel: toNullableString(payload.homePopupButtonLabel),
     homePopupButtonHref: toNullableString(payload.homePopupButtonHref),
+    homePopupImageUrl: toNullableString(payload.homePopupImageUrl),
     homePopupVideoUrl,
     homePopupPlacement,
     showSponsorBanner: payload.showSponsorBanner === true,

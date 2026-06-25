@@ -8,6 +8,7 @@ type HomePopupProps = {
   body?: string | null;
   buttonLabel?: string | null;
   buttonHref?: string | null;
+  imageUrl?: string | null;
   videoUrl?: string | null;
   placement?: string | null;
 };
@@ -63,9 +64,10 @@ function getPlacementClasses(placement: string | null | undefined) {
   }
 }
 
-export function HomePopup({ title, body, buttonLabel, buttonHref, videoUrl, placement }: HomePopupProps) {
+export function HomePopup({ title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement }: HomePopupProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const contentKey = useMemo(() => encodeURIComponent([title, body, buttonLabel, buttonHref, videoUrl, placement].filter(Boolean).join("|")), [title, body, buttonLabel, buttonHref, videoUrl, placement]);
+  const contentKey = useMemo(() => encodeURIComponent([title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement].filter(Boolean).join("|")), [title, body, buttonLabel, buttonHref, imageUrl, videoUrl, placement]);
+  const normalizedImageUrl = imageUrl?.trim();
   const youtubeEmbedUrl = getYouTubeEmbedUrl(videoUrl);
   const normalizedVideoUrl = videoUrl?.trim();
   const placementClasses = getPlacementClasses(placement);
@@ -91,14 +93,14 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, videoUrl, plac
   }, [closePopup, isVisible]);
 
   useEffect(() => {
-    if (!title && !body && !normalizedVideoUrl) {
+    if (!title && !body && !normalizedImageUrl && !normalizedVideoUrl) {
       return;
     }
 
     if (window.sessionStorage.getItem("industrialconj-home-popup-dismissed") !== contentKey) {
       setIsVisible(true);
     }
-  }, [body, contentKey, normalizedVideoUrl, title]);
+  }, [body, contentKey, normalizedImageUrl, normalizedVideoUrl, title]);
 
   if (!isVisible) {
     return null;
@@ -124,6 +126,11 @@ export function HomePopup({ title, body, buttonLabel, buttonHref, videoUrl, plac
 
         <div className="pr-10">
           {title ? <h2 id="home-popup-title" className="text-3xl font-black sm:text-4xl">{title}</h2> : null}
+          {normalizedImageUrl ? (
+            <div className="mt-6 rounded-3xl border border-white/10 bg-white p-4">
+              <img src={normalizedImageUrl} alt={title || "Imagen del aviso"} className="mx-auto max-h-[360px] w-full object-contain" />
+            </div>
+          ) : null}
           {body ? (
             <div className="mt-5 space-y-4 text-base leading-7 text-[color:var(--muted)]">
               {body.split(/\n{2,}/).map((paragraph, index) => (

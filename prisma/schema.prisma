@@ -205,6 +205,7 @@ model SiteConfig {
   homePopupBody               String?  @default("Estamos buscando a la mascota que mejor represente los valores, la identidad y la esencia de Ingeniería Industrial.\n\nConoce las propuestas, elige tu favorita y sé parte de esta importante decisión.")
   homePopupButtonLabel        String?  @default("Vota aquí")
   homePopupButtonHref         String?
+  homePopupImageUrl           String?
   homePopupVideoUrl           String?
   homePopupPlacement          String   @default("center")
   showSponsorBanner           Boolean  @default(true)

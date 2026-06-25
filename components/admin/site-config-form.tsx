@@ -27,6 +27,7 @@ type SiteConfigShape = {
   homePopupBody: string | null;
   homePopupButtonLabel: string | null;
   homePopupButtonHref: string | null;
+  homePopupImageUrl: string | null;
   homePopupVideoUrl: string | null;
   homePopupPlacement: string;
   showSponsorBanner: boolean;
@@ -272,6 +273,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       homePopupBody: formData.get("homePopupBody"),
       homePopupButtonLabel: formData.get("homePopupButtonLabel"),
       homePopupButtonHref: formData.get("homePopupButtonHref"),
+      homePopupImageUrl: formData.get("homePopupImageUrl"),
       homePopupVideoUrl: normalizedPopupVideoUrl,
       homePopupPlacement: formData.get("homePopupPlacement"),
       showSponsorBanner: formData.get("showSponsorBanner") === "on",
@@ -403,7 +405,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
           <p className="pill">Pop-up inicio</p>
           <h3 className="mt-3 text-2xl font-black">Aviso editable en la portada</h3>
           <p className="mt-2 text-sm text-[color:var(--muted)]">
-            Aparece solo al entrar al inicio. Puedes activarlo, ocultarlo, cambiar el texto, agregar link y video.
+            Aparece solo al entrar al inicio. Puedes activarlo, ocultarlo, cambiar el texto, agregar link, imagen y video.
           </p>
         </div>
 
@@ -439,6 +441,16 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
             placeholder="Escribe el contenido del aviso. Si pegas URLs completas, se mostrarán como links."
           />
         </div>
+
+        <UploadField
+          name="homePopupImageUrl"
+          label="Imagen del pop-up"
+          defaultValue={config.homePopupImageUrl || ""}
+          accept="image/*"
+          uploadLabel="Subir imagen"
+          urlPlaceholder="URL de imagen"
+          hint="Opcional. Se muestra dentro del aviso, sobre el texto. Útil para figuras o afiches."
+        />
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>

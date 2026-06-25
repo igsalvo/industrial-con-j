@@ -32,7 +32,7 @@ export function ProductPhotoSlider({
         <>
           <button
             type="button"
-            className="absolute left-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-[color:var(--accent)]"
+            className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-[color:var(--accent)]"
             onClick={() => changePhoto(-1)}
             aria-label="Foto anterior"
           >
@@ -40,7 +40,7 @@ export function ProductPhotoSlider({
           </button>
           <button
             type="button"
-            className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-[color:var(--accent)]"
+            className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-black/55 text-white backdrop-blur transition hover:bg-[color:var(--accent)]"
             onClick={() => changePhoto(1)}
             aria-label="Foto siguiente"
           >
@@ -51,7 +51,7 @@ export function ProductPhotoSlider({
               <button
                 key={`${photo}-${index}`}
                 type="button"
-                className={`h-2 w-2 rounded-full transition ${index === activeIndex ? "bg-[color:var(--accent)]" : "bg-white/70"}`}
+                className={`h-3 w-3 rounded-full transition ${index === activeIndex ? "bg-[color:var(--accent)]" : "bg-white/70"}`}
                 onClick={() => setActiveIndex(index)}
                 aria-label={`Ver foto ${index + 1}`}
               />

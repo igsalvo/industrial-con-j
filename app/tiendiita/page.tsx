@@ -34,15 +34,15 @@ export default async function TiendiitaPage() {
           )}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,19,18,0.98)_0%,rgba(17,19,18,0.82)_38%,rgba(17,19,18,0.12)_74%)]" />
         </div>
-        <div className="shell relative min-h-[250px] py-8 sm:min-h-[280px] sm:py-10">
+        <div className="shell relative min-h-[240px] py-8 sm:min-h-[280px] sm:py-10">
           <p className="brand-kicker text-xs text-white/60 notranslate" translate="no">{siteConfig.productsSectionEyebrow || "TIENDIITA CEIN"}</p>
-          <h1 className="mt-4 max-w-xl text-4xl font-black sm:text-5xl">{siteConfig.productsSectionTitle || "Productos con identidad industrial"}</h1>
+          <h1 className="mt-4 max-w-xl text-[clamp(2rem,8vw,3rem)] font-black sm:text-5xl">{siteConfig.productsSectionTitle || "Productos con identidad industrial"}</h1>
           <p className="mt-5 max-w-2xl text-sm leading-6 text-[color:var(--muted)]">
             {siteConfig.productsSectionDescription || "Artículos, recuerdos y productos pensados para quienes quieren llevar consigo parte de la comunidad de Ingeniería Industrial."}
           </p>
           <div className="mt-6 grid max-w-3xl gap-3 text-xs text-white/70 sm:grid-cols-2">
-            <span className="inline-flex items-center gap-2"><BadgeCheck size={16} />Diseños exclusivos para la comunidad</span>
-            <span className="inline-flex items-center gap-2"><Star size={16} />Calidad premium y materiales duraderos</span>
+            <span className="inline-flex min-w-0 items-center gap-2"><BadgeCheck className="shrink-0" size={16} />Diseños exclusivos para la comunidad</span>
+            <span className="inline-flex min-w-0 items-center gap-2"><Star className="shrink-0" size={16} />Calidad premium y materiales duraderos</span>
           </div>
         </div>
       </section>

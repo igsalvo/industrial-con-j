@@ -114,17 +114,17 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
   return (
     <div className="mt-5 space-y-7">
       <div className="grid gap-5 lg:grid-cols-[0.78fr_1.22fr]">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-5">
           <div className="mb-5 flex items-center justify-between gap-3">
             <button type="button" className="btn-secondary !bg-transparent !p-3" onClick={() => changeMonth(-1)} aria-label="Mes anterior">
               <ChevronLeft size={18} />
             </button>
-            <p className="text-center text-lg font-black capitalize">{formatMonth(visibleMonth)}</p>
+            <p className="text-center text-base font-black capitalize sm:text-lg">{formatMonth(visibleMonth)}</p>
             <button type="button" className="btn-secondary !bg-transparent !p-3" onClick={() => changeMonth(1)} aria-label="Mes siguiente">
               <ChevronRight size={18} />
             </button>
           </div>
-          <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-[color:var(--muted)]">
+          <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-[color:var(--muted)] sm:gap-2">
             {["L", "M", "M", "J", "V", "S", "D"].map((day, index) => (
               <span key={`${day}-${index}`}>{day}</span>
             ))}
@@ -138,7 +138,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                   key={`${day || "empty"}-${index}`}
                   type="button"
                   disabled={!day}
-                  className={`relative aspect-square rounded-lg border border-white/10 p-2 text-sm font-bold transition disabled:cursor-default ${isSelected ? "bg-[color:var(--accent)] text-white shadow-[0_0_24px_rgba(226,33,28,0.5)]" : hasEvent ? "text-white hover:border-[color:var(--accent)]" : "text-white/70 hover:border-white/30"}`}
+                  className={`relative aspect-square min-h-10 rounded-lg border border-white/10 p-1 text-xs font-bold transition disabled:cursor-default sm:min-h-11 sm:p-2 sm:text-sm ${isSelected ? "bg-[color:var(--accent)] text-white shadow-[0_0_24px_rgba(226,33,28,0.5)]" : hasEvent ? "text-white hover:border-[color:var(--accent)]" : "text-white/70 hover:border-white/30"}`}
                   onClick={() => {
                     if (dateKey) {
                       setSelectedDateKey(dateKey);
@@ -147,7 +147,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                   aria-label={day ? `Seleccionar ${day}` : undefined}
                 >
                   {day || ""}
-                  {hasEvent && day ? <span className={`absolute bottom-2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full ${isSelected ? "bg-white" : "bg-[color:var(--accent)]"}`} /> : null}
+                  {hasEvent && day ? <span className={`absolute bottom-1.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full sm:bottom-2 ${isSelected ? "bg-white" : "bg-[color:var(--accent)]"}`} /> : null}
                 </button>
               );
             })}
@@ -159,7 +159,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
         </div>
 
         {featured ? (
-        <article className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-7">
+        <article className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
           <div className="absolute inset-0">
             {featuredImageUrl ? (
               <img src={featuredImageUrl} alt={featured.title} className="h-full min-h-64 w-full object-cover opacity-85" style={{ objectPosition: featuredImagePosition }} />
@@ -168,17 +168,17 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
             )}
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,19,18,0.98)_0%,rgba(17,19,18,0.86)_42%,rgba(17,19,18,0.32)_100%)]" />
           </div>
-          <div className="relative max-w-xl py-5">
+          <div className="relative max-w-xl py-3 sm:py-5">
             <p className="brand-kicker text-xs text-[color:var(--accent)]">{selectedDateKey ? "Evento seleccionado" : featured.isFeatured ? "Evento destacado" : featuredIsUpcoming ? "Evento más próximo" : "Actividad reciente"}</p>
-            <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.title}</h2>
+            <h2 className="mt-4 text-[clamp(1.8rem,8vw,2.25rem)] font-black sm:text-4xl">{featured.title}</h2>
             {featured.description ? <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p> : null}
             <div className="mt-6 grid gap-4 text-sm text-white sm:grid-cols-2">
-              <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-[color:var(--accent)]"><CalendarDays size={18} /></span>{formatEventDate(featured.startDate)}<br />{formatEventTime(featured.startDate)}</span>
-              {featured.location ? <span className="inline-flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg border border-white/10 text-white/70"><MapPin size={18} /></span>{featured.location}</span> : null}
+              <span className="inline-flex min-w-0 items-center gap-3"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-white/10 text-[color:var(--accent)]"><CalendarDays size={18} /></span><span>{formatEventDate(featured.startDate)}<br />{formatEventTime(featured.startDate)}</span></span>
+              {featured.location ? <span className="inline-flex min-w-0 items-center gap-3"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-white/10 text-white/70"><MapPin size={18} /></span><span>{featured.location}</span></span> : null}
             </div>
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap">
               <a
-                className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                className="btn-primary w-full gap-2 !px-4 !py-2 text-sm sm:w-auto"
                 href={createGoogleCalendarUrl({ ...featured, start: featured.startDate, end: featured.endDate })}
                 target="_blank"
                 rel="noreferrer"
@@ -197,7 +197,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
               </a>
               {featured.ctaLink ? (
                 <a
-                  className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                  className="btn-secondary w-full gap-2 !px-4 !py-2 text-sm sm:w-auto"
                   href={featured.ctaLink}
                   target="_blank"
                   rel="noreferrer"

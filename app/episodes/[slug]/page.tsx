@@ -49,7 +49,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
   ].filter(Boolean);
 
   return (
-    <section className="shell py-12">
+    <section className="shell py-8 md:py-12">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <article className="space-y-8">
           <div className="space-y-6">
@@ -66,13 +66,13 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
             ) : null}
             {episode.audioEmbedUrl ? (
               <div className="card overflow-hidden">
-                <iframe className="h-80 w-full" src={episode.audioEmbedUrl} title={`${episode.title} audio`} />
+                <iframe className="h-64 w-full sm:h-80" src={episode.audioEmbedUrl} title={`${episode.title} audio`} />
               </div>
             ) : null}
           </div>
 
           {episode.timestamps.length > 0 ? (
-            <div className="card p-8">
+            <div className="card p-5 sm:p-8">
               <h2 className="text-2xl font-bold">Timestamps</h2>
               <ul className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
                 {episode.timestamps.map((timestamp: string) => (
@@ -83,7 +83,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
           ) : null}
 
           {resourceLinks.length > 0 ? (
-            <div className="card p-8">
+            <div className="card p-5 sm:p-8">
               <h2 className="text-2xl font-bold">Recursos descargables</h2>
               <div className="mt-4 space-y-3">
                 {resourceLinks.map((resource) => (
@@ -103,13 +103,13 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
         </article>
 
         <aside className="space-y-6">
-          <div className="card p-8">
+          <div className="card p-5 sm:p-8">
             <h2 className="text-2xl font-bold">Invitados</h2>
             <div className="mt-4 space-y-4">
               {episode.guests.length ? (
                 episode.guests.map((guest: (typeof episode.guests)[number]) => (
-                  <div key={guest.slug} className="grid grid-cols-[72px_1fr] gap-4 rounded-2xl border border-[color:var(--line)] p-4">
-                    <div className="relative h-[72px] w-[72px] overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
+                  <div key={guest.slug} className="grid grid-cols-[64px_1fr] gap-4 rounded-2xl border border-[color:var(--line)] p-4 sm:grid-cols-[72px_1fr]">
+                    <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#d70904,#2b2b2b)] sm:h-[72px] sm:w-[72px]">
                       {guest.profileImage ? (
                         <Image
                           src={guest.profileImage}

@@ -65,6 +65,28 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
     return () => window.removeEventListener("tiendiita-cart-toggle", toggleCart);
   }, []);
 
+  useEffect(() => {
+    if (!cartOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setCartOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [cartOpen]);
+
   const trackProducts = useMemo(() => {
     if (products.length <= 4) {
       return products;
@@ -173,67 +195,78 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
   return (
     <section className="relative space-y-5">
       {cartOpen ? (
-        <aside className="ml-auto max-w-xl rounded-2xl border border-white/10 bg-[#181a19] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-black">Carrito de cotización</h2>
-            <button type="button" className="btn-secondary !bg-transparent !p-2" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito">
-              <X size={18} />
-            </button>
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {cartItems.length ? (
-              cartItems.map((item) => (
-                <div key={item.id} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                  <div>
-                    <p className="font-bold">{item.name}</p>
-                    <p className="mt-1 text-sm text-[color:var(--muted)]">{formatPrice(item.price) || "Precio por confirmar"}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label={`Disminuir cantidad de ${item.name}`}>
-                      <Minus size={15} />
-                    </button>
-                    <input
-                      className="field h-10 w-16 px-2 text-center"
-                      type="number"
-                      min={1}
-                      value={item.quantity}
-                      onChange={(event) => updateQuantity(item.id, Number(event.target.value) || 0)}
-                      aria-label={`Cantidad de ${item.name}`}
-                    />
-                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label={`Aumentar cantidad de ${item.name}`}>
-                      <Plus size={15} />
-                    </button>
-                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => removeFromCart(item.id)} aria-label={`Eliminar ${item.name}`}>
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="rounded-xl border border-white/10 p-4 text-sm text-[color:var(--muted)]">Tu carrito está vacío.</p>
-            )}
-          </div>
-
-          <form onSubmit={submitQuote} className="mt-5 space-y-3">
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Monto a cotizar</p>
-              <p className="mt-2 text-2xl font-black">{formattedTotal || "$0"}</p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <input className="field" name="name" placeholder="Nombre" required />
-              <input className="field" name="email" type="email" placeholder="Correo" required />
-            </div>
-            <textarea className="field min-h-24" name="note" placeholder="Mensaje opcional" />
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button className="btn-primary gap-2" type="submit" disabled={status === "submitting" || cartItems.length === 0}>
-                {status === "success" ? "Cotización enviada" : status === "submitting" ? "Enviando..." : "Cotizar"}
-                <CheckCircle2 size={17} />
+        <div className="fixed inset-0 z-[60] bg-black/60 p-0 backdrop-blur-sm sm:p-4" onMouseDown={() => setCartOpen(false)}>
+          <aside
+            className="ml-auto flex h-[100dvh] w-full max-w-xl flex-col overflow-hidden border-white/10 bg-[#181a19] shadow-[0_20px_70px_rgba(0,0,0,0.35)] sm:h-[calc(100dvh-2rem)] sm:rounded-2xl sm:border"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-white/10 p-4 sm:p-5">
+              <h2 id="cart-title" className="text-xl font-black">Carrito de cotización</h2>
+              <button type="button" className="btn-secondary !bg-transparent !p-2" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito">
+                <X size={18} />
               </button>
-              {message ? <p className={`text-sm ${status === "error" ? "text-red-400" : "text-[color:var(--muted)]"}`}>{message}</p> : null}
             </div>
-          </form>
-        </aside>
+
+            <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-5">
+              <div className="space-y-3">
+                {cartItems.length ? (
+                  cartItems.map((item) => (
+                    <div key={item.id} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+                      <div className="min-w-0">
+                        <p className="font-bold">{item.name}</p>
+                        <p className="mt-1 text-sm text-[color:var(--muted)]">{formatPrice(item.price) || "Precio por confirmar"}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button type="button" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label={`Disminuir cantidad de ${item.name}`}>
+                          <Minus size={15} />
+                        </button>
+                        <input
+                          className="field h-11 w-16 px-2 text-center"
+                          type="number"
+                          min={1}
+                          inputMode="numeric"
+                          value={item.quantity}
+                          onChange={(event) => updateQuantity(item.id, Number(event.target.value) || 0)}
+                          aria-label={`Cantidad de ${item.name}`}
+                        />
+                        <button type="button" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label={`Aumentar cantidad de ${item.name}`}>
+                          <Plus size={15} />
+                        </button>
+                        <button type="button" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => removeFromCart(item.id)} aria-label={`Eliminar ${item.name}`}>
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-xl border border-white/10 p-4 text-sm text-[color:var(--muted)]">Tu carrito está vacío.</p>
+                )}
+              </div>
+
+              <form onSubmit={submitQuote} className="mt-5 space-y-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Monto a cotizar</p>
+                  <p className="mt-2 text-2xl font-black">{formattedTotal || "$0"}</p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input className="field" name="name" placeholder="Nombre" required />
+                  <input className="field" name="email" type="email" placeholder="Correo" required />
+                </div>
+                <textarea className="field min-h-24" name="note" placeholder="Mensaje opcional" />
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <button className="btn-primary w-full gap-2 sm:w-auto" type="submit" disabled={status === "submitting" || cartItems.length === 0}>
+                    {status === "success" ? "Cotización enviada" : status === "submitting" ? "Enviando..." : "Cotizar"}
+                    <CheckCircle2 size={17} />
+                  </button>
+                  {message ? <p className={`text-sm ${status === "error" ? "text-red-400" : "text-[color:var(--muted)]"}`}>{message}</p> : null}
+                </div>
+              </form>
+            </div>
+          </aside>
+        </div>
       ) : null}
 
       <div className="flex items-center justify-between gap-3">
@@ -256,7 +289,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
         </button>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
         {trackProducts.slice(0, 4).map((product) => {
           const extraPhotos = Array.isArray(product.photoUrls) ? product.photoUrls.filter((photo): photo is string => typeof photo === "string" && photo.length > 0) : [];
           const photos = [product.photoUrl, ...extraPhotos].filter((photo): photo is string => Boolean(photo));
@@ -270,6 +303,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
                 <h3 className="text-2xl font-bold leading-tight">{product.name}</h3>
                 <p className="mt-3 line-clamp-4 text-sm leading-6 text-[color:var(--muted)]">{product.description}</p>
                 {price ? <p className="mt-5 text-xl font-black">{price}</p> : null}
+                <div className="min-h-5 flex-1" />
                 <button type="button" className="btn-primary mt-auto w-full gap-2" onClick={() => addToCart(product)}>
                   Agregar al carrito
                   <ShoppingCart size={16} />

@@ -57,12 +57,12 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
         description={heading.description}
       />
 
-      <nav className="flex flex-wrap gap-2 rounded-2xl border border-[color:var(--line)] p-2">
+      <nav className="flex flex-wrap gap-2 rounded-2xl border border-[color:var(--line)] p-2" aria-label="Secciones del podcast">
         {tabs.map((tab) => (
           <Link
             key={tab.id}
             href={`/podcast?tab=${tab.id}`}
-            className={activeTab === tab.id ? "btn-primary !px-4 !py-2 text-sm" : "btn-secondary !px-4 !py-2 text-sm"}
+            className={activeTab === tab.id ? "btn-primary flex-1 !px-4 !py-2 text-sm sm:flex-none" : "btn-secondary flex-1 !px-4 !py-2 text-sm sm:flex-none"}
           >
             {tab.label}
           </Link>
@@ -88,7 +88,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                   <article key={episode.id} className="card grid overflow-hidden lg:grid-cols-[0.95fr_1.05fr]">
                     <TrackedLink
                       href={`/episodes/${episode.slug}`}
-                      className="group relative block min-h-[260px] overflow-hidden bg-[linear-gradient(135deg,#d70904,#2b2b2b)] sm:min-h-[360px]"
+                      className="group relative block aspect-video overflow-hidden bg-[linear-gradient(135deg,#d70904,#2b2b2b)] lg:aspect-auto lg:min-h-[360px]"
                       eventName="click_episode"
                       eventParams={{
                         link_text: "Play",
@@ -101,18 +101,18 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                         src={thumbnailUrl}
                         alt={episode.title}
                         fill
-                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        className="object-contain transition duration-300 group-hover:scale-[1.03] lg:object-cover"
                         style={{ objectPosition: imagePosition }}
                         sizes="(min-width: 1024px) 42vw, 100vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-                      <div className="absolute bottom-6 left-6 grid h-16 w-16 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_0_36px_rgba(226,33,28,0.42)] transition group-hover:scale-105">
+                      <div className="absolute bottom-4 left-4 grid h-12 w-12 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_0_36px_rgba(226,33,28,0.42)] transition group-hover:scale-105 sm:bottom-6 sm:left-6 sm:h-16 sm:w-16">
                         <Play size={26} fill="currentColor" />
                       </div>
                     </TrackedLink>
-                    <div className="flex flex-col justify-between p-6 md:p-8">
+                    <div className="flex flex-col justify-between p-5 md:p-8">
                       <div>
-                        <h2 className="text-3xl font-black">
+                        <h2 className="text-[clamp(1.65rem,7vw,2rem)] font-black">
                           <Link href={`/episodes/${episode.slug}`} className="hover:text-[color:var(--accent)]">{episode.title}</Link>
                         </h2>
                         <p className="mt-4 line-clamp-3 leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
@@ -136,14 +136,14 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                       {platformLinks.length ? (
                         <div className="mt-7">
                           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted)]">Dónde verlo o escucharlo</p>
-                          <div className="mt-3 flex flex-wrap gap-3">
+                          <div className="mt-3 grid gap-3 sm:flex sm:flex-wrap">
                             {platformLinks.map((platform) => (
                               <TrackedAnchor
                                 key={platform.label}
                                 href={platform.href}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                                className="btn-secondary w-full gap-2 !px-4 !py-2 text-sm sm:w-auto"
                                 eventName={platform.eventName}
                                 eventParams={{
                                   link_text: platform.label,
@@ -158,7 +158,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                             ))}
                             <TrackedLink
                               href={`/episodes/${episode.slug}`}
-                              className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                              className="btn-primary w-full gap-2 !px-4 !py-2 text-sm sm:w-auto"
                               eventName="click_episode"
                               eventParams={{
                                 link_text: "Ver episodio",

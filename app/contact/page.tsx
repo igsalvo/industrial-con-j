@@ -25,7 +25,7 @@ export default async function ContactPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.2)]">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.2)] sm:p-5">
             <ContactForm showSubject hideHeader submitLabel="Enviar mensaje" className="!border-0 !bg-transparent !p-0 !shadow-none" />
           </div>
         </div>

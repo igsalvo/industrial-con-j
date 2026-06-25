@@ -22,10 +22,10 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
   };
 
   return (
-    <section className="shell py-12">
+    <section className="shell py-8 md:py-12">
       <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-        <div className="card p-8">
-          <div className="relative h-64 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
+        <div className="card p-5 sm:p-8">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] sm:h-64 sm:aspect-auto">
             {guest.profileImage ? (
               <Image
                 src={guest.profileImage}
@@ -37,7 +37,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
               />
             ) : null}
           </div>
-          <h1 className="mt-6 text-4xl font-black">{guest.name}</h1>
+          <h1 className="mt-6 text-[clamp(2rem,8vw,2.5rem)] font-black">{guest.name}</h1>
           <p className="mt-2 text-sm text-[color:var(--muted)]">
             {guest.role ? `${guest.role} · ` : ""}
             {guest.company || "Invitado del podcast"}

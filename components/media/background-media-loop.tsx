@@ -30,7 +30,7 @@ export function BackgroundMediaLoop({
   }, [visibleItems.length]);
 
   return (
-    <section className="relative min-h-[430px] overflow-hidden rounded-2xl border border-white/10 bg-[#151515] sm:min-h-[540px] lg:min-h-[620px]">
+    <section className="relative min-h-[320px] overflow-hidden rounded-2xl border border-white/10 bg-[#151515] sm:min-h-[440px] lg:min-h-[620px]">
       {current ? (
         <img
           src={current.src}
@@ -43,11 +43,11 @@ export function BackgroundMediaLoop({
       )}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.18)_42%,rgba(0,0,0,0.84)_100%)]" />
       <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-4 p-5 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-4">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-white/25 bg-black/35 backdrop-blur">
             <Play fill="currentColor" size={17} />
           </span>
-          <div>
+          <div className="min-w-0">
             <h2 className="text-xl font-black leading-tight sm:text-2xl">{title}</h2>
             <p className="mt-2 text-sm leading-5 text-white/78 sm:text-base sm:leading-6">{description}</p>
           </div>

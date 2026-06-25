@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search, ShoppingCart, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { trackEvent } from "@/lib/analytics";
@@ -53,6 +53,8 @@ export function SiteHeader({
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const isAdminRoute = pathname.startsWith("/admin");
   const isTiendiitaRoute = pathname.startsWith("/tiendiita");
   const visibleLinks = links.filter((link) => {
@@ -95,6 +97,30 @@ export function SiteHeader({
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    mobileMenuRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+        mobileMenuButtonRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (!isTiendiitaRoute) {
@@ -144,10 +170,10 @@ export function SiteHeader({
 
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--surface)]/90 backdrop-blur-xl">
-      <div className="shell flex items-center justify-between gap-3 py-3">
+      <div className="shell flex min-h-16 items-center justify-between gap-2 py-2 sm:gap-3 lg:py-3">
         <Link href={isAdminRoute ? "/admin" : "/"} className="flex min-w-0 flex-1 items-center lg:max-w-[330px]">
-          <div className="relative h-14 w-full max-w-[210px] overflow-hidden rounded-2xl border border-[color:var(--line)] bg-transparent p-2 shadow-sm sm:h-20 sm:max-w-[330px]">
-            <Image src={resolvedLogo} alt="Industrial con J" fill className="object-contain p-2" sizes="(min-width: 1024px) 330px, 55vw" priority />
+          <div className="relative h-12 w-full max-w-[170px] overflow-hidden rounded-xl border border-[color:var(--line)] bg-transparent p-1.5 shadow-sm sm:h-16 sm:max-w-[260px] lg:h-20 lg:max-w-[330px]">
+            <Image src={resolvedLogo} alt="Industrial con J" fill className="object-contain p-1.5 sm:p-2" sizes="(min-width: 1024px) 330px, (min-width: 640px) 260px, 170px" priority />
           </div>
         </Link>
 
@@ -204,7 +230,7 @@ export function SiteHeader({
         </div>
 
         {!isAdminRoute && isTiendiitaRoute ? (
-          <button type="button" className="btn-primary gap-2 !px-3 !py-3 text-sm lg:hidden" onClick={toggleCart} aria-label="Abrir carrito de cotización">
+          <button type="button" className="btn-primary shrink-0 gap-2 !px-3 !py-3 text-sm lg:hidden" onClick={toggleCart} aria-label="Abrir carrito de cotización">
             <ShoppingCart size={17} />
             <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
           </button>
@@ -212,11 +238,13 @@ export function SiteHeader({
 
         {!isAdminRoute ? (
           <button
+            ref={mobileMenuButtonRef}
             type="button"
-            className="btn-secondary !p-3 lg:hidden"
+            className="btn-secondary shrink-0 !p-3 lg:hidden"
             onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
             aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -224,9 +252,24 @@ export function SiteHeader({
       </div>
 
       {!isAdminRoute && mobileMenuOpen ? (
-        <div className="border-t border-[color:var(--line)] bg-[color:var(--surface)] lg:hidden">
-          <div className="shell space-y-4 py-4">
-            <nav className="grid grid-cols-2 gap-2">
+        <div className="fixed inset-0 top-[65px] z-50 bg-black/45 backdrop-blur-sm lg:hidden" onMouseDown={() => setMobileMenuOpen(false)}>
+          <div
+            id="mobile-navigation"
+            ref={mobileMenuRef}
+            className="ml-auto flex max-h-[calc(100dvh-65px)] w-full max-w-sm flex-col overflow-y-auto border-l border-[color:var(--line)] bg-[color:var(--surface)] px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 shadow-2xl focus:outline-none"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú principal"
+            tabIndex={-1}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <p className="brand-kicker text-xs text-[color:var(--muted)]">Navegación</p>
+              <button type="button" className="btn-secondary !p-3" onClick={() => setMobileMenuOpen(false)} aria-label="Cerrar menú">
+                <X size={18} />
+              </button>
+            </div>
+            <nav className="grid gap-2">
               {visibleLinks.map((link) => {
                 const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
 
@@ -234,7 +277,7 @@ export function SiteHeader({
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition hover:border-[color:var(--accent)] ${
+                    className={`rounded-2xl border px-4 py-3 text-left text-base font-semibold transition hover:border-[color:var(--accent)] ${
                       "cta" in link && link.cta
                         ? "border-[color:var(--accent)] bg-[color:var(--accent)] text-white"
                         : isActive
@@ -251,11 +294,11 @@ export function SiteHeader({
               })}
             </nav>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="mt-4 grid gap-3">
               {!isTiendiitaRoute ? (
                 <Link
                   href="/search"
-                  className="btn-secondary gap-2 !px-4 !py-3 text-sm"
+                  className="btn-secondary w-full gap-2 !px-4 !py-3 text-sm"
                   onClick={() => trackEvent("click_search", { link_url: "/search", link_text: "Buscar", section: "mobile_header" })}
                 >
                   <Search size={16} />
@@ -263,14 +306,23 @@ export function SiteHeader({
                 </Link>
               ) : null}
               {isTiendiitaRoute ? (
-                <button type="button" className="btn-primary gap-2 !px-4 !py-3 text-sm" onClick={toggleCart}>
+                <button
+                  type="button"
+                  className="btn-primary w-full gap-2 !px-4 !py-3 text-sm"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    toggleCart();
+                  }}
+                >
                   <ShoppingCart size={17} />
                   Carrito
                   <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
                 </button>
               ) : null}
-              <LanguageToggle />
-              {showThemeToggle ? <ThemeToggle /> : null}
+              <div className="flex flex-wrap items-center gap-3">
+                <LanguageToggle />
+                {showThemeToggle ? <ThemeToggle /> : null}
+              </div>
             </div>
           </div>
         </div>

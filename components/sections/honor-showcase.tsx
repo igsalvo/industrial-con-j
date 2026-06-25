@@ -60,6 +60,28 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
     return () => window.clearInterval(interval);
   }, [members.length]);
 
+  useEffect(() => {
+    if (!modalMember) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setModalMember(null);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [modalMember]);
+
   if (!featured) {
     return <p className="rounded-2xl border border-white/10 p-5 text-sm text-[color:var(--muted)]">Aún no hay personas publicadas.</p>;
   }
@@ -69,15 +91,15 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
 
   return (
     <div className="space-y-5">
-      <article className="grid min-h-[360px] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:grid-cols-[0.86fr_1fr]">
-        <div className="h-[360px] bg-white/5">
+      <article className="grid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:min-h-[360px] lg:grid-cols-[0.86fr_1fr]">
+        <div className="aspect-[4/3] bg-white/5 lg:aspect-auto lg:h-[360px]">
           {featured.photoUrl ? <img src={featured.photoUrl} alt={featured.name} className="h-full w-full object-cover" style={{ objectPosition: featuredPosition }} /> : null}
         </div>
-        <div className="relative overflow-hidden p-8">
+        <div className="relative overflow-hidden p-5 sm:p-8">
           <div className="pointer-events-none absolute right-0 top-0 h-full w-64 bg-[radial-gradient(circle_at_70%_20%,rgba(226,33,28,0.13),transparent_35%)]" />
           <div className="relative max-w-lg">
             <p className="brand-kicker text-xs text-[color:var(--accent)]">Miembro destacado</p>
-            <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.name}</h2>
+            <h2 className="mt-4 text-[clamp(1.8rem,8vw,2.25rem)] font-black sm:text-4xl">{featured.name}</h2>
             {formatGeneration(featured.generation) ? <p className="mt-4 text-lg font-bold text-[color:var(--accent)]">{formatGeneration(featured.generation)}</p> : null}
             <p className="mt-4 line-clamp-4 text-base leading-7 text-[color:var(--muted)]">{featured.description}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -95,7 +117,7 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
       </article>
 
       <p className="brand-kicker text-xs text-white/50">Miembros del círculo</p>
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+      <section className="grid gap-4 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {members.map((member, index) => {
           const photoPosition = `${member.photoPositionX ?? 50}% ${member.photoPositionY ?? 50}%`;
           const linkedInUrl = getLinkedInUrl(member.externalLinks);
@@ -110,10 +132,10 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
                 </div>
               </button>
               <div className="p-4">
-                <h3 className="line-clamp-1 font-black">{member.name}</h3>
+                <h3 className="font-black leading-tight">{member.name}</h3>
                 {formatGeneration(member.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(member.generation)}</p> : null}
                 <div className="mt-3 flex items-center gap-2">
-                  <button type="button" className="inline-flex items-center gap-2 text-sm text-white/80 transition hover:text-[color:var(--accent)]" onClick={() => setModalMember(member)}>
+                  <button type="button" className="inline-flex min-h-10 items-center gap-2 text-sm text-white/80 transition hover:text-[color:var(--accent)]" onClick={() => setModalMember(member)}>
                     Ver perfil <ArrowRight size={14} />
                   </button>
                   {linkedInUrl ? (
@@ -128,12 +150,12 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
         })}
       </section>
       {modalMember ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" role="dialog" aria-modal="true" aria-labelledby="honor-profile-title">
-          <div className="max-h-[90vh] w-full max-w-5xl overflow-auto rounded-2xl border border-white/10 bg-[#181a19] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-6">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-3 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="honor-profile-title" onMouseDown={() => setModalMember(null)}>
+          <div className="max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl overflow-auto rounded-2xl border border-white/10 bg-[#181a19] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:max-h-[90vh] sm:p-6" onMouseDown={(event) => event.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="brand-kicker text-xs text-[color:var(--accent)]">Perfil</p>
-                <h2 id="honor-profile-title" className="mt-3 text-3xl font-black">{modalMember.name}</h2>
+                <h2 id="honor-profile-title" className="mt-3 text-[clamp(1.65rem,7vw,1.875rem)] font-black">{modalMember.name}</h2>
                 {formatGeneration(modalMember.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(modalMember.generation)}</p> : null}
               </div>
               <button type="button" className="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-white/75 hover:text-[color:var(--accent)]" onClick={() => setModalMember(null)} aria-label="Cerrar perfil">

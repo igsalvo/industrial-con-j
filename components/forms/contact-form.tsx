@@ -97,14 +97,14 @@ export function ContactForm({
             <option value="Donaciones">Donaciones</option>
           </select>
         ) : null}
-        <input className="field" name="phone" placeholder="Teléfono opcional" />
+        <input className="field" name="phone" type="tel" inputMode="tel" placeholder="Teléfono opcional" />
         <input className="field" name="company" placeholder="Organización / institución opcional" />
       </div>
 
       <textarea className="field min-h-32" name="message" placeholder="Comentario" required />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <button type="submit" className="btn-primary gap-2" disabled={status === "submitting"}>
+        <button type="submit" className="btn-primary w-full gap-2 sm:w-auto" disabled={status === "submitting"}>
           {status === "success" ? "Mensaje enviado" : status === "submitting" ? "Enviando..." : submitLabel}
           {status === "success" ? <CheckCircle2 size={17} /> : <Send size={17} />}
         </button>

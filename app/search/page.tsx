@@ -19,10 +19,10 @@ export default async function SearchPage({
   const guests = results.guests;
 
   return (
-    <section className="shell py-12">
-      <div className="card p-8">
+    <section className="shell py-8 md:py-12">
+      <div className="card p-5 sm:p-8">
         <p className="pill">Busqueda global</p>
-        <h1 className="mt-4 text-4xl font-black">Encuentra episodios, invitados y temas</h1>
+        <h1 className="mt-4 text-[clamp(2rem,8vw,2.5rem)] font-black">Encuentra episodios, invitados y temas</h1>
         <form className="mt-6 grid gap-4 lg:grid-cols-4">
           <input className="field lg:col-span-2" defaultValue={resolvedSearchParams.q} name="q" placeholder="Lean, mantenimiento, minería..." />
           <select className="field" defaultValue={resolvedSearchParams.guest || ""} name="guest">
@@ -50,7 +50,7 @@ export default async function SearchPage({
             ))}
           </select>
           <TrackedSubmitButton
-            className="btn-primary lg:col-span-4 lg:w-fit"
+            className="btn-primary w-full lg:col-span-4 lg:w-fit"
             eventName="click_search"
             eventParams={{ link_text: "Filtrar resultados", section: "search_page" }}
           >
@@ -81,21 +81,21 @@ export default async function SearchPage({
         </div>
       </div>
 
-      <div className="mt-10 card p-8">
+      <div className="mt-10 card p-5 sm:p-8">
         <h2 className="text-2xl font-bold">Exploracion rapida</h2>
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 grid gap-3 sm:flex sm:flex-wrap">
           <TrackedLink
-            className="btn-secondary"
+            className="btn-secondary w-full sm:w-auto"
             href="/episodes"
             eventName="click_episode"
             eventParams={{ link_text: "Ver todos los episodios", content_type: "episode", section: "search_quick_links" }}
           >
             Ver todos los episodios
           </TrackedLink>
-          <Link className="btn-secondary" href="/guests">
+          <Link className="btn-secondary w-full sm:w-auto" href="/guests">
             Ver todos los invitados
           </Link>
-          <Link className="btn-secondary" href="/community">
+          <Link className="btn-secondary w-full sm:w-auto" href="/community">
             Ir a comunidad
           </Link>
         </div>

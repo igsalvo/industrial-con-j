@@ -133,12 +133,12 @@ export function HeroSection({
   ] as Array<AccessItem | null>).filter((item): item is AccessItem => Boolean(item));
 
   return (
-    <section className="shell py-10 md:py-16">
-      <div className="relative overflow-hidden rounded-[2rem] border border-[color:var(--line)] p-6 md:p-10 xl:p-12" style={{ background: "var(--hero)" }}>
+    <section className="shell py-8 md:py-16">
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] p-4 sm:p-6 md:rounded-[2rem] md:p-10 xl:p-12" style={{ background: "var(--hero)" }}>
         <div className="relative z-10 grid gap-8 xl:grid-cols-[0.78fr_1.22fr] xl:items-start">
           <div className="max-w-3xl xl:pr-2">
             <span className="pill">{config.heroEyebrow || "Comunidad industrial en movimiento"}</span>
-            <h1 className="mt-6 max-w-4xl text-4xl md:text-6xl" style={{ fontWeight: 650 }}>
+            <h1 className="mt-5 max-w-4xl text-[clamp(2.15rem,9vw,3.75rem)] md:mt-6 md:text-6xl" style={{ fontWeight: 650 }}>
               {config.heroTitle || "Ingeniería Industrial se escribe con"}{" "}
               <span className="text-[color:var(--accent)]">{config.heroTitleAccent || "J"}</span>
             </h1>
@@ -205,13 +205,13 @@ export function HeroSection({
               </div>
             ) : config.heroImageUrl ? (
               <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-[color:var(--surface-strong)] shadow-2xl shadow-black/25 ring-1 ring-white/5">
-                <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-cover" />
+                <img src={config.heroImageUrl} alt="Industrial con J" className="h-full w-full object-contain" />
               </div>
             ) : null}
-            <div className={`${hasHeroMedia || config.heroImageUrl ? "mt-6" : ""} flex flex-wrap gap-4`}>
+            <div className={`${hasHeroMedia || config.heroImageUrl ? "mt-6" : ""} grid gap-3 sm:flex sm:flex-wrap sm:gap-4`}>
               <TrackedLink
                 href={config.heroPrimaryCtaHref || "/podcast"}
-                className="btn-primary gap-2"
+                className="btn-primary w-full gap-2 sm:w-auto"
                 eventName={getCtaEventName(config.heroPrimaryCtaHref || "/podcast")}
                 eventParams={{ link_text: config.heroPrimaryCtaLabel || "Explorar Industrial con J", section: "hero_primary" }}
               >
@@ -220,7 +220,7 @@ export function HeroSection({
               </TrackedLink>
               <TrackedLink
                 href={secondaryHref}
-                className="btn-secondary"
+                className="btn-secondary w-full sm:w-auto"
                 eventName={getCtaEventName(secondaryHref)}
                 eventParams={{ link_text: secondaryLabel, section: "hero_secondary" }}
               >

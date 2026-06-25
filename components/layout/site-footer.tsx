@@ -13,18 +13,18 @@ export function SiteFooter({
   const resolvedFooterDescription = !footerDescription || footerDescription === legacyFooterDescription ? currentFooterDescription : footerDescription;
 
   return (
-    <footer className="border-t border-[color:var(--line)] py-10">
+    <footer className="border-t border-[color:var(--line)] py-8 md:py-10">
       <div className="shell flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>{footerTitle || "Industrial con J"}</p>
           <p className="mt-2 max-w-xl text-sm text-[color:var(--muted)]">
             {resolvedFooterDescription}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 text-sm text-[color:var(--muted)]">
+        <div className="grid gap-2 text-sm text-[color:var(--muted)] sm:flex sm:flex-wrap sm:gap-3 md:justify-end">
           <TrackedLink
-            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            className="inline-flex min-h-11 items-center gap-2 transition hover:text-[color:var(--foreground)]"
             href="/contact"
             eventName="click_contact"
             eventParams={{ link_text: "Contacto", section: "footer" }}
@@ -33,7 +33,7 @@ export function SiteFooter({
             Contacto
           </TrackedLink>
           <TrackedAnchor
-            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            className="inline-flex min-h-11 items-center gap-2 transition hover:text-[color:var(--foreground)]"
             href="https://www.instagram.com/ingenieriaindustrialuchile/"
             target="_blank"
             rel="noreferrer"
@@ -44,7 +44,7 @@ export function SiteFooter({
             Instagram
           </TrackedAnchor>
           <TrackedAnchor
-            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            className="inline-flex min-h-11 items-center gap-2 transition hover:text-[color:var(--foreground)]"
             href="https://www.linkedin.com/company/ingenieria-industrial-uchile/posts/?feedView=all"
             target="_blank"
             rel="noreferrer"
@@ -55,7 +55,7 @@ export function SiteFooter({
             LinkedIn
           </TrackedAnchor>
           <TrackedAnchor
-            className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]"
+            className="inline-flex min-h-11 items-center gap-2 transition hover:text-[color:var(--foreground)]"
             href="https://www.youtube.com/channel/UCIk3G6moIvN8JzMt4p1H5wQ"
             target="_blank"
             rel="noreferrer"
@@ -65,7 +65,7 @@ export function SiteFooter({
             <Youtube size={16} />
             YouTube
           </TrackedAnchor>
-          <a className="inline-flex items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.dii.uchile.cl/" target="_blank" rel="noreferrer">
+          <a className="inline-flex min-h-11 items-center gap-2 transition hover:text-[color:var(--foreground)]" href="https://www.dii.uchile.cl/" target="_blank" rel="noreferrer">
             <Building2 size={16} />
             Sitio web ingeniería industrial
           </a>

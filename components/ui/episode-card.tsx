@@ -17,20 +17,42 @@ type EpisodeCardProps = {
     thumbnailPositionX?: string | null;
     thumbnailPositionY?: string | null;
     clipThumbnailUrl: string | null;
-    guests: Array<{ id: string; name: string }>;
+    guests: Array<{ id: string; name: string; slug: string }>;
     sponsor: { name: string } | null;
   };
+  mediaVariant?: "default" | "wide";
 };
 
-export function EpisodeCard({ episode }: EpisodeCardProps) {
+export function EpisodeCard({ episode, mediaVariant = "default" }: EpisodeCardProps) {
   const imageUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || episodePlaceholder;
   const imagePosition = `${episode.thumbnailPositionX || "center"} ${episode.thumbnailPositionY || "center"}`;
+  const mediaClassName =
+    mediaVariant === "wide"
+      ? "relative block aspect-[16/9] overflow-hidden border-b border-[color:var(--line)] bg-black"
+      : "relative block h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64";
+  const imageClassName =
+    mediaVariant === "wide"
+      ? "object-contain transition duration-300 hover:scale-[1.02]"
+      : "object-cover transition duration-300 hover:scale-[1.03]";
 
   return (
     <article className="card overflow-hidden">
-      <div className="relative h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64">
-        <Image src={imageUrl} alt={episode.title} fill className="object-cover" style={{ objectPosition: imagePosition }} sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
-      </div>
+      <TrackedLink
+        href={`/episodes/${episode.slug}`}
+        className={mediaClassName}
+        eventName="click_episode"
+        eventParams={{
+          link_text: episode.title,
+          content_type: "episode",
+          content_title: episode.title,
+          section: "episode_card_thumbnail"
+        }}
+      >
+        <Image src={imageUrl} alt={episode.title} fill className={imageClassName} style={{ objectPosition: imagePosition }} sizes="(min-width: 1280px) 33vw, (min-width: 1024px) 50vw, 100vw" />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-5">
+          <p className="line-clamp-2 text-2xl font-black leading-tight text-white">{episode.title}</p>
+        </div>
+      </TrackedLink>
       <div className="p-6">
         <div className="flex flex-wrap gap-2">
           {episode.tags.slice(0, 3).map((tag: string) => (
@@ -39,25 +61,22 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
             </span>
           ))}
         </div>
-        <h3 className="mt-4 text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
-          <TrackedLink
-            href={`/episodes/${episode.slug}`}
-            eventName="click_episode"
-            eventParams={{
-              link_text: episode.title,
-              content_type: "episode",
-              content_title: episode.title,
-              section: "episode_card"
-            }}
-          >
-            {episode.title}
-          </TrackedLink>
-        </h3>
         <p className="mt-3 text-sm text-[color:var(--muted)]">{episode.shortDescription}</p>
         <div className="mt-6 flex items-center justify-between gap-4 text-sm text-[color:var(--muted)]">
           <div>
             <p>{formatDate(episode.publishedAt)}</p>
-            <p>{episode.guests.map((guest: (typeof episode.guests)[number]) => guest.name).join(", ") || "Sin invitado"}</p>
+            <p>
+              {episode.guests.length
+                ? episode.guests.map((guest, index) => (
+                    <span key={guest.id}>
+                      {index > 0 ? ", " : null}
+                      <TrackedLink href={`/guests/${guest.slug}`} eventName="click_guest" eventParams={{ link_text: guest.name, content_type: "guest", content_title: guest.name, section: "episode_card" }} className="hover:text-[color:var(--accent)] hover:underline">
+                        {guest.name}
+                      </TrackedLink>
+                    </span>
+                  ))
+                : "Sin invitado"}
+            </p>
           </div>
           <TrackedLink
             href={`/episodes/${episode.slug}`}

@@ -1,20 +1,16 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ContactForm } from "@/components/forms/contact-form";
-import { PublicSurveyForm } from "@/components/forms/public-survey-form";
-import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig, hasDatabase } from "@/lib/queries";
-import { prisma } from "@/lib/prisma";
-import { getYouTubeEmbedUrl } from "@/lib/youtube";
-import { EpisodeCard } from "@/components/ui/episode-card";
+import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorShowcase } from "@/components/sections/sponsor-showcase";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { Lightbulb, Mic2, MessageCircle, Star } from "lucide-react";
+import { ExternalLink, Play, Star } from "lucide-react";
 
 const tabs = [
   { id: "episodes", label: "Episodios" },
   { id: "guests", label: "Invitados" },
-  { id: "community", label: "Comunidad" },
   { id: "sponsors", label: "Aliados" }
 ] as const;
 
@@ -27,19 +23,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const activeTab = tabs.some((tab) => tab.id === params.tab) ? params.tab : "episodes";
   const [episodes, guests, sponsors, siteConfig] = await Promise.all([getAllEpisodes(), getAllGuests(), getAllSponsors(), getSiteConfig()]);
-  const surveys =
-    activeTab === "community" && hasDatabase()
-      ? await prisma.survey.findMany({
-          where: { status: "PUBLISHED" },
-          include: {
-            episode: true,
-            questions: {
-              orderBy: { position: "asc" }
-            }
-          },
-          orderBy: { updatedAt: "desc" }
-        })
-      : [];
   if (!siteConfig.showPodcastSection) {
     notFound();
   }
@@ -55,13 +38,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
       eyebrow: siteConfig.guestsPageEyebrow || "Invitados",
       title: siteConfig.guestsPageTitle || "Personas que construyen industria",
       description: siteConfig.guestsPageDescription || "Perfiles, empresas, enlaces sociales y episodios donde participan."
-    },
-    community: {
-      eyebrow: siteConfig.communityPageEyebrow || "Comunidad",
-      title: siteConfig.communityPageTitle || "Participa en Industrial con J",
-      description:
-        siteConfig.communityPageDescription ||
-        "Queremos escuchar tus ideas, preguntas y comentarios. Propón temas, recomienda invitados o cuéntanos cómo te gustaría ser parte de esta comunidad."
     },
     sponsors: {
       eyebrow: siteConfig.sponsorsPageEyebrow || "ALIADOS",
@@ -100,23 +76,104 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
           ) : (
             <div className="space-y-8">
               {episodes.map((episode) => {
-                const embedUrl = episode.videoEmbedUrl || getYouTubeEmbedUrl(episode.youtubeUrl);
+                const thumbnailUrl = episode.thumbnailUrl || episode.clipThumbnailUrl || "/logo-podcast.jpg";
+                const imagePosition = `${episode.thumbnailPositionX || "center"} ${episode.thumbnailPositionY || "center"}`;
+                const platformLinks = [
+                  { label: "Spotify", href: episode.spotifyUrl, eventName: "click_spotify" },
+                  { label: "YouTube", href: episode.youtubeUrl, eventName: "click_youtube" },
+                  { label: "Apple Podcasts", href: episode.applePodcastsUrl, eventName: "click_apple_podcasts" }
+                ].filter((platform): platform is { label: string; href: string; eventName: string } => Boolean(platform.href));
+
                 return (
-                  <article key={episode.id} className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-                    <div className="overflow-hidden rounded-[1.5rem] border border-[color:var(--line)] bg-black">
-                      {embedUrl ? (
-                        <iframe
-                          src={embedUrl}
-                          title={episode.title}
-                          className="aspect-video w-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <div className="flex aspect-video items-center justify-center p-6 text-sm text-white/70">Sin video embebido</div>
-                      )}
+                  <article key={episode.id} className="card grid overflow-hidden lg:grid-cols-[0.95fr_1.05fr]">
+                    <TrackedLink
+                      href={`/episodes/${episode.slug}`}
+                      className="group relative block min-h-[260px] overflow-hidden bg-[linear-gradient(135deg,#d70904,#2b2b2b)] sm:min-h-[360px]"
+                      eventName="click_episode"
+                      eventParams={{
+                        link_text: "Play",
+                        content_type: "episode",
+                        content_title: episode.title,
+                        section: "podcast_episode_thumbnail"
+                      }}
+                    >
+                      <Image
+                        src={thumbnailUrl}
+                        alt={episode.title}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        style={{ objectPosition: imagePosition }}
+                        sizes="(min-width: 1024px) 42vw, 100vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+                      <div className="absolute bottom-6 left-6 grid h-16 w-16 place-items-center rounded-full bg-[color:var(--accent)] text-white shadow-[0_0_36px_rgba(226,33,28,0.42)] transition group-hover:scale-105">
+                        <Play size={26} fill="currentColor" />
+                      </div>
+                    </TrackedLink>
+                    <div className="flex flex-col justify-between p-6 md:p-8">
+                      <div>
+                        <h2 className="text-3xl font-black">
+                          <Link href={`/episodes/${episode.slug}`} className="hover:text-[color:var(--accent)]">{episode.title}</Link>
+                        </h2>
+                        <p className="mt-4 line-clamp-3 leading-7 text-[color:var(--muted)]">{episode.shortDescription}</p>
+                      </div>
+                      {episode.guests.length ? (
+                        <div className="mt-6">
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted)]">Invitados</p>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {episode.guests.map((guest) => (
+                              <Link
+                                key={guest.id}
+                                href={`/guests/${guest.slug}`}
+                                className="rounded-full border border-[color:var(--line)] px-3 py-1.5 text-sm font-semibold hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                              >
+                                {guest.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                      {platformLinks.length ? (
+                        <div className="mt-7">
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--muted)]">Dónde verlo o escucharlo</p>
+                          <div className="mt-3 flex flex-wrap gap-3">
+                            {platformLinks.map((platform) => (
+                              <TrackedAnchor
+                                key={platform.label}
+                                href={platform.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn-secondary gap-2 !px-4 !py-2 text-sm"
+                                eventName={platform.eventName}
+                                eventParams={{
+                                  link_text: platform.label,
+                                  content_type: "episode",
+                                  content_title: episode.title,
+                                  section: "podcast_episode"
+                                }}
+                              >
+                                {platform.label}
+                                <ExternalLink size={14} />
+                              </TrackedAnchor>
+                            ))}
+                            <TrackedLink
+                              href={`/episodes/${episode.slug}`}
+                              className="btn-primary gap-2 !px-4 !py-2 text-sm"
+                              eventName="click_episode"
+                              eventParams={{
+                                link_text: "Ver episodio",
+                                content_type: "episode",
+                                content_title: episode.title,
+                                section: "podcast_episode"
+                              }}
+                            >
+                              <Play size={15} fill="currentColor" />
+                              Ver episodio
+                            </TrackedLink>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
-                    <EpisodeCard episode={episode} />
                   </article>
                 );
               })}
@@ -144,67 +201,6 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
               <GuestCard key={guest.slug} guest={guest} />
             ))}
           </div>
-        </section>
-      ) : null}
-
-      {activeTab === "community" ? (
-        <section className="grid gap-8 xl:grid-cols-[0.82fr_1fr_0.95fr]">
-          <aside className="card p-6">
-            <h2 className="text-2xl font-black">Espacios de participación</h2>
-            <div className="mt-5 space-y-4">
-              {[
-                { title: "Propón un tema", text: "Sugiere un tema que te gustaría que conversemos en el podcast.", icon: Lightbulb },
-                { title: "Sugiere un invitado", text: "Recomienda a alguien que aporte valor a nuestra audiencia.", icon: Mic2 },
-                { title: "Cuéntanos tu idea", text: "Comparte tu idea, proyecto o iniciativa con la comunidad.", icon: MessageCircle }
-              ].map((item) => {
-                const Icon = item.icon;
-                return (
-                  <article key={item.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4">
-                    <div className="mb-3 grid h-10 w-10 place-items-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
-                      <Icon size={18} />
-                    </div>
-                    <h3 className="font-bold">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[color:var(--muted)]">{item.text}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </aside>
-
-          <div className="space-y-6">
-            {surveys.length === 0 ? (
-              <div className="card p-8">
-                <h2 className="text-2xl font-bold">{siteConfig.communityEmptyTitle || "No hay preguntas activas por ahora"}</h2>
-                <p className="text-content mt-3 text-sm text-[color:var(--muted)]">
-                  {siteConfig.communityEmptyDescription || "Pronto abriremos nuevos espacios para que puedas compartir tus ideas, preguntas y opiniones con la comunidad."}
-                </p>
-                <Link href="/podcast?tab=episodes" className="btn-secondary mt-5">
-                  Explorar episodios
-                </Link>
-              </div>
-            ) : (
-              surveys.map((survey) => (
-                <div key={survey.id} className="space-y-3">
-                  {survey.episode ? (
-                    <p className="text-sm text-[color:var(--muted)]">
-                      Capitulo:{" "}
-                      <Link href={`/episodes/${survey.episode.slug}`} className="font-semibold text-[color:var(--foreground)]">
-                        {survey.episode.title}
-                      </Link>
-                    </p>
-                  ) : null}
-                  <PublicSurveyForm survey={survey} />
-                </div>
-              ))
-            )}
-          </div>
-
-          <ContactForm
-            type="CONTACT"
-            title={siteConfig.communityContactTitle || "Queremos escucharte"}
-            description={siteConfig.communityContactDescription || "Déjanos tu comentario, idea o propuesta."}
-            submitLabel={siteConfig.communityContactSubmitLabel || "Enviar mensaje"}
-          />
         </section>
       ) : null}
 

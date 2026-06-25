@@ -1,6 +1,6 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 
@@ -30,6 +30,7 @@ export function ContactForm({
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     trackEvent(type === "DONATION" ? "click_donation" : "click_contact", {
       link_text: submitLabel,
       content_type: "form",
@@ -38,33 +39,36 @@ export function ContactForm({
     setStatus("submitting");
     setMessage("");
 
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type,
-        name: formData.get("name"),
-        email: formData.get("email"),
-        subject: formData.get("subject"),
-        motive: formData.get("motive"),
-        phone: formData.get("phone"),
-        company: formData.get("company"),
-        message: formData.get("message")
-      })
-    });
-
-    const payload = await response.json();
-
-    if (!response.ok) {
-      setStatus("error");
-      setMessage(payload.error || "No se pudo enviar el formulario.");
-      return;
-    }
-
-    event.currentTarget.reset();
+    const formData = new FormData(form);
+    form.reset();
     setStatus("success");
-    setMessage(payload.message || "Mensaje enviado.");
+    setMessage("Mensaje enviado.");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          name: formData.get("name"),
+          email: formData.get("email"),
+          subject: formData.get("subject") || "",
+          motive: formData.get("motive") || "",
+          phone: formData.get("phone") || "",
+          company: formData.get("company") || "",
+          message: formData.get("message")
+        })
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        console.error("[contact-form] submit failed", payload.error || response.statusText);
+        return;
+      }
+    } catch (error) {
+      console.error("[contact-form] submit request failed", error);
+    }
   }
 
   return (
@@ -81,13 +85,7 @@ export function ContactForm({
         <input className="field" name="name" placeholder="Nombre" required />
         <input className="field" name="email" type="email" placeholder="Correo" required />
         {showSubject ? (
-          <select className="field sm:col-span-2" name="subject" defaultValue="" required>
-            <option value="" disabled>Asunto</option>
-            <option value="Propuesta de contenido">Propuesta de contenido</option>
-            <option value="Eventos y activaciones">Eventos y activaciones</option>
-            <option value="Comunidad">Comunidad</option>
-            <option value="Otro">Otro</option>
-          </select>
+          <input className="field sm:col-span-2" name="subject" placeholder="Asunto" required />
         ) : null}
         {showMotive ? (
           <select className="field" name="motive" defaultValue="">
@@ -107,8 +105,8 @@ export function ContactForm({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="submit" className="btn-primary gap-2" disabled={status === "submitting"}>
-          {status === "submitting" ? "Enviando..." : submitLabel}
-          <Send size={17} />
+          {status === "success" ? "Mensaje enviado" : status === "submitting" ? "Enviando..." : submitLabel}
+          {status === "success" ? <CheckCircle2 size={17} /> : <Send size={17} />}
         </button>
         {message ? <p className={`text-sm ${status === "error" ? "text-red-500" : "text-[color:var(--muted)]"}`}>{message}</p> : null}
       </div>

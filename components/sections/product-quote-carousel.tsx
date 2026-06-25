@@ -117,6 +117,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
 
   async function submitQuote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     trackEvent("click_tiendita", {
       link_text: "Cotizar",
       content_type: "quote",
@@ -132,34 +133,37 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
       return;
     }
 
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/tiendiita/quote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        note: formData.get("note"),
-        items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: Number(item.price)
-        }))
-      })
-    });
-    const payload = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      setStatus("error");
-      setMessage(payload.error || "No se pudo enviar la cotización.");
-      return;
-    }
-
-    event.currentTarget.reset();
+    const formData = new FormData(form);
+    form.reset();
     setCartItems([]);
     setStatus("success");
-    setMessage(payload.message || "Cotización enviada.");
+    setMessage("Cotización enviada.");
+
+    try {
+      const response = await fetch("/api/tiendiita/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          note: formData.get("note"),
+          items: cartItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: Number(item.price)
+          }))
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        console.error("[product-quote-carousel] submit failed", payload.error || response.statusText);
+        return;
+      }
+    } catch (error) {
+      console.error("[product-quote-carousel] submit request failed", error);
+    }
   }
 
   if (products.length === 0) {
@@ -223,7 +227,7 @@ export function ProductQuoteCarousel({ products }: { products: Product[] }) {
             <textarea className="field min-h-24" name="note" placeholder="Mensaje opcional" />
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <button className="btn-primary gap-2" type="submit" disabled={status === "submitting" || cartItems.length === 0}>
-                {status === "submitting" ? "Enviando..." : "Cotizar"}
+                {status === "success" ? "Cotización enviada" : status === "submitting" ? "Enviando..." : "Cotizar"}
                 <CheckCircle2 size={17} />
               </button>
               {message ? <p className={`text-sm ${status === "error" ? "text-red-400" : "text-[color:var(--muted)]"}`}>{message}</p> : null}

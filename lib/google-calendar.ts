@@ -20,6 +20,15 @@ type IcalEventLike = {
 
 const DEFAULT_CALENDAR_ICS_URL = "https://calendar.google.com/calendar/ical/vinculacion.dii%40uchile.cl/public/basic.ics";
 
+function decodeGoogleCalendarCid(value: string) {
+  try {
+    const decoded = Buffer.from(value, "base64url").toString("utf8").trim();
+    return decoded.includes("@") ? decoded : value;
+  } catch {
+    return value;
+  }
+}
+
 export function toGoogleCalendarDate(date: Date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 }
@@ -97,7 +106,7 @@ async function getEventsFromGoogleIcs(url: string, limit: number) {
   const now = new Date();
   const blocks = body.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
 
-  return blocks
+  const events = blocks
     .map((block): CalendarEvent | null => {
       const startLine = block.split(/\r?\n/).find((line) => line.startsWith("DTSTART")) || "";
       const endLine = block.split(/\r?\n/).find((line) => line.startsWith("DTEND")) || "";
@@ -118,9 +127,19 @@ async function getEventsFromGoogleIcs(url: string, limit: number) {
         end
       };
     })
-    .filter((event): event is CalendarEvent => Boolean(event))
+    .filter((event): event is CalendarEvent => Boolean(event));
+
+  const upcoming = events
     .filter((event) => event.start >= now || Boolean(event.end && event.end >= now))
-    .sort((a, b) => a.start.getTime() - b.start.getTime())
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+
+  if (upcoming.length > 0) {
+    return upcoming.slice(0, limit);
+  }
+
+  return events
+    .filter((event) => event.start < now)
+    .sort((a, b) => b.start.getTime() - a.start.getTime())
     .slice(0, limit);
 }
 
@@ -139,7 +158,9 @@ function getCalendarFeedUrl() {
   if (value.startsWith("http")) {
     try {
       const url = new URL(value);
-      const calendarId = url.searchParams.get("src") || url.searchParams.get("cid");
+      const src = url.searchParams.get("src");
+      const cid = url.searchParams.get("cid");
+      const calendarId = src || (cid ? decodeGoogleCalendarCid(cid) : null);
 
       if (url.hostname.includes("calendar.google.com") && calendarId) {
         return toGoogleCalendarIcsUrl(calendarId);
@@ -273,10 +294,13 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
       }
     }
 
-    const events = parsedEvents
+    const upcomingEvents = parsedEvents
       .filter((event) => event.start >= now || Boolean(event.end && event.end >= now))
-      .sort((a, b) => a.start.getTime() - b.start.getTime())
-      .slice(0, limit);
+      .sort((a, b) => a.start.getTime() - b.start.getTime());
+    const events = (upcomingEvents.length > 0
+      ? upcomingEvents
+      : parsedEvents.filter((event) => event.start < now).sort((a, b) => b.start.getTime() - a.start.getTime())
+    ).slice(0, limit);
 
     console.log("Eventos detectados:", events.length, "VEVENT fuente:", sourceEvents.length);
 

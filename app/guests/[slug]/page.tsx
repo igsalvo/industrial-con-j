@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getGuestBySlug } from "@/lib/queries";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { TrackedAnchor } from "@/components/analytics/tracked-link";
@@ -12,6 +13,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
   }
 
   const socialLinks = (guest.socialLinks ?? {}) as Record<string, string | undefined>;
+  const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
   const getSocialEventName = (key: string, url?: string) => {
     const value = `${key} ${url || ""}`.toLowerCase();
     if (value.includes("instagram")) return "click_instagram";
@@ -23,12 +25,18 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
     <section className="shell py-12">
       <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
         <div className="card p-8">
-          <div
-            className="h-64 rounded-[1.5rem] bg-cover bg-center"
-            style={{
-              backgroundImage: guest.profileImage ? `url(${guest.profileImage})` : "linear-gradient(135deg, #0f766e, #0f172a)"
-            }}
-          />
+          <div className="relative h-64 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
+            {guest.profileImage ? (
+              <Image
+                src={guest.profileImage}
+                alt={guest.name}
+                fill
+                className="object-contain"
+                style={{ objectPosition: imagePosition }}
+                sizes="(min-width: 1024px) 33vw, 100vw"
+              />
+            ) : null}
+          </div>
           <h1 className="mt-6 text-4xl font-black">{guest.name}</h1>
           <p className="mt-2 text-sm text-[color:var(--muted)]">
             {guest.role ? `${guest.role} · ` : ""}
@@ -72,7 +80,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
           <h2 className="text-3xl font-black">Episodios donde participa</h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             {guest.episodes.map((episode: (typeof guest.episodes)[number]) => (
-              <EpisodeCard key={episode.slug} episode={episode} />
+              <EpisodeCard key={episode.slug} episode={episode} mediaVariant="wide" />
             ))}
           </div>
         </div>

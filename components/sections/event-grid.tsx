@@ -80,7 +80,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
     [events]
   );
   const now = new Date();
-  const nextEvent = eventItems.find((event) => event.startDate >= now) || eventItems[0];
+  const nextEvent = eventItems.find((event) => event.startDate >= now) || eventItems[eventItems.length - 1];
   const featuredDefaultEvent = eventItems.find((event) => event.isFeatured && event.startDate >= now) || eventItems.find((event) => event.isFeatured);
   const defaultEvent = featuredDefaultEvent || nextEvent;
   const firstEventDate = defaultEvent?.startDate;
@@ -95,6 +95,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
   const selectedEvents = selectedDateKey ? eventItems.filter((event) => getDateKey(event.startDate) === selectedDateKey) : [];
   const displayedEvents = selectedDateKey ? selectedEvents : defaultEvent ? [defaultEvent] : [];
   const featured = displayedEvents[0];
+  const featuredIsUpcoming = Boolean(featured && (featured.startDate >= now || (featured.endDate && featured.endDate >= now)));
   const featuredImageUrl = featured?.imageUrl || fallbackImage?.src;
   const featuredImagePosition = featured?.imageUrl
     ? `${featured.imagePositionX || "center"} ${featured.imagePositionY || "center"}`
@@ -168,7 +169,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,19,18,0.98)_0%,rgba(17,19,18,0.86)_42%,rgba(17,19,18,0.32)_100%)]" />
           </div>
           <div className="relative max-w-xl py-5">
-            <p className="brand-kicker text-xs text-[color:var(--accent)]">{selectedDateKey ? "Evento seleccionado" : featured.isFeatured ? "Evento destacado" : "Evento más próximo"}</p>
+            <p className="brand-kicker text-xs text-[color:var(--accent)]">{selectedDateKey ? "Evento seleccionado" : featured.isFeatured ? "Evento destacado" : featuredIsUpcoming ? "Evento más próximo" : "Actividad reciente"}</p>
             <h2 className="mt-4 text-3xl font-black sm:text-4xl">{featured.title}</h2>
             {featured.description ? <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--muted)]">{featured.description}</p> : null}
             <div className="mt-6 grid gap-4 text-sm text-white sm:grid-cols-2">
@@ -184,7 +185,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 onClick={(clickEvent) =>
                   trackEvent("click_event", {
                     link_url: clickEvent.currentTarget.href,
-                    link_text: "Agregar a mi calendario",
+                    link_text: "Agregar a mi Google Calendar",
                     content_type: "event",
                     content_title: featured.title,
                     section: "events_calendar"
@@ -192,7 +193,7 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
                 }
               >
                 <CalendarPlus size={16} />
-                Agregar a mi calendario
+                Agregar a mi Google Calendar
               </a>
               {featured.ctaLink ? (
                 <a
@@ -228,44 +229,6 @@ export function EventGrid({ events, fallbackImage }: { events: PublicCalendarEve
         )}
       </div>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        {displayedEvents.length ? (
-          displayedEvents.map((event) => (
-            <article key={event.uid} className="grid gap-4 overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-5 sm:grid-cols-[84px_1fr_auto] sm:items-center">
-              <div className="rounded-xl border border-white/10 bg-black/10 p-4">
-                <CalendarDays className="text-[color:var(--accent)]" />
-                <p className="mt-4 text-lg font-black">{formatEventDate(event.startDate)}</p>
-                <p className="mt-1 text-xs text-[color:var(--muted)]">{formatEventTime(event.startDate)}</p>
-              </div>
-              <div>
-                <h3 className="text-lg font-bold">{event.title}</h3>
-                {event.description ? <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-[color:var(--muted)]">{event.description}</p> : null}
-                {event.location ? <p className="mt-4 flex items-center gap-2 text-sm text-[color:var(--muted)]"><MapPin size={16} />{event.location}</p> : null}
-              </div>
-              {event.ctaLink ? (
-                <a
-                  className="btn-secondary !bg-transparent !p-3 text-sm"
-                  href={event.ctaLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Ver detalles de ${event.title}`}
-                  onClick={(clickEvent) =>
-                    trackEvent("click_event", {
-                      link_url: clickEvent.currentTarget.href,
-                      link_text: event.ctaText || "Ver detalles",
-                      content_type: "event",
-                      content_title: event.title,
-                      section: "events_list"
-                    })
-                  }
-                ><ArrowRight size={16} /></a>
-              ) : null}
-            </article>
-          ))
-        ) : (
-          <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">No hay eventos programados para este día.</p>
-        )}
-      </section>
     </div>
   );
 }

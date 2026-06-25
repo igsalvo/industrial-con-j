@@ -22,6 +22,15 @@ type SiteConfigShape = {
   showContactLink: boolean;
   showThemeToggle: boolean;
   showDonationsSection: boolean;
+  showHomePopup: boolean;
+  homePopupTitle: string | null;
+  homePopupBody: string | null;
+  homePopupButtonLabel: string | null;
+  homePopupButtonHref: string | null;
+  homePopupImageUrl: string | null;
+  homePopupVideoUrl: string | null;
+  homePopupPlacement: string;
+  homePopupMode: string;
   showSponsorBanner: boolean;
   sponsorBannerTitle: string | null;
   heroEyebrow: string | null;
@@ -228,9 +237,16 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     setSuccess("");
     const formData = new FormData(event.currentTarget);
     const normalizedHeroVideoUrl = heroVideoUrl.trim();
+    const normalizedPopupVideoUrl = String(formData.get("homePopupVideoUrl") || "").trim();
 
     if (heroVideoEnabled && !isValidHeroVideoUrl(normalizedHeroVideoUrl)) {
       setError("La URL del video debe ser un .mp4, .webm, .mov HTTPS/local o un enlace válido de YouTube.");
+      setLoading(false);
+      return;
+    }
+
+    if (normalizedPopupVideoUrl && !isValidHeroVideoUrl(normalizedPopupVideoUrl)) {
+      setError("La URL del video del pop-up debe ser un .mp4, .webm, .mov HTTPS/local o un enlace válido de YouTube.");
       setLoading(false);
       return;
     }
@@ -253,6 +269,15 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       showContactLink: formData.get("showContactLink") === "on",
       showThemeToggle: formData.get("showThemeToggle") === "on",
       showDonationsSection: formData.get("showDonationsSection") === "on",
+      showHomePopup: formData.get("showHomePopup") === "on",
+      homePopupTitle: formData.get("homePopupTitle"),
+      homePopupBody: formData.get("homePopupBody"),
+      homePopupButtonLabel: formData.get("homePopupButtonLabel"),
+      homePopupButtonHref: formData.get("homePopupButtonHref"),
+      homePopupImageUrl: formData.get("homePopupImageUrl"),
+      homePopupVideoUrl: normalizedPopupVideoUrl,
+      homePopupPlacement: formData.get("homePopupPlacement"),
+      homePopupMode: formData.get("homePopupMode"),
       showSponsorBanner: formData.get("showSponsorBanner") === "on",
       sponsorBannerTitle: formData.get("sponsorBannerTitle"),
       heroEyebrow: formData.get("heroEyebrow"),
@@ -377,6 +402,89 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-8">
+      <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
+        <div>
+          <p className="pill">Pop-up inicio</p>
+          <h3 className="mt-3 text-2xl font-black">Aviso emergente editable</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">
+            Elige si aparece como pop-up al entrar al inicio o como ventana lateral visible en todo el sitio hasta que se cierre.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+          <label className="card flex items-center gap-3 p-4 text-sm font-medium">
+            <input defaultChecked={config.showHomePopup} name="showHomePopup" type="checkbox" />
+            Mostrar aviso
+          </label>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Tipo de aviso</label>
+              <select className="field" name="homePopupMode" defaultValue={config.homePopupMode || "modal"}>
+                <option value="modal">Pop-up de inicio</option>
+                <option value="side-panel">Ventana lateral en todo el sitio</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Ubicación / formato del pop-up</label>
+              <select className="field" name="homePopupPlacement" defaultValue={config.homePopupPlacement || "center"}>
+                <option value="center">Centro</option>
+                <option value="fullscreen">Pantalla completa</option>
+                <option value="right">Costado derecho</option>
+                <option value="left">Costado izquierdo</option>
+                <option value="top">Arriba</option>
+                <option value="bottom">Abajo</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Título</label>
+          <input className="field" name="homePopupTitle" defaultValue={config.homePopupTitle || ""} placeholder="¡Ayúdanos a elegir nuestra mascota!" />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-semibold">Texto</label>
+          <textarea
+            className="field min-h-32"
+            name="homePopupBody"
+            defaultValue={config.homePopupBody || ""}
+            placeholder="Escribe el contenido del aviso. Si pegas URLs completas, se mostrarán como links."
+          />
+        </div>
+
+        <UploadField
+          name="homePopupImageUrl"
+          label="Imagen del pop-up"
+          defaultValue={config.homePopupImageUrl || ""}
+          accept="image/*"
+          uploadLabel="Subir imagen"
+          urlPlaceholder="URL de imagen"
+          hint="Opcional. Se muestra dentro del aviso, sobre el texto. Útil para figuras o afiches."
+        />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Texto botón</label>
+            <input className="field" name="homePopupButtonLabel" defaultValue={config.homePopupButtonLabel || ""} placeholder="Vota aquí" />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-semibold">Link botón</label>
+            <input className="field" name="homePopupButtonHref" defaultValue={config.homePopupButtonHref || ""} placeholder="https://..." />
+          </div>
+        </div>
+
+        <UploadField
+          name="homePopupVideoUrl"
+          label="Video del pop-up"
+          defaultValue={config.homePopupVideoUrl || ""}
+          accept="video/mp4"
+          uploadLabel="Subir video .mp4"
+          urlPlaceholder="URL .mp4 o link de YouTube"
+          hint="Opcional. Si lo completas, se muestra un reproductor dentro del pop-up."
+        />
+      </div>
+
       <div className="space-y-4 rounded-3xl border border-[color:var(--line)] p-5">
         <div>
           <p className="pill">Video visible del inicio</p>

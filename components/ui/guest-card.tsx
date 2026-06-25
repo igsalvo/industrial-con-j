@@ -12,9 +12,11 @@ export function GuestCard({
     profileImage: string | null;
     profilePositionX?: string | null;
     profilePositionY?: string | null;
+    episodes?: Array<{ slug: string; title: string }>;
   };
 }) {
   const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
+  const latestEpisode = guest.episodes?.[0];
 
   return (
     <article className="card overflow-hidden">
@@ -27,6 +29,15 @@ export function GuestCard({
         </h3>
         <p className="mt-1 text-sm text-[color:var(--muted)]">{guest.company || "Invitado del podcast"}</p>
         <p className="mt-4 line-clamp-4 text-sm text-[color:var(--muted)]">{guest.bio}</p>
+        {latestEpisode ? (
+          <Link href={`/episodes/${latestEpisode.slug}`} className="btn-secondary mt-5 !px-4 !py-2 text-sm" aria-label={`Ver episodio ${latestEpisode.title}`}>
+            Ver episodio
+          </Link>
+        ) : (
+          <Link href={`/guests/${guest.slug}`} className="btn-secondary mt-5 !px-4 !py-2 text-sm">
+            Ver perfil
+          </Link>
+        )}
       </div>
     </article>
   );

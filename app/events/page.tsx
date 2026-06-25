@@ -61,6 +61,11 @@ export default async function EventsPage() {
     seen.add(key);
     return true;
   });
+  const hasUpcomingEvents = calendarEvents.some((event) => {
+    const start = new Date(event.start);
+    const end = event.end ? new Date(event.end) : null;
+    return start >= now || Boolean(end && end >= now);
+  });
 
   return (
     <main className="dark relative overflow-hidden bg-[#111312] py-9 text-white">
@@ -68,8 +73,8 @@ export default async function EventsPage() {
       <div className="shell relative">
       <SectionHeading
         eyebrow={siteConfig.eventsSectionEyebrow || "EVENTOS"}
-        title={siteConfig.eventsSectionTitle || "Próximas actividades"}
-        description={siteConfig.eventsSectionDescription || "Encuentros, conversaciones y actividades para reunir a la comunidad de Ingeniería Industrial."}
+        title={hasUpcomingEvents ? siteConfig.eventsSectionTitle || "Próximas actividades" : "Actividades recientes"}
+        description={siteConfig.eventsSectionDescription || "Encuentros, conversaciones y actividades del calendario de Vinculación DII."}
       />
       <EventGrid events={calendarEvents} fallbackImage={mediaItems[0]} />
       </div>

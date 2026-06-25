@@ -141,14 +141,19 @@ export const surveyResponseSchema = z.object({
   )
 });
 
+const optionalFormString = z.preprocess(
+  (value) => (value === null || value === undefined ? "" : value),
+  z.string().trim().optional().or(z.literal(""))
+);
+
 export const contactMessageSchema = z.object({
   type: z.enum(["CONTACT", "DONATION", "SPONSORSHIP", "PARTICIPATION"]).default("CONTACT"),
   name: z.string().trim().min(1, "Ingresa tu nombre."),
   email: z.string().trim().email("Ingresa un correo válido."),
-  subject: z.string().trim().optional().or(z.literal("")),
-  motive: z.string().trim().optional().or(z.literal("")),
-  phone: z.string().trim().optional().or(z.literal("")),
-  company: z.string().trim().optional().or(z.literal("")),
+  subject: optionalFormString,
+  motive: optionalFormString,
+  phone: optionalFormString,
+  company: optionalFormString,
   message: z.string().trim().min(1, "Ingresa un mensaje.")
 });
 

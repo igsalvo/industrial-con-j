@@ -33,7 +33,6 @@ export function NewsCardGrid({
               </div>
               <h3 className="mt-4 text-2xl font-bold">{item.title}</h3>
               <p className="mt-3 line-clamp-4 text-sm leading-6 text-[color:var(--muted)]">{item.excerpt}</p>
-              <p className="mt-4 line-clamp-5 text-sm leading-6 text-[color:var(--muted)]">{item.body}</p>
               <Link className="btn-secondary mt-auto w-full gap-2 !px-4 !py-2 text-sm" href={`/news/${item.slug}`}>
                 Ver más
                 <ArrowUpRight size={15} />

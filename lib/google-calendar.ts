@@ -16,6 +16,8 @@ type IcalEventLike = {
   end?: Date;
   uid?: string;
   rrule?: unknown;
+  organizer?: unknown;
+  attendees?: unknown;
 };
 
 const DEFAULT_CALENDAR_ICS_URL = "https://calendar.google.com/calendar/ical/vinculacion.dii%40uchile.cl/public/basic.ics";
@@ -27,6 +29,37 @@ function decodeGoogleCalendarCid(value: string) {
   } catch {
     return value;
   }
+}
+
+function normalizeEmail(value: string) {
+  return value.trim().replace(/^mailto:/i, "").toLowerCase();
+}
+
+function getCalendarOwnerEmail() {
+  const explicitEmail = process.env.GOOGLE_CALENDAR_ACCEPTED_EMAIL?.trim();
+  if (explicitEmail) {
+    return normalizeEmail(explicitEmail);
+  }
+
+  const calendarId = process.env.GOOGLE_CALENDAR_ID?.trim();
+  if (!calendarId) {
+    return "";
+  }
+
+  if (calendarId.startsWith("http")) {
+    try {
+      const url = new URL(calendarId);
+      const src = url.searchParams.get("src");
+      const cid = url.searchParams.get("cid");
+      const pathCalendarId = decodeURIComponent(url.pathname.match(/\/calendar\/ical\/([^/]+)/)?.[1] || "");
+      const decodedCalendarId = src || (cid ? decodeGoogleCalendarCid(cid) : "") || pathCalendarId;
+      return decodedCalendarId.includes("@") ? normalizeEmail(decodedCalendarId) : "";
+    } catch {
+      return "";
+    }
+  }
+
+  return calendarId.includes("@") ? normalizeEmail(calendarId) : "";
 }
 
 export function toGoogleCalendarDate(date: Date) {
@@ -65,6 +98,16 @@ function getIcsField(block: string, name: string) {
   return line.slice(line.indexOf(":") + 1).trim();
 }
 
+function getIcsLines(block: string, name: string) {
+  return block
+    .split(/\r?\n/)
+    .filter((item) => item.startsWith(`${name}:`) || item.startsWith(`${name};`));
+}
+
+function getIcsLineValue(line: string) {
+  return line.slice(line.indexOf(":") + 1).trim();
+}
+
 function unescapeIcsText(value: string) {
   return value
     .replace(/\\n/g, "\n")
@@ -96,6 +139,86 @@ function parseIcsDate(value: string, allDay: boolean) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+function lineHasAcceptedAttendee(line: string, calendarEmail: string) {
+  const normalizedLine = line.toLowerCase();
+  const attendeeEmail = normalizeEmail(getIcsLineValue(line));
+
+  return attendeeEmail === calendarEmail && normalizedLine.includes("partstat=accepted");
+}
+
+function isRelevantIcsBlock(block: string, calendarEmail: string) {
+  if (!calendarEmail) {
+    return true;
+  }
+
+  const organizer = normalizeEmail(getIcsField(block, "ORGANIZER"));
+  if (organizer === calendarEmail) {
+    return true;
+  }
+
+  const attendeeLines = getIcsLines(block, "ATTENDEE");
+  if (attendeeLines.length === 0) {
+    return true;
+  }
+
+  return attendeeLines.some((line) => lineHasAcceptedAttendee(line, calendarEmail));
+}
+
+function extractEmailFromUnknown(value: unknown) {
+  if (typeof value === "string") {
+    return normalizeEmail(value);
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    for (const key of ["email", "mailto", "val"]) {
+      if (typeof record[key] === "string") {
+        return normalizeEmail(String(record[key]));
+      }
+    }
+  }
+
+  return "";
+}
+
+function attendeeIsAccepted(value: unknown, calendarEmail: string) {
+  if (typeof value === "string") {
+    return false;
+  }
+
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const email = extractEmailFromUnknown(value);
+  const partstat = "params" in value && value.params && typeof value.params === "object" && "PARTSTAT" in value.params
+    ? String(value.params.PARTSTAT).toLowerCase()
+    : "partstat" in value
+      ? String(value.partstat).toLowerCase()
+      : "";
+
+  return email === calendarEmail && partstat === "accepted";
+}
+
+function isRelevantParsedEvent(event: IcalEventLike, calendarEmail: string) {
+  if (!calendarEmail) {
+    return true;
+  }
+
+  const organizer = extractEmailFromUnknown(event.organizer);
+  if (organizer === calendarEmail) {
+    return true;
+  }
+
+  const attendees = event.attendees;
+  const attendeeList = Array.isArray(attendees) ? attendees : attendees ? Object.values(attendees as Record<string, unknown>) : [];
+  if (attendeeList.length === 0) {
+    return true;
+  }
+
+  return attendeeList.some((attendee) => attendeeIsAccepted(attendee, calendarEmail));
+}
+
 async function getEventsFromGoogleIcs(url: string, limit: number) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) {
@@ -103,10 +226,12 @@ async function getEventsFromGoogleIcs(url: string, limit: number) {
   }
 
   const body = unfoldIcsLines(await response.text());
+  const calendarEmail = getCalendarOwnerEmail();
   const now = new Date();
   const blocks = body.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
 
   const events = blocks
+    .filter((block) => isRelevantIcsBlock(block, calendarEmail))
     .map((block): CalendarEvent | null => {
       const startLine = block.split(/\r?\n/).find((line) => line.startsWith("DTSTART")) || "";
       const endLine = block.split(/\r?\n/).find((line) => line.startsWith("DTEND")) || "";
@@ -262,10 +387,11 @@ export async function getEventsFromICS(limit = 12): Promise<CalendarEvent[]> {
     const ical = icalModule.default ?? icalModule;
     const data = await loadCalendarData(ical, url);
     const now = new Date();
+    const calendarEmail = getCalendarOwnerEmail();
     const rangeEnd = new Date(now);
     rangeEnd.setMonth(rangeEnd.getMonth() + 18);
     const parsedEvents: CalendarEvent[] = [];
-    const sourceEvents = (Object.values(data) as IcalEventLike[]).filter((entry) => entry?.type === "VEVENT");
+    const sourceEvents = (Object.values(data) as IcalEventLike[]).filter((entry) => entry?.type === "VEVENT" && isRelevantParsedEvent(entry, calendarEmail));
 
     for (const event of sourceEvents) {
       if (event.rrule) {

@@ -43,6 +43,36 @@ function getLinkedInUrl(externalLinks: unknown) {
   return typeof link?.url === "string" ? link.url : null;
 }
 
+function HonorPhoto({
+  member,
+  className = "",
+  priority = false
+}: {
+  member: HonorMember;
+  className?: string;
+  priority?: boolean;
+}) {
+  const photoPosition = `${member.photoPositionX ?? 50}% ${member.photoPositionY ?? 50}%`;
+
+  if (!member.photoUrl) {
+    return null;
+  }
+
+  return (
+    <img
+      src={member.photoUrl}
+      alt={member.name}
+      width={640}
+      height={640}
+      loading="eager"
+      decoding={priority ? "sync" : "async"}
+      fetchPriority={priority ? "high" : "auto"}
+      className={`h-full w-full object-cover ${className}`}
+      style={{ objectPosition: photoPosition }}
+    />
+  );
+}
+
 export function HonorShowcase({ members }: { members: HonorMember[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalMember, setModalMember] = useState<HonorMember | null>(null);
@@ -86,14 +116,13 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
     return <p className="rounded-2xl border border-white/10 p-5 text-sm text-[color:var(--muted)]">Aún no hay personas publicadas.</p>;
   }
 
-  const featuredPosition = `${featured.photoPositionX ?? 50}% ${featured.photoPositionY ?? 50}%`;
   const featuredLinkedInUrl = getLinkedInUrl(featured.externalLinks);
 
   return (
     <div className="space-y-5">
       <article className="grid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:min-h-[360px] lg:grid-cols-[0.86fr_1fr]">
-        <div className="aspect-[4/3] bg-white/5 lg:aspect-auto lg:h-[360px]">
-          {featured.photoUrl ? <img src={featured.photoUrl} alt={featured.name} className="h-full w-full object-cover" style={{ objectPosition: featuredPosition }} /> : null}
+        <div className="aspect-square bg-white/5 lg:h-[360px]">
+          <HonorPhoto member={featured} priority />
         </div>
         <div className="relative overflow-hidden p-5 sm:p-8">
           <div className="pointer-events-none absolute right-0 top-0 h-full w-64 bg-[radial-gradient(circle_at_70%_20%,rgba(226,33,28,0.13),transparent_35%)]" />
@@ -119,7 +148,6 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
       <p className="brand-kicker text-xs text-white/50">Miembros del círculo</p>
       <section className="grid gap-4 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {members.map((member, index) => {
-          const photoPosition = `${member.photoPositionX ?? 50}% ${member.photoPositionY ?? 50}%`;
           const linkedInUrl = getLinkedInUrl(member.externalLinks);
           return (
             <article
@@ -127,8 +155,8 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
               className={`overflow-hidden rounded-xl border bg-white/[0.035] text-left transition ${index === activeIndex ? "border-[color:var(--accent)]" : "border-white/10 hover:border-white/25"}`}
             >
               <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
-                <div className="aspect-[4/3] bg-white/5">
-                {member.photoUrl ? <img src={member.photoUrl} alt={member.name} className="h-full w-full object-cover" style={{ objectPosition: photoPosition }} /> : null}
+                <div className="aspect-square bg-white/5">
+                  <HonorPhoto member={member} priority={index < 12} />
                 </div>
               </button>
               <div className="p-4">
@@ -163,16 +191,11 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
               </button>
             </div>
             <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(260px,0.9fr)_1fr] lg:items-start">
-              <div className="overflow-hidden rounded-xl border border-white/10 bg-black/20">
+              <div className="aspect-square overflow-hidden rounded-xl border border-white/10 bg-black/20">
                 {modalMember.photoUrl ? (
-                  <img
-                    src={modalMember.photoUrl}
-                    alt={modalMember.name}
-                    className="max-h-[70vh] w-full object-contain"
-                    style={{ objectPosition: `${modalMember.photoPositionX ?? 50}% ${modalMember.photoPositionY ?? 50}%` }}
-                  />
+                  <HonorPhoto member={modalMember} priority className="max-h-[70vh]" />
                 ) : (
-                  <div className="grid min-h-[280px] place-items-center px-6 text-center text-sm text-[color:var(--muted)]">Sin foto disponible</div>
+                  <div className="grid h-full min-h-[280px] place-items-center px-6 text-center text-sm text-[color:var(--muted)]">Sin foto disponible</div>
                 )}
               </div>
               <div>

@@ -11,6 +11,7 @@ export default async function HonorPage() {
   }
 
   const preloadedPhotoUrls = Array.from(new Set(honorMembers.map((member) => member.photoUrl).filter((photoUrl): photoUrl is string => Boolean(photoUrl)))).slice(0, 24);
+  const showAlumniNews = alumniNewsItems.length > 0 && siteConfig.showAlumniNewsSection !== false;
 
   return (
     <>
@@ -27,7 +28,7 @@ export default async function HonorPage() {
             </p>
           </section>
           <HonorShowcase members={honorMembers} />
-          {siteConfig.showAlumniNewsSection ? (
+          {showAlumniNews ? (
             <section className="pt-5">
               <SectionHeading
                 eyebrow={siteConfig.alumniNewsSectionEyebrow || "Noticias Alumni"}

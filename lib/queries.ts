@@ -375,6 +375,20 @@ export async function getPublicSectionsData() {
   }
 }
 
+export async function getNewsItemBySlug(slug: string): Promise<PublicNewsItem | null> {
+  if (!hasDatabase()) {
+    return null;
+  }
+
+  try {
+    return await prisma.newsItem.findFirst({
+      where: { slug, isVisible: true }
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function getCalendarSources() {
   const defaultSource = {
     id: "default-vinculacion-dii",

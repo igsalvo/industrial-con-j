@@ -37,6 +37,7 @@ const percentageNumber = z.preprocess(
 
 const objectPositionX = z.preprocess((value) => (value === "" || value === null ? undefined : value), z.enum(["left", "center", "right"]).default("center"));
 const objectPositionY = z.preprocess((value) => (value === "" || value === null ? undefined : value), z.enum(["top", "center", "bottom"]).default("center"));
+const newsPlacement = z.preprocess((value) => (value === "" || value === null || value === undefined ? "NEWS" : value), z.enum(["NEWS", "ALUMNI", "BOTH"]).default("NEWS"));
 
 export const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido."),
@@ -193,6 +194,7 @@ export const newsItemInputSchema = z.object({
   ctaLink: optionalUrl,
   publishedAt: z.string().optional(),
   order: z.coerce.number().int().default(0),
+  placement: newsPlacement,
   showOnNews: z.boolean().default(true),
   showOnAlumniNews: z.boolean().default(false),
   isVisible: z.boolean().default(true)
@@ -366,6 +368,8 @@ export function toHonorMemberPayload(input: z.infer<typeof honorMemberInputSchem
 }
 
 export function toNewsItemPayload(input: z.infer<typeof newsItemInputSchema>) {
+  const placement = input.placement || (input.showOnAlumniNews && !input.showOnNews ? "ALUMNI" : input.showOnAlumniNews ? "BOTH" : "NEWS");
+
   return {
     title: input.title,
     slug: input.slug?.trim() || slugify(input.title),
@@ -379,8 +383,8 @@ export function toNewsItemPayload(input: z.infer<typeof newsItemInputSchema>) {
     ctaLink: input.ctaLink,
     publishedAt: input.publishedAt ? parseChileDateTimeLocal(input.publishedAt) : new Date(),
     order: input.order,
-    showOnNews: input.showOnNews,
-    showOnAlumniNews: input.showOnAlumniNews,
+    showOnNews: placement === "NEWS" || placement === "BOTH",
+    showOnAlumniNews: placement === "ALUMNI" || placement === "BOTH",
     isVisible: input.isVisible
   };
 }

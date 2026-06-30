@@ -6,9 +6,12 @@ import { formatChileDateTimeLocal } from "@/lib/date-time";
 import { prisma } from "@/lib/prisma";
 
 function normalizeRecord(record: NonNullable<Awaited<ReturnType<typeof prisma.newsItem.findUnique>>>) {
+  const placement = record.showOnNews && record.showOnAlumniNews ? "BOTH" : record.showOnAlumniNews ? "ALUMNI" : "NEWS";
+
   return {
     ...record,
     tags: record.tags.join(", "),
+    placement,
     publishedAt: formatChileDateTimeLocal(record.publishedAt)
   };
 }

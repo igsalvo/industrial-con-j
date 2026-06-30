@@ -11,7 +11,6 @@ export const newsFields = [
   { name: "ctaLink", label: "Link botón", type: "url" },
   { name: "publishedAt", label: "Fecha de publicación", type: "datetime-local" },
   { name: "order", label: "Orden", type: "number" },
-  { name: "showOnNews", label: "Mostrar en Noticias", type: "checkbox" },
-  { name: "showOnAlumniNews", label: "Mostrar en Noticias Alumni", type: "checkbox", defaultChecked: false },
+  { name: "placement", label: "Dónde se muestra", type: "select", options: [{ label: "Noticias", value: "NEWS" }, { label: "Noticias Alumni", value: "ALUMNI" }, { label: "Ambas secciones", value: "BOTH" }] },
   { name: "isVisible", label: "Visible", type: "checkbox" }
 ] as const;

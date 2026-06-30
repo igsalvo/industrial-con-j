@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <div className="grain min-h-screen">
             <SiteHeader
               showPodcastLink={siteConfig.showPodcastSection}
+              showNewsLink={siteConfig.showNewsSection}
               showEventsLink={siteConfig.showEventsSection}
               showIdentityLink={siteConfig.showIdentitySection}
               showHonorLink={siteConfig.showHonorSection}

@@ -11,6 +11,8 @@ type SiteConfigShape = {
   showFeaturedClips: boolean;
   showLatestEpisodes: boolean;
   showSponsorsSection: boolean;
+  showNewsSection: boolean;
+  showAlumniNewsSection: boolean;
   showRecommendedSection: boolean;
   showGuestsSection: boolean;
   showIdentitySection: boolean;
@@ -58,6 +60,14 @@ type SiteConfigShape = {
   sponsorsSectionTitle: string | null;
   sponsorsSectionDescription: string | null;
   sponsorsSectionOrder: number;
+  newsSectionEyebrow: string | null;
+  newsSectionTitle: string | null;
+  newsSectionDescription: string | null;
+  newsSectionOrder: number;
+  alumniNewsSectionEyebrow: string | null;
+  alumniNewsSectionTitle: string | null;
+  alumniNewsSectionDescription: string | null;
+  alumniNewsSectionOrder: number;
   donationsSectionEyebrow: string | null;
   donationsSectionTitle: string | null;
   donationsSectionDescription: string | null;
@@ -143,6 +153,22 @@ const sectionFields = [
     eyebrowName: "sponsorsSectionEyebrow",
     titleName: "sponsorsSectionTitle",
     descriptionName: "sponsorsSectionDescription"
+  },
+  {
+    key: "newsSection",
+    label: "Noticias",
+    orderName: "newsSectionOrder",
+    eyebrowName: "newsSectionEyebrow",
+    titleName: "newsSectionTitle",
+    descriptionName: "newsSectionDescription"
+  },
+  {
+    key: "alumniNewsSection",
+    label: "Noticias Alumni",
+    orderName: "alumniNewsSectionOrder",
+    eyebrowName: "alumniNewsSectionEyebrow",
+    titleName: "alumniNewsSectionTitle",
+    descriptionName: "alumniNewsSectionDescription"
   },
   {
     key: "donationsSection",
@@ -258,6 +284,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       showFeaturedClips: formData.get("showFeaturedClips") === "on",
       showLatestEpisodes: formData.get("showLatestEpisodes") === "on",
       showSponsorsSection: formData.get("showSponsorsSection") === "on",
+      showNewsSection: formData.get("showNewsSection") === "on",
+      showAlumniNewsSection: formData.get("showAlumniNewsSection") === "on",
       showRecommendedSection: false,
       showGuestsSection: formData.get("showGuestsSection") === "on",
       showIdentitySection: formData.get("showIdentitySection") === "on",
@@ -305,6 +333,14 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       sponsorsSectionTitle: formData.get("sponsorsSectionTitle"),
       sponsorsSectionDescription: formData.get("sponsorsSectionDescription"),
       sponsorsSectionOrder: formData.get("sponsorsSectionOrder"),
+      newsSectionEyebrow: formData.get("newsSectionEyebrow"),
+      newsSectionTitle: formData.get("newsSectionTitle"),
+      newsSectionDescription: formData.get("newsSectionDescription"),
+      newsSectionOrder: formData.get("newsSectionOrder"),
+      alumniNewsSectionEyebrow: formData.get("alumniNewsSectionEyebrow"),
+      alumniNewsSectionTitle: formData.get("alumniNewsSectionTitle"),
+      alumniNewsSectionDescription: formData.get("alumniNewsSectionDescription"),
+      alumniNewsSectionOrder: formData.get("alumniNewsSectionOrder"),
       donationsSectionEyebrow: formData.get("donationsSectionEyebrow"),
       donationsSectionTitle: formData.get("donationsSectionTitle"),
       donationsSectionDescription: formData.get("donationsSectionDescription"),
@@ -388,6 +424,8 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showFeaturedClips", label: "Mostrar shorts destacados", defaultChecked: config.showFeaturedClips },
     { name: "showLatestEpisodes", label: "Mostrar últimos episodios", defaultChecked: config.showLatestEpisodes },
     { name: "showSponsorsSection", label: "Mostrar sección aliados", defaultChecked: config.showSponsorsSection },
+    { name: "showNewsSection", label: "Mostrar Noticias", defaultChecked: config.showNewsSection },
+    { name: "showAlumniNewsSection", label: "Mostrar Noticias Alumni", defaultChecked: config.showAlumniNewsSection },
     { name: "showDonationsSection", label: "Mostrar Donaciones", defaultChecked: config.showDonationsSection },
     { name: "showGuestsSection", label: "Mostrar sección invitados", defaultChecked: config.showGuestsSection },
     { name: "showIdentitySection", label: "Mostrar identidad", defaultChecked: config.showIdentitySection },

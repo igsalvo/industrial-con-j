@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarDays, GraduationCap, Play, Podcast, Store, type LucideIcon } from "lucide-react";
+import { ArrowRight, CalendarDays, GraduationCap, Newspaper, Play, Podcast, Store, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
@@ -77,6 +77,7 @@ export function HeroSection({
     heroVideoEnabled?: boolean;
     showThemeToggle?: boolean;
     showPodcastSection?: boolean;
+    showNewsSection?: boolean;
     showEventsSection?: boolean;
     showHonorSection?: boolean;
     showProductsSection?: boolean;
@@ -99,6 +100,15 @@ export function HeroSection({
           title: "Podcast",
           description: "Conversaciones con voces de la comunidad industrial.",
           Icon: Podcast
+        }
+      : null,
+    config.showNewsSection !== false
+      ? {
+          href: "/news",
+          label: "Noticias",
+          title: "Noticias",
+          description: "Novedades e hitos de la comunidad industrial.",
+          Icon: Newspaper
         }
       : null,
     config.showEventsSection !== false

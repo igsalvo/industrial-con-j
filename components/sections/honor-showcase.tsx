@@ -67,7 +67,7 @@ function HonorPhoto({
       loading="eager"
       decoding={priority ? "sync" : "async"}
       fetchPriority={priority ? "high" : "auto"}
-      className={`h-full w-full object-cover ${className}`}
+      className={`block !h-full w-full object-cover ${className}`}
       style={{ objectPosition: photoPosition }}
     />
   );
@@ -152,17 +152,17 @@ export function HonorShowcase({ members }: { members: HonorMember[] }) {
           return (
             <article
               key={member.id}
-              className={`overflow-hidden rounded-xl border bg-white/[0.035] text-left transition ${index === activeIndex ? "border-[color:var(--accent)]" : "border-white/10 hover:border-white/25"}`}
+              className={`flex h-full min-h-[430px] flex-col overflow-hidden rounded-xl border bg-white/[0.035] text-left transition ${index === activeIndex ? "border-[color:var(--accent)]" : "border-white/10 hover:border-white/25"}`}
             >
-              <button type="button" onClick={() => setActiveIndex(index)} className="block w-full text-left">
-                <div className="aspect-square bg-white/5">
+              <button type="button" onClick={() => setActiveIndex(index)} className="block w-full shrink-0 text-left">
+                <div className="aspect-square overflow-hidden bg-white/5">
                   <HonorPhoto member={member} priority={index < 12} />
                 </div>
               </button>
-              <div className="p-4">
-                <h3 className="font-black leading-tight">{member.name}</h3>
+              <div className="flex flex-1 flex-col p-4">
+                <h3 className="line-clamp-3 min-h-[4.5rem] font-black leading-tight">{member.name}</h3>
                 {formatGeneration(member.generation) ? <p className="mt-2 text-base font-bold text-[color:var(--accent)]">{formatGeneration(member.generation)}</p> : null}
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-auto flex items-center gap-2 pt-5">
                   <button type="button" className="inline-flex min-h-10 items-center gap-2 text-sm text-white/80 transition hover:text-[color:var(--accent)]" onClick={() => setModalMember(member)}>
                     Ver perfil <ArrowRight size={14} />
                   </button>

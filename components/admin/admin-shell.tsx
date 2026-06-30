@@ -6,6 +6,7 @@ const links = [
   { href: "/admin/episodes", label: "Episodios" },
   { href: "/admin/guests", label: "Invitados" },
   { href: "/admin/sponsors", label: "Aliados" },
+  { href: "/admin/news", label: "Noticias" },
   { href: "/admin/media", label: "Imágenes" },
   { href: "/admin/identity", label: "Identidad" },
   { href: "/admin/honor", label: "Alumni" },

@@ -189,6 +189,8 @@ model SiteConfig {
   showFeaturedClips           Boolean  @default(true)
   showLatestEpisodes          Boolean  @default(true)
   showSponsorsSection         Boolean  @default(true)
+  showNewsSection             Boolean  @default(true)
+  showAlumniNewsSection       Boolean  @default(true)
   showRecommendedSection      Boolean  @default(true)
   showGuestsSection           Boolean  @default(true)
   showIdentitySection         Boolean  @default(true)
@@ -236,6 +238,14 @@ model SiteConfig {
   sponsorsSectionTitle        String?  @default("Aliados de Industrial con J")
   sponsorsSectionDescription  String?  @default("Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.")
   sponsorsSectionOrder        Int      @default(3)
+  newsSectionEyebrow          String?  @default("Noticias")
+  newsSectionTitle            String?  @default("Noticias de la comunidad")
+  newsSectionDescription      String?  @default("Actualizaciones, hitos y novedades del ecosistema Industrial con J.")
+  newsSectionOrder            Int      @default(4)
+  alumniNewsSectionEyebrow    String?  @default("Noticias Alumni")
+  alumniNewsSectionTitle      String?  @default("Noticias Alumni")
+  alumniNewsSectionDescription String? @default("Novedades y reconocimientos vinculados a alumni de Ingeniería Industrial.")
+  alumniNewsSectionOrder      Int      @default(8)
   donationsSectionEyebrow     String?  @default("Donaciones")
   donationsSectionTitle       String?  @default("Apoya nuevas conversaciones industriales")
   donationsSectionDescription String?  @default("Deja tus datos para coordinar una donacion, alianza o apoyo al proyecto.")
@@ -349,6 +359,30 @@ model HonorMember {
   updatedAt     DateTime @updatedAt
 
   @@index([isVisible, order])
+}
+
+model NewsItem {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  title              String
+  excerpt            String
+  body               String
+  imageUrl           String?
+  imagePositionX     String   @default("center")
+  imagePositionY     String   @default("center")
+  tags               String[]
+  ctaText            String?
+  ctaLink            String?
+  publishedAt        DateTime @default(now())
+  order              Int      @default(0)
+  showOnNews         Boolean  @default(true)
+  showOnAlumniNews   Boolean  @default(false)
+  isVisible          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([isVisible, showOnNews, publishedAt])
+  @@index([isVisible, showOnAlumniNews, publishedAt])
 }
 
 model ProductCategory {

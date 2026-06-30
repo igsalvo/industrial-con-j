@@ -5,6 +5,7 @@ const siteUrl = "https://industrialconj.cl";
 const publicRoutes = [
   "",
   "/podcast",
+  "/news",
   "/events",
   "/honor",
   "/guests",

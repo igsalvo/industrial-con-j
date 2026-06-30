@@ -1,9 +1,11 @@
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { HonorShowcase } from "@/components/sections/honor-showcase";
+import { NewsCardGrid } from "@/components/news/news-card-grid";
+import { SectionHeading } from "@/components/sections/section-heading";
 import { notFound } from "next/navigation";
 
 export default async function HonorPage() {
-  const [{ honorMembers }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
+  const [{ honorMembers, alumniNewsItems }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
   if (!siteConfig.showHonorSection) {
     notFound();
   }
@@ -25,6 +27,16 @@ export default async function HonorPage() {
             </p>
           </section>
           <HonorShowcase members={honorMembers} />
+          {siteConfig.showAlumniNewsSection ? (
+            <section className="pt-5">
+              <SectionHeading
+                eyebrow={siteConfig.alumniNewsSectionEyebrow || "Noticias Alumni"}
+                title={siteConfig.alumniNewsSectionTitle || "Noticias Alumni"}
+                description={siteConfig.alumniNewsSectionDescription || "Novedades y reconocimientos vinculados a alumni de Ingeniería Industrial."}
+              />
+              <NewsCardGrid items={alumniNewsItems} compact />
+            </section>
+          ) : null}
         </div>
       </main>
     </>

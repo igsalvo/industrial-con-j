@@ -14,7 +14,7 @@ async function safeQuery<T>(query: Promise<T>, fallback: T) {
 
 export default async function AdminDashboardPage() {
   const databaseReady = hasDatabase();
-  const [episodes, guests, sponsors, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, events, participationItems] = databaseReady
+  const [episodes, guests, sponsors, newsItems, surveys, messages, siteConfig, identityItems, honorMembers, products, categories, events, participationItems] = databaseReady
     ? await Promise.all([
         safeQuery(prisma.episode.findMany({
           orderBy: { updatedAt: "desc" },
@@ -25,6 +25,10 @@ export default async function AdminDashboardPage() {
           take: 5
         }), []),
         safeQuery(prisma.sponsor.findMany({
+          orderBy: { updatedAt: "desc" },
+          take: 5
+        }), []),
+        safeQuery(prisma.newsItem.findMany({
           orderBy: { updatedAt: "desc" },
           take: 5
         }), []),
@@ -44,7 +48,7 @@ export default async function AdminDashboardPage() {
         safeQuery(prisma.event.findMany({ orderBy: { startsAt: "asc" }, take: 5 }), []),
         safeQuery(prisma.participationItem.findMany({ orderBy: { updatedAt: "desc" }, take: 5 }), [])
       ])
-    : [[], [], [], [], [], null, [], [], [], [], [], []];
+    : [[], [], [], [], [], [], null, [], [], [], [], [], []];
 
   return (
     <div className="space-y-6">
@@ -85,6 +89,11 @@ export default async function AdminDashboardPage() {
             title: "Aliados",
             text: "Crear, editar y organizar aliados.",
             href: "/admin/sponsors"
+          },
+          {
+            title: "Noticias",
+            text: "Crear noticias y elegir dónde se muestran.",
+            href: "/admin/news"
           },
           {
             title: "Encuestas",
@@ -215,6 +224,10 @@ export default async function AdminDashboardPage() {
                 <Link href="/admin/surveys" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Encuestas</span>
                   <span className="text-xs text-[color:var(--muted)]">{surveys.length} registros</span>
+                </Link>
+                <Link href="/admin/news" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
+                  <span className="font-semibold">Noticias</span>
+                  <span className="text-xs text-[color:var(--muted)]">{newsItems.length} registros</span>
                 </Link>
                 <Link href="/admin/messages" className="flex items-center justify-between rounded-2xl border border-[color:var(--line)] p-4">
                   <span className="font-semibold">Bandeja</span>

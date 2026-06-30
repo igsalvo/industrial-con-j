@@ -7,6 +7,8 @@ export const defaultSiteConfig = {
   showFeaturedClips: true,
   showLatestEpisodes: true,
   showSponsorsSection: true,
+  showNewsSection: true,
+  showAlumniNewsSection: true,
   showRecommendedSection: false,
   showGuestsSection: true,
   showIdentitySection: true,
@@ -55,6 +57,14 @@ export const defaultSiteConfig = {
   sponsorsSectionTitle: "Aliados de Industrial con J",
   sponsorsSectionDescription: "Organizaciones que impulsan esta comunidad de conversaciones, eventos e iniciativas en torno a la Ingeniería Industrial.",
   sponsorsSectionOrder: 3,
+  newsSectionEyebrow: "Noticias",
+  newsSectionTitle: "Noticias de la comunidad",
+  newsSectionDescription: "Actualizaciones, hitos y novedades del ecosistema Industrial con J.",
+  newsSectionOrder: 4,
+  alumniNewsSectionEyebrow: "Noticias Alumni",
+  alumniNewsSectionTitle: "Noticias Alumni",
+  alumniNewsSectionDescription: "Novedades y reconocimientos vinculados a alumni de Ingeniería Industrial.",
+  alumniNewsSectionOrder: 8,
   donationsSectionEyebrow: "Donaciones",
   donationsSectionTitle: "Apoya nuevas conversaciones industriales",
   donationsSectionDescription: "Deja tus datos para coordinar una donación, alianza o apoyo al proyecto.",
@@ -168,6 +178,22 @@ export type PublicMediaItem = {
   isFeatured: boolean;
 };
 
+export type PublicNewsItem = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  imageUrl: string | null;
+  imagePositionX: string;
+  imagePositionY: string;
+  tags: string[];
+  ctaText: string | null;
+  ctaLink: string | null;
+  publishedAt: Date;
+  order: number;
+};
+
 export async function getMediaItems(section: string): Promise<PublicMediaItem[]> {
   if (!hasDatabase()) {
     return [];
@@ -207,6 +233,7 @@ export async function getHomepageData() {
       latestEpisodes: [],
       recommendedEpisodes: [],
       sponsors: [],
+      newsItems: [],
       guests: [],
       identityItems: [],
       honorMembers: [],
@@ -217,7 +244,7 @@ export async function getHomepageData() {
   }
 
   try {
-    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems] = await Promise.all([
+    const [featuredClips, latestEpisodes, recommendedEpisodes, sponsors, newsItems, guests, identityItems, honorMembers, products, events, participationItems] = await Promise.all([
       prisma.episode.findMany({
         where: {
           isVisible: true,
@@ -242,6 +269,11 @@ export async function getHomepageData() {
       prisma.sponsor.findMany({
         where: { isVisible: true },
         orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+      }),
+      prisma.newsItem.findMany({
+        where: { isVisible: true, showOnNews: true },
+        orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
+        take: 4
       }),
       prisma.guest.findMany({
         where: { isVisible: true },
@@ -276,7 +308,7 @@ export async function getHomepageData() {
       })
     ]);
 
-    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, guests, identityItems, honorMembers, products, events, participationItems };
+    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, newsItems, guests, identityItems, honorMembers, products, events, participationItems };
   } catch (error) {
     console.error("Homepage data query failed", error);
     return {
@@ -284,6 +316,7 @@ export async function getHomepageData() {
       latestEpisodes: [],
       recommendedEpisodes: [],
       sponsors: [],
+      newsItems: [],
       guests: [],
       identityItems: [],
       honorMembers: [],
@@ -296,11 +329,11 @@ export async function getHomepageData() {
 
 export async function getPublicSectionsData() {
   if (!hasDatabase()) {
-    return { identityItems: [], honorMembers: [], products: [], categories: [], events: [], participationItems: [] };
+    return { identityItems: [], honorMembers: [], newsItems: [], alumniNewsItems: [], products: [], categories: [], events: [], participationItems: [] };
   }
 
   try {
-    const [identityItems, honorMembers, products, categories, events, participationItems] = await Promise.all([
+    const [identityItems, honorMembers, newsItems, alumniNewsItems, products, categories, events, participationItems] = await Promise.all([
       prisma.identityItem.findMany({
         where: { isVisible: true },
         orderBy: [{ order: "asc" }, { updatedAt: "desc" }]
@@ -308,6 +341,14 @@ export async function getPublicSectionsData() {
       prisma.honorMember.findMany({
         where: { isVisible: true },
         orderBy: [{ name: "asc" }]
+      }),
+      prisma.newsItem.findMany({
+        where: { isVisible: true, showOnNews: true },
+        orderBy: [{ order: "asc" }, { publishedAt: "desc" }]
+      }),
+      prisma.newsItem.findMany({
+        where: { isVisible: true, showOnAlumniNews: true },
+        orderBy: [{ order: "asc" }, { publishedAt: "desc" }]
       }),
       prisma.product.findMany({
         where: { isVisible: true, category: { isVisible: true } },
@@ -328,9 +369,9 @@ export async function getPublicSectionsData() {
       })
     ]);
 
-    return { identityItems, honorMembers, products, categories, events, participationItems };
+    return { identityItems, honorMembers, newsItems, alumniNewsItems, products, categories, events, participationItems };
   } catch {
-    return { identityItems: [], honorMembers: [], products: [], categories: [], events: [], participationItems: [] };
+    return { identityItems: [], honorMembers: [], newsItems: [], alumniNewsItems: [], products: [], categories: [], events: [], participationItems: [] };
   }
 }
 

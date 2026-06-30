@@ -11,6 +11,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const links = [
   { href: "/podcast", label: "Podcast" },
+  { href: "/news", label: "Noticias" },
   { href: "/events", label: "Eventos" },
   { href: "/identity", label: "Identidad" },
   { href: "/honor", label: "Alumni" },
@@ -29,6 +30,7 @@ function getNavigationEvent(href: string) {
 
 export function SiteHeader({
   showPodcastLink = true,
+  showNewsLink = true,
   showEventsLink = true,
   showHonorLink = true,
   showProductsLink = true,
@@ -40,6 +42,7 @@ export function SiteHeader({
   logoUrl
 }: {
   showPodcastLink?: boolean;
+  showNewsLink?: boolean;
   showEventsLink?: boolean;
   showHonorLink?: boolean;
   showProductsLink?: boolean;
@@ -60,6 +63,10 @@ export function SiteHeader({
   const visibleLinks = links.filter((link) => {
     if (link.href === "/podcast") {
       return showPodcastLink;
+    }
+
+    if (link.href === "/news") {
+      return showNewsLink;
     }
 
     if (link.href === "/events") {

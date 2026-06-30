@@ -180,6 +180,24 @@ export const honorMemberInputSchema = z.object({
   isVisible: z.boolean().default(true)
 });
 
+export const newsItemInputSchema = z.object({
+  title: z.string().trim().min(1),
+  slug: z.string().trim().optional().or(z.literal("")),
+  excerpt: z.string().trim().min(1),
+  body: z.string().trim().min(1),
+  imageUrl: optionalUrl,
+  imagePositionX: objectPositionX,
+  imagePositionY: objectPositionY,
+  tags: z.string().optional(),
+  ctaText: z.string().trim().optional().or(z.literal("")),
+  ctaLink: optionalUrl,
+  publishedAt: z.string().optional(),
+  order: z.coerce.number().int().default(0),
+  showOnNews: z.boolean().default(true),
+  showOnAlumniNews: z.boolean().default(false),
+  isVisible: z.boolean().default(true)
+});
+
 export const productCategoryInputSchema = z.object({
   name: z.string().trim().min(1),
   slug: z.string().trim().optional().or(z.literal("")),
@@ -343,6 +361,26 @@ export function toHonorMemberPayload(input: z.infer<typeof honorMemberInputSchem
     generation: input.generation || undefined,
     externalLinks: input.externalLinks,
     order: input.order,
+    isVisible: input.isVisible
+  };
+}
+
+export function toNewsItemPayload(input: z.infer<typeof newsItemInputSchema>) {
+  return {
+    title: input.title,
+    slug: input.slug?.trim() || slugify(input.title),
+    excerpt: input.excerpt,
+    body: input.body,
+    imageUrl: input.imageUrl,
+    imagePositionX: input.imagePositionX,
+    imagePositionY: input.imagePositionY,
+    tags: normalizeList(input.tags || ""),
+    ctaText: input.ctaText || undefined,
+    ctaLink: input.ctaLink,
+    publishedAt: input.publishedAt ? parseChileDateTimeLocal(input.publishedAt) : new Date(),
+    order: input.order,
+    showOnNews: input.showOnNews,
+    showOnAlumniNews: input.showOnAlumniNews,
     isVisible: input.isVisible
   };
 }

@@ -8,6 +8,8 @@ const publicRoutes = [
   "/news",
   "/events",
   "/honor",
+  "/honor/circulo-de-honor",
+  "/honor/noticias-alumni",
   "/guests",
   "/sponsors",
   "/donations",

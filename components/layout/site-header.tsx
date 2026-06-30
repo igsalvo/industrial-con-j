@@ -21,8 +21,8 @@ const links = [
 ];
 
 const alumniLinks = [
-  { href: "/honor#circulo-de-honor", label: "Círculo de honor" },
-  { href: "/honor#noticias-alumni", label: "Noticias Alumni" }
+  { href: "/honor/circulo-de-honor", label: "Círculo de honor" },
+  { href: "/honor/noticias-alumni", label: "Noticias Alumni" }
 ];
 
 function getNavigationEvent(href: string) {

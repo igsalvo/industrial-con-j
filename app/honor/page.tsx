@@ -1,15 +1,14 @@
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
-import { AlumniTabs } from "@/components/sections/alumni-tabs";
+import { HonorShowcase } from "@/components/sections/honor-showcase";
 import { notFound } from "next/navigation";
 
 export default async function HonorPage() {
-  const [{ honorMembers, alumniNewsItems }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
+  const [{ honorMembers }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
   if (!siteConfig.showHonorSection) {
     notFound();
   }
 
   const preloadedPhotoUrls = Array.from(new Set(honorMembers.map((member) => member.photoUrl).filter((photoUrl): photoUrl is string => Boolean(photoUrl)))).slice(0, 24);
-  const showAlumniNews = siteConfig.showAlumniNewsSection !== false;
 
   return (
     <>
@@ -25,14 +24,7 @@ export default async function HonorPage() {
               {siteConfig.honorSectionDescription || "Reconocimiento a egresados y egresadas de Ingeniería Industrial que han dejado una huella significativa en la industria, la sociedad y el desarrollo del país."}
             </p>
           </section>
-          <AlumniTabs
-            members={honorMembers}
-            newsItems={alumniNewsItems}
-            showNews={showAlumniNews}
-            newsEyebrow={siteConfig.alumniNewsSectionEyebrow || "Noticias Alumni"}
-            newsTitle={siteConfig.alumniNewsSectionTitle || "Noticias Alumni"}
-            newsDescription={siteConfig.alumniNewsSectionDescription || "Novedades y reconocimientos vinculados a alumni de Ingeniería Industrial."}
-          />
+          <HonorShowcase members={honorMembers} />
         </div>
       </main>
     </>

@@ -3,6 +3,7 @@ import { HonorShowcase } from "@/components/sections/honor-showcase";
 import { NewsCardGrid } from "@/components/news/news-card-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function HonorPage() {
   const [{ honorMembers, alumniNewsItems }, siteConfig] = await Promise.all([getPublicSectionsData(), getSiteConfig()]);
@@ -11,7 +12,7 @@ export default async function HonorPage() {
   }
 
   const preloadedPhotoUrls = Array.from(new Set(honorMembers.map((member) => member.photoUrl).filter((photoUrl): photoUrl is string => Boolean(photoUrl)))).slice(0, 24);
-  const showAlumniNews = alumniNewsItems.length > 0 && siteConfig.showAlumniNewsSection !== false;
+  const showAlumniNews = siteConfig.showAlumniNewsSection !== false;
 
   return (
     <>
@@ -27,9 +28,19 @@ export default async function HonorPage() {
               {siteConfig.honorSectionDescription || "Reconocimiento a egresados y egresadas de Ingeniería Industrial que han dejado una huella significativa en la industria, la sociedad y el desarrollo del país."}
             </p>
           </section>
-          <HonorShowcase members={honorMembers} />
+          <nav className="grid overflow-hidden rounded-2xl border border-white/10 bg-[color:var(--accent)] text-center text-sm font-black uppercase tracking-[0.08em] text-white sm:grid-cols-2">
+            <Link href="#circulo-de-honor" className="px-5 py-4 transition hover:bg-white/10">
+              Círculo de honor
+            </Link>
+            <Link href="#noticias-alumni" className="border-t border-white/15 px-5 py-4 transition hover:bg-white/10 sm:border-l sm:border-t-0">
+              Noticias Alumni
+            </Link>
+          </nav>
+          <section id="circulo-de-honor" className="scroll-mt-28">
+            <HonorShowcase members={honorMembers} />
+          </section>
           {showAlumniNews ? (
-            <section className="pt-5">
+            <section id="noticias-alumni" className="scroll-mt-28 pt-5">
               <SectionHeading
                 eyebrow={siteConfig.alumniNewsSectionEyebrow || "Noticias Alumni"}
                 title={siteConfig.alumniNewsSectionTitle || "Noticias Alumni"}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { ChevronDown, Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -18,6 +18,11 @@ const links = [
   { href: "/tiendiita", label: "TienDIIta" },
   { href: "/donations", label: "Donaciones", cta: true },
   { href: "/contact", label: "Contacto" }
+];
+
+const alumniLinks = [
+  { href: "/honor#circulo-de-honor", label: "Círculo de honor" },
+  { href: "/honor#noticias-alumni", label: "Noticias Alumni" }
 ];
 
 function getNavigationEvent(href: string) {
@@ -189,6 +194,34 @@ export function SiteHeader({
             {visibleLinks.map((link) => {
               const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
 
+              if (link.href === "/honor") {
+                return (
+                  <div key={link.href} className="group relative">
+                    <Link
+                      href={link.href}
+                      className={`inline-flex items-center gap-1 text-base transition hover:text-[color:var(--foreground)] ${isActive ? "text-[color:var(--foreground)]" : "text-[color:var(--muted)]"}`}
+                      aria-current={isActive ? "page" : undefined}
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                      onClick={() => trackNavigation(link.href, link.label, "header_nav")}
+                    >
+                      {link.label}
+                      <ChevronDown size={15} />
+                    </Link>
+                    <div className="invisible absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-2 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                      {alumniLinks.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="block rounded-xl px-4 py-3 text-sm font-semibold text-[color:var(--foreground)] transition hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={link.href}
@@ -284,6 +317,36 @@ export function SiteHeader({
             <nav className="grid gap-2">
               {visibleLinks.map((link) => {
                 const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+                if (link.href === "/honor") {
+                  return (
+                    <div key={link.href} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-2">
+                      <Link
+                        href={link.href}
+                        className={`flex items-center justify-between rounded-xl px-3 py-3 text-base font-semibold transition ${
+                          isActive ? "bg-[color:var(--accent-soft)] text-[color:var(--foreground)]" : "text-[color:var(--foreground)]"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                        onClick={() => trackNavigation(link.href, link.label, "mobile_nav")}
+                      >
+                        {link.label}
+                        <ChevronDown size={16} />
+                      </Link>
+                      <div className="mt-1 grid gap-1">
+                        {alumniLinks.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className="rounded-xl px-3 py-2 text-sm font-semibold text-[color:var(--muted)] transition hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
 
                 return (
                   <Link

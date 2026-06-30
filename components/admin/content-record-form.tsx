@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Bold, Eye, Heading2, ImageIcon, LinkIcon, Palette } from "lucide-react";
 import { UploadField } from "@/components/admin/upload-field";
+import { RichNewsBody } from "@/components/news/rich-news-body";
 
 type Field =
-  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "select" | "url" | "image" | "images" | "checkbox" | "json" | "linkedin"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
+  | { name: string; label: string; type?: "text" | "number" | "datetime-local" | "textarea" | "rich-news" | "select" | "url" | "image" | "images" | "checkbox" | "json" | "linkedin"; required?: boolean; options?: ReadonlyArray<{ label: string; value: string }>; defaultChecked?: boolean };
 
 type ContentRecordFormProps = {
   mode: "create" | "edit";
@@ -101,6 +103,115 @@ function ImageListField({ name, label, defaultValue }: { name: string; label: st
   );
 }
 
+function RichNewsEditor({ name, label, defaultValue, required }: { name: string; label: string; defaultValue: string; required?: boolean }) {
+  const [value, setValue] = useState(defaultValue);
+  const [showPreview, setShowPreview] = useState(true);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function updateSelection(nextValue: string, selectionStart: number, selectionEnd = selectionStart) {
+    setValue(nextValue);
+    window.requestAnimationFrame(() => {
+      textareaRef.current?.focus();
+      textareaRef.current?.setSelectionRange(selectionStart, selectionEnd);
+    });
+  }
+
+  function wrapSelection(before: string, after: string, fallback: string) {
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? value.length;
+    const end = textarea?.selectionEnd ?? value.length;
+    const selected = value.slice(start, end) || fallback;
+    const nextValue = `${value.slice(0, start)}${before}${selected}${after}${value.slice(end)}`;
+    updateSelection(nextValue, start + before.length, start + before.length + selected.length);
+  }
+
+  function insertBlock(content: string) {
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? value.length;
+    const prefix = start > 0 && !value.slice(0, start).endsWith("\n") ? "\n\n" : "";
+    const suffix = value.slice(start).startsWith("\n") ? "" : "\n\n";
+    const nextValue = `${value.slice(0, start)}${prefix}${content}${suffix}${value.slice(start)}`;
+    const cursor = start + prefix.length + content.length;
+    updateSelection(nextValue, cursor);
+  }
+
+  function addLink() {
+    const href = window.prompt("Pega el link completo");
+    if (!href) return;
+    wrapSelection("[", `](${href.trim()})`, "texto del link");
+  }
+
+  function addColor() {
+    const color = window.prompt("Color de la letra, por ejemplo #d70904", "#d70904");
+    if (!color) return;
+    wrapSelection(`[color=${color.trim()}]`, "[/color]", "texto con color");
+  }
+
+  function addImage() {
+    const imageUrl = window.prompt("Pega el link de la imagen");
+    if (!imageUrl) return;
+    insertBlock(imageUrl.trim());
+  }
+
+  return (
+    <div className="space-y-3 md:col-span-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span className="block text-sm font-semibold">{label}</span>
+          <p className="mt-1 text-xs text-[color:var(--muted)]">Selecciona texto y usa los botones. Para una imagen, pega el link o usa el botón de imagen.</p>
+        </div>
+        <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={() => setShowPreview((current) => !current)}>
+          <Eye size={14} />
+          {showPreview ? "Ocultar vista previa" : "Ver vista previa"}
+        </button>
+      </div>
+      <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)]">
+        <div className="flex flex-wrap gap-2 border-b border-[color:var(--line)] p-3">
+          <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={() => wrapSelection("**", "**", "texto en negrita")}>
+            <Bold size={14} />
+            Negrita
+          </button>
+          <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={() => insertBlock("## Subtítulo")}>
+            <Heading2 size={14} />
+            Subtítulo
+          </button>
+          <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={addColor}>
+            <Palette size={14} />
+            Color
+          </button>
+          <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={addLink}>
+            <LinkIcon size={14} />
+            Link
+          </button>
+          <button type="button" className="btn-secondary gap-2 !px-3 !py-2 text-xs" onClick={addImage}>
+            <ImageIcon size={14} />
+            Imagen
+          </button>
+        </div>
+        <div className={`grid gap-0 ${showPreview ? "xl:grid-cols-2" : ""}`}>
+          <textarea
+            ref={textareaRef}
+            className="min-h-[420px] w-full resize-y border-0 bg-transparent p-4 text-base leading-7 outline-none"
+            name={name}
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            required={required}
+            placeholder="Escribe la noticia aquí..."
+          />
+          {showPreview ? (
+            <div className="min-h-[420px] border-t border-[color:var(--line)] bg-[color:var(--surface-strong)] p-4 xl:border-l xl:border-t-0">
+              <p className="text-xs font-semibold uppercase text-[color:var(--muted)]">Vista previa</p>
+              <div className="prose-preview mt-3">
+                {value.trim() ? <RichNewsBody body={value} /> : <p className="text-sm text-[color:var(--muted)]">La vista previa aparecerá aquí.</p>}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, record, fields }: ContentRecordFormProps) {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -180,6 +291,9 @@ export function ContentRecordForm({ mode, endpoint, backHref, submitLabel, recor
                 {field.label}
               </label>
             );
+          }
+          if (field.type === "rich-news") {
+            return <RichNewsEditor key={field.name} name={field.name} label={field.label} defaultValue={defaultValue} required={field.required} />;
           }
           if (field.type === "textarea" || field.type === "json") {
             return (

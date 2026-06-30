@@ -17,7 +17,10 @@ export function NewsFeaturedLoop({
 }) {
   const loopItems = useMemo(() => items.slice(0, 4), [items]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeItem = loopItems[activeIndex] || loopItems[0];
+  const visibleItems = useMemo(() => {
+    if (loopItems.length <= 1) return loopItems;
+    return [...loopItems.slice(activeIndex), ...loopItems.slice(0, activeIndex)];
+  }, [activeIndex, loopItems]);
 
   useEffect(() => {
     if (loopItems.length <= 1) {
@@ -31,7 +34,7 @@ export function NewsFeaturedLoop({
     return () => window.clearInterval(timer);
   }, [loopItems.length]);
 
-  if (loopItems.length === 0 || !activeItem) {
+  if (loopItems.length === 0) {
     return (
       <div className="space-y-5">
         <p className="rounded-2xl border border-[color:var(--line)] p-5 text-sm text-[color:var(--muted)]">Aún no hay noticias publicadas.</p>
@@ -43,49 +46,55 @@ export function NewsFeaturedLoop({
     );
   }
 
-  const objectPosition = `${activeItem.imagePositionX || "center"} ${activeItem.imagePositionY || "center"}`;
-
   function move(step: number) {
     setActiveIndex((current) => (current + step + loopItems.length) % loopItems.length);
   }
 
   return (
     <section className="space-y-5" aria-label="Noticias destacadas">
-      <article className={`card overflow-hidden ${compact ? "" : "lg:grid lg:grid-cols-[1.1fr_0.9fr]"}`}>
-        <div className="aspect-[16/10] min-h-[260px] bg-[color:var(--surface-strong)] lg:aspect-auto">
-          {activeItem.imageUrl ? <img src={activeItem.imageUrl} alt={activeItem.title} className="h-full w-full object-cover" style={{ objectPosition }} /> : null}
-        </div>
-        <div className="flex min-h-[360px] flex-col p-6 sm:p-8">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs font-semibold uppercase text-[color:var(--muted)]">{formatDate(activeItem.publishedAt)}</p>
-            {activeItem.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] font-semibold uppercase text-[color:var(--muted)]">{tag}</span>
-            ))}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link href={moreHref} className="btn-secondary gap-2">
+          Ver más noticias
+          <ArrowUpRight size={16} />
+        </Link>
+        {loopItems.length > 1 ? (
+          <div className="flex items-center gap-2">
+            <button type="button" className="btn-secondary !p-3" onClick={() => move(-1)} aria-label="Noticia anterior">
+              <ChevronLeft size={17} />
+            </button>
+            <button type="button" className="btn-secondary !p-3" onClick={() => move(1)} aria-label="Siguiente noticia">
+              <ChevronRight size={17} />
+            </button>
           </div>
-          <h2 className="mt-5 text-[clamp(2rem,5vw,3.1rem)] font-black leading-tight">{activeItem.title}</h2>
-          <p className="mt-4 line-clamp-4 text-base leading-7 text-[color:var(--muted)]">{activeItem.excerpt}</p>
-          <div className="mt-auto flex flex-wrap items-center gap-3 pt-7">
-            <Link href={`/news/${activeItem.slug}`} className="btn-primary gap-2">
-              Ver más
-              <ArrowUpRight size={16} />
-            </Link>
-            <Link href={moreHref} className="btn-secondary gap-2">
-              Ver más noticias
-              <ArrowUpRight size={16} />
-            </Link>
-            {loopItems.length > 1 ? (
-              <div className="ml-auto flex items-center gap-2">
-                <button type="button" className="btn-secondary !p-3" onClick={() => move(-1)} aria-label="Noticia anterior">
-                  <ChevronLeft size={17} />
-                </button>
-                <button type="button" className="btn-secondary !p-3" onClick={() => move(1)} aria-label="Siguiente noticia">
-                  <ChevronRight size={17} />
-                </button>
+        ) : null}
+      </div>
+      <div className={`grid auto-rows-fr gap-5 ${compact ? "md:grid-cols-2 xl:grid-cols-4" : "md:grid-cols-2 xl:grid-cols-4"}`}>
+        {visibleItems.map((item, index) => {
+          const objectPosition = `${item.imagePositionX || "center"} ${item.imagePositionY || "center"}`;
+
+          return (
+            <article key={`${item.id}-${index}`} className="card flex h-full min-h-[390px] flex-col overflow-hidden">
+              <div className="aspect-[16/9] shrink-0 bg-[color:var(--surface-strong)]">
+                {item.imageUrl ? <img src={item.imageUrl} alt={item.title} className="h-full w-full object-cover" style={{ objectPosition }} /> : null}
               </div>
-            ) : null}
-          </div>
-        </div>
-      </article>
+              <div className="flex flex-1 flex-col p-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs font-semibold uppercase text-[color:var(--muted)]">{formatDate(item.publishedAt)}</p>
+                  {item.tags.slice(0, 1).map((tag) => (
+                    <span key={tag} className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[10px] font-semibold uppercase text-[color:var(--muted)]">{tag}</span>
+                  ))}
+                </div>
+                <h2 className="mt-4 line-clamp-2 text-2xl font-black leading-tight">{item.title}</h2>
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-[color:var(--muted)]">{item.excerpt}</p>
+                <Link href={`/news/${item.slug}`} className="btn-primary mt-auto w-full gap-2 !px-4 !py-2 text-sm">
+                  Ver más
+                  <ArrowUpRight size={15} />
+                </Link>
+              </div>
+            </article>
+          );
+        })}
+      </div>
       {loopItems.length > 1 ? (
         <div className="flex flex-wrap gap-2">
           {loopItems.map((item, index) => (

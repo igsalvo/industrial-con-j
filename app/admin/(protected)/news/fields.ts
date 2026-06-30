@@ -2,7 +2,7 @@ export const newsFields = [
   { name: "title", label: "Título", required: true },
   { name: "slug", label: "Slug opcional" },
   { name: "excerpt", label: "Bajada / resumen", type: "textarea", required: true },
-  { name: "body", label: "Contenido (**negrita**, [texto](https://...), [color=#d70904]texto[/color], URL de imagen sola en una línea)", type: "textarea", required: true },
+  { name: "body", label: "Contenido", type: "rich-news", required: true },
   { name: "imageUrl", label: "Imagen opcional", type: "image" },
   { name: "imagePositionX", label: "Encuadre horizontal", type: "select", options: [{ label: "Izquierda", value: "left" }, { label: "Centro", value: "center" }, { label: "Derecha", value: "right" }] },
   { name: "imagePositionY", label: "Encuadre vertical", type: "select", options: [{ label: "Arriba", value: "top" }, { label: "Centro", value: "center" }, { label: "Abajo", value: "bottom" }] },

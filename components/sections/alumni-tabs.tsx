@@ -52,43 +52,8 @@ export function AlumniTabs({
     return () => window.removeEventListener("hashchange", syncHash);
   }, [showNews]);
 
-  function selectTab(nextTab: AlumniTab) {
-    if (nextTab === "news" && !showNews) {
-      return;
-    }
-
-    setActiveTab(nextTab);
-    const hash = nextTab === "news" ? "#noticias-alumni" : "#circulo-de-honor";
-    window.history.replaceState(null, "", hash);
-  }
-
   return (
     <div className="space-y-5">
-      <div className={`grid overflow-hidden rounded-2xl border border-white/10 bg-[color:var(--accent)] text-center text-sm font-black uppercase tracking-[0.08em] text-white ${showNews ? "sm:grid-cols-2" : ""}`} role="tablist" aria-label="Secciones Alumni">
-        <button
-          type="button"
-          className={`px-5 py-4 transition ${activeTab === "honor" ? "bg-white/18" : "hover:bg-white/10"}`}
-          role="tab"
-          aria-selected={activeTab === "honor"}
-          aria-controls="circulo-de-honor"
-          onClick={() => selectTab("honor")}
-        >
-          Círculo de honor
-        </button>
-        {showNews ? (
-          <button
-            type="button"
-            className={`border-t border-white/15 px-5 py-4 transition sm:border-l sm:border-t-0 ${activeTab === "news" ? "bg-white/18" : "hover:bg-white/10"}`}
-            role="tab"
-            aria-selected={activeTab === "news"}
-            aria-controls="noticias-alumni"
-            onClick={() => selectTab("news")}
-          >
-            Noticias Alumni
-          </button>
-        ) : null}
-      </div>
-
       <section id="circulo-de-honor" role="tabpanel" hidden={activeTab !== "honor"}>
         <HonorShowcase members={members} />
       </section>

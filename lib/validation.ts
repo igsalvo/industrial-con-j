@@ -194,6 +194,7 @@ export const newsItemInputSchema = z.object({
   ctaLink: optionalUrl,
   publishedAt: z.string().optional(),
   order: z.coerce.number().int().default(0),
+  isPinned: z.boolean().default(false),
   placement: newsPlacement,
   showOnNews: z.boolean().default(true),
   showOnAlumniNews: z.boolean().default(false),
@@ -383,6 +384,7 @@ export function toNewsItemPayload(input: z.infer<typeof newsItemInputSchema>) {
     ctaLink: input.ctaLink,
     publishedAt: input.publishedAt ? parseChileDateTimeLocal(input.publishedAt) : new Date(),
     order: input.order,
+    isPinned: input.isPinned,
     showOnNews: placement === "NEWS" || placement === "BOTH",
     showOnAlumniNews: placement === "ALUMNI" || placement === "BOTH",
     isVisible: input.isVisible

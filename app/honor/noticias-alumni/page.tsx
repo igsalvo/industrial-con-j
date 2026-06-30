@@ -1,4 +1,4 @@
-import { NewsCardGrid } from "@/components/news/news-card-grid";
+import { NewsFeaturedLoop } from "@/components/news/news-featured-loop";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { notFound } from "next/navigation";
@@ -17,7 +17,7 @@ export default async function AlumniNewsPage() {
           title={siteConfig.alumniNewsSectionTitle || "Noticias Alumni"}
           description={siteConfig.alumniNewsSectionDescription || "Novedades y reconocimientos vinculados a alumni de Ingeniería Industrial."}
         />
-        <NewsCardGrid items={alumniNewsItems} compact />
+        <NewsFeaturedLoop items={alumniNewsItems} moreHref="/honor/noticias-alumni/todas" compact />
       </div>
     </main>
   );

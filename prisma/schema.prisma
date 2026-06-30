@@ -375,6 +375,7 @@ model NewsItem {
   ctaLink            String?
   publishedAt        DateTime @default(now())
   order              Int      @default(0)
+  isPinned           Boolean  @default(false)
   showOnNews         Boolean  @default(true)
   showOnAlumniNews   Boolean  @default(false)
   isVisible          Boolean  @default(true)
@@ -383,6 +384,7 @@ model NewsItem {
 
   @@index([isVisible, showOnNews, publishedAt])
   @@index([isVisible, showOnAlumniNews, publishedAt])
+  @@index([isVisible, isPinned, publishedAt])
 }
 
 model ProductCategory {

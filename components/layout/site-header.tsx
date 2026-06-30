@@ -197,16 +197,16 @@ export function SiteHeader({
               if (link.href === "/honor") {
                 return (
                   <div key={link.href} className="group relative">
-                    <Link
-                      href={link.href}
+                    <button
+                      type="button"
                       className={`inline-flex items-center gap-1 text-base transition hover:text-[color:var(--foreground)] ${isActive ? "text-[color:var(--foreground)]" : "text-[color:var(--muted)]"}`}
                       aria-current={isActive ? "page" : undefined}
+                      aria-haspopup="menu"
                       style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
-                      onClick={() => trackNavigation(link.href, link.label, "header_nav")}
                     >
                       {link.label}
                       <ChevronDown size={15} />
-                    </Link>
+                    </button>
                     <div className="invisible absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-2 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                       {alumniLinks.map((item) => (
                         <Link
@@ -321,17 +321,17 @@ export function SiteHeader({
                 if (link.href === "/honor") {
                   return (
                     <div key={link.href} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface-strong)] p-2">
-                      <Link
-                        href={link.href}
-                        className={`flex items-center justify-between rounded-xl px-3 py-3 text-base font-semibold transition ${
+                      <button
+                        type="button"
+                        className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-base font-semibold transition ${
                           isActive ? "bg-[color:var(--accent-soft)] text-[color:var(--foreground)]" : "text-[color:var(--foreground)]"
                         }`}
                         aria-current={isActive ? "page" : undefined}
-                        onClick={() => trackNavigation(link.href, link.label, "mobile_nav")}
+                        aria-haspopup="menu"
                       >
                         {link.label}
                         <ChevronDown size={16} />
-                      </Link>
+                      </button>
                       <div className="mt-1 grid gap-1">
                         {alumniLinks.map((item) => (
                           <Link

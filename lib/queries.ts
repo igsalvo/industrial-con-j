@@ -192,7 +192,31 @@ export type PublicNewsItem = {
   ctaLink: string | null;
   publishedAt: Date;
   order: number;
+  isPinned: boolean;
 };
+
+type NewsScope = "news" | "alumni";
+
+function getNewsScopeWhere(scope: NewsScope) {
+  return scope === "alumni" ? { isVisible: true, showOnAlumniNews: true } : { isVisible: true, showOnNews: true };
+}
+
+function sortNewsByPublishedAt(items: PublicNewsItem[]) {
+  return [...items].sort((a, b) => {
+    const byDate = b.publishedAt.getTime() - a.publishedAt.getTime();
+    return byDate || a.order - b.order;
+  });
+}
+
+function pickFeaturedNewsItems(items: PublicNewsItem[], limit = 4) {
+  const pinned = sortNewsByPublishedAt(items.filter((item) => item.isPinned)).slice(0, limit);
+  if (pinned.length >= limit) {
+    return pinned;
+  }
+
+  const recent = sortNewsByPublishedAt(items.filter((item) => !item.isPinned)).slice(0, limit - pinned.length);
+  return [...pinned, ...recent];
+}
 
 export async function getMediaItems(section: string): Promise<PublicMediaItem[]> {
   if (!hasDatabase()) {
@@ -272,8 +296,8 @@ export async function getHomepageData() {
       }),
       prisma.newsItem.findMany({
         where: { isVisible: true, showOnNews: true },
-        orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
-        take: 4
+        orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }, { order: "asc" }],
+        take: 12
       }),
       prisma.guest.findMany({
         where: { isVisible: true },
@@ -308,7 +332,7 @@ export async function getHomepageData() {
       })
     ]);
 
-    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, newsItems, guests, identityItems, honorMembers, products, events, participationItems };
+    return { featuredClips, latestEpisodes, recommendedEpisodes, sponsors, newsItems: pickFeaturedNewsItems(newsItems), guests, identityItems, honorMembers, products, events, participationItems };
   } catch (error) {
     console.error("Homepage data query failed", error);
     return {
@@ -344,11 +368,11 @@ export async function getPublicSectionsData() {
       }),
       prisma.newsItem.findMany({
         where: { isVisible: true, showOnNews: true },
-        orderBy: [{ order: "asc" }, { publishedAt: "desc" }]
+        orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }, { order: "asc" }]
       }),
       prisma.newsItem.findMany({
         where: { isVisible: true, showOnAlumniNews: true },
-        orderBy: [{ order: "asc" }, { publishedAt: "desc" }]
+        orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }, { order: "asc" }]
       }),
       prisma.product.findMany({
         where: { isVisible: true, category: { isVisible: true } },
@@ -369,7 +393,7 @@ export async function getPublicSectionsData() {
       })
     ]);
 
-    return { identityItems, honorMembers, newsItems, alumniNewsItems, products, categories, events, participationItems };
+    return { identityItems, honorMembers, newsItems: pickFeaturedNewsItems(newsItems), alumniNewsItems: pickFeaturedNewsItems(alumniNewsItems), products, categories, events, participationItems };
   } catch {
     return { identityItems: [], honorMembers: [], newsItems: [], alumniNewsItems: [], products: [], categories: [], events: [], participationItems: [] };
   }
@@ -386,6 +410,39 @@ export async function getNewsItemBySlug(slug: string): Promise<PublicNewsItem | 
     });
   } catch {
     return null;
+  }
+}
+
+export async function getNewsItemsPage({
+  scope,
+  page = 1,
+  pageSize = 6
+}: {
+  scope: NewsScope;
+  page?: number;
+  pageSize?: number;
+}): Promise<{ items: PublicNewsItem[]; page: number; totalPages: number; totalCount: number }> {
+  if (!hasDatabase()) {
+    return { items: [], page: 1, totalPages: 1, totalCount: 0 };
+  }
+
+  const safePage = Math.max(1, page);
+  const where = getNewsScopeWhere(scope);
+
+  try {
+    const totalCount = await prisma.newsItem.count({ where });
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+    const currentPage = Math.min(safePage, totalPages);
+    const items = await prisma.newsItem.findMany({
+        where,
+        orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }, { order: "asc" }],
+        skip: (currentPage - 1) * pageSize,
+        take: pageSize
+      });
+
+    return { items, page: currentPage, totalPages, totalCount };
+  } catch {
+    return { items: [], page: 1, totalPages: 1, totalCount: 0 };
   }
 }
 

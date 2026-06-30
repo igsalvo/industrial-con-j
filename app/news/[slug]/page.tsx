@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { RichNewsBody } from "@/components/news/rich-news-body";
 import { getNewsItemBySlug } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 import { notFound } from "next/navigation";
@@ -35,9 +36,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
           </div>
         ) : null}
 
-        <div className="mt-8 whitespace-pre-line text-base leading-8 text-[color:var(--muted)]">
-          {newsItem.body}
-        </div>
+        <RichNewsBody body={newsItem.body} />
 
         {newsItem.ctaLink ? (
           <a href={newsItem.ctaLink} target="_blank" rel="noreferrer" className="btn-primary mt-8 gap-2">

@@ -1,4 +1,4 @@
-import { NewsCardGrid } from "@/components/news/news-card-grid";
+import { NewsFeaturedLoop } from "@/components/news/news-featured-loop";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getPublicSectionsData, getSiteConfig } from "@/lib/queries";
 import { notFound } from "next/navigation";
@@ -16,7 +16,7 @@ export default async function NewsPage() {
         title={siteConfig.newsSectionTitle || "Noticias de la comunidad"}
         description={siteConfig.newsSectionDescription || "Actualizaciones, hitos y novedades del ecosistema Industrial con J."}
       />
-      <NewsCardGrid items={newsItems} />
+      <NewsFeaturedLoop items={newsItems} moreHref="/news/todas" />
     </main>
   );
 }

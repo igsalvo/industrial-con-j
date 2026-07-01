@@ -30,10 +30,7 @@ export function EpisodeCard({ episode, mediaVariant = "default" }: EpisodeCardPr
     mediaVariant === "wide"
       ? "relative block aspect-[16/9] overflow-hidden border-b border-[color:var(--line)] bg-black"
       : "relative block h-56 overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)] md:h-64";
-  const imageClassName =
-    mediaVariant === "wide"
-      ? "object-contain transition duration-300 hover:scale-[1.02]"
-      : "object-cover transition duration-300 hover:scale-[1.03]";
+  const imageClassName = "object-contain transition duration-300";
 
   return (
     <article className="card overflow-hidden">

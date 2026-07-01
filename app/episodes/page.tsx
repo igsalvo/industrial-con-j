@@ -70,7 +70,7 @@ export default async function EpisodesPage({ searchParams }: { searchParams: Pro
               <img
                 src={featuredImage}
                 alt={featured.title}
-                className="h-full min-h-[320px] w-full object-cover"
+                className="h-full min-h-[320px] w-full object-contain"
                 style={{ objectPosition: `${featured.thumbnailPositionX || "center"} ${featured.thumbnailPositionY || "center"}` }}
               />
               <div className="absolute inset-0 bg-black/30" />

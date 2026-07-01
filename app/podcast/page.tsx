@@ -101,7 +101,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                         src={thumbnailUrl}
                         alt={episode.title}
                         fill
-                        className="object-contain transition duration-300 group-hover:scale-[1.03] lg:object-cover"
+                        className="object-contain transition duration-300"
                         style={{ objectPosition: imagePosition }}
                         sizes="(min-width: 1024px) 42vw, 100vw"
                       />

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllEpisodes, getAllGuests, getAllSponsors, getSiteConfig } from "@/lib/queries";
-import { getGuestImagePosition } from "@/lib/guest-image-position";
+import { getGuestImageFit, getGuestImagePosition } from "@/lib/guest-image-position";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
 import { GuestCard } from "@/components/ui/guest-card";
 import { SponsorShowcase } from "@/components/sections/sponsor-showcase";
@@ -189,6 +189,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
             <div className="grid gap-6 md:grid-cols-2">
               {featuredGuests.map((guest) => {
                 const imagePosition = getGuestImagePosition(guest);
+                const imageFit = getGuestImageFit(guest);
                 const latestEpisode = guest.episodes?.[0];
 
                 return (
@@ -205,7 +206,7 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
                           src={guest.profileImage}
                           alt={guest.name}
                           fill
-                          className="object-cover"
+                          className={imageFit}
                           style={{ objectPosition: imagePosition }}
                           sizes="(min-width: 1024px) 24vw, (min-width: 768px) 45vw, 100vw"
                         />

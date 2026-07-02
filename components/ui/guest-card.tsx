@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getGuestImagePosition } from "@/lib/guest-image-position";
+import { getGuestImageFit, getGuestImagePosition } from "@/lib/guest-image-position";
 
 export function GuestCard({
   guest
@@ -17,12 +17,13 @@ export function GuestCard({
   };
 }) {
   const imagePosition = getGuestImagePosition(guest);
+  const imageFit = getGuestImageFit(guest);
   const latestEpisode = guest.episodes?.[0];
 
   return (
     <article className="card flex h-full min-w-0 flex-col overflow-hidden">
       <div className="relative aspect-[4/3] overflow-hidden border-b border-[color:var(--line)] bg-[linear-gradient(135deg,#d70904,#2b2b2b)]">
-        {guest.profileImage ? <img src={guest.profileImage} alt={guest.name} className="guest-card-image h-full w-full object-cover" style={{ objectPosition: imagePosition }} /> : null}
+        {guest.profileImage ? <img src={guest.profileImage} alt={guest.name} className={`guest-card-image h-full w-full ${imageFit}`} style={{ objectPosition: imagePosition }} /> : null}
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <h3 className="text-2xl" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getGuestImagePosition } from "@/lib/guest-image-position";
 
 export function GuestCard({
   guest
@@ -15,7 +16,7 @@ export function GuestCard({
     episodes?: Array<{ slug: string; title: string }>;
   };
 }) {
-  const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
+  const imagePosition = getGuestImagePosition(guest);
   const latestEpisode = guest.episodes?.[0];
 
   return (

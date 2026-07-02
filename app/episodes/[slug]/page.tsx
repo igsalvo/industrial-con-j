@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Music2, Youtube } from "lucide-react";
 import { getEpisodeBySlug, getSiteConfig } from "@/lib/queries";
+import { getGuestImagePosition } from "@/lib/guest-image-position";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { PublicSurveyForm } from "@/components/forms/public-survey-form";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-link";
@@ -116,7 +117,7 @@ export default async function EpisodeDetailPage({ params }: { params: Promise<{ 
                           alt={guest.name}
                           fill
                           className="object-cover"
-                          style={{ objectPosition: `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}` }}
+                          style={{ objectPosition: getGuestImagePosition(guest) }}
                           sizes="72px"
                         />
                       ) : null}

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getGuestBySlug } from "@/lib/queries";
+import { getGuestImagePosition } from "@/lib/guest-image-position";
 import { EpisodeCard } from "@/components/ui/episode-card";
 import { TrackedAnchor } from "@/components/analytics/tracked-link";
 
@@ -13,7 +14,7 @@ export default async function GuestDetailPage({ params }: { params: Promise<{ sl
   }
 
   const socialLinks = (guest.socialLinks ?? {}) as Record<string, string | undefined>;
-  const imagePosition = `${guest.profilePositionX || "center"} ${guest.profilePositionY || "center"}`;
+  const imagePosition = getGuestImagePosition(guest);
   const getSocialEventName = (key: string, url?: string) => {
     const value = `${key} ${url || ""}`.toLowerCase();
     if (value.includes("instagram")) return "click_instagram";

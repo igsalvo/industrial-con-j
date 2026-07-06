@@ -197,26 +197,29 @@ export function SiteHeader({
               if (link.href === "/honor") {
                 return (
                   <div key={link.href} className="group relative">
-                    <button
-                      type="button"
+                    <Link
+                      href={link.href}
                       className={`inline-flex items-center gap-1 text-base transition hover:text-[color:var(--foreground)] ${isActive ? "text-[color:var(--foreground)]" : "text-[color:var(--muted)]"}`}
                       aria-current={isActive ? "page" : undefined}
                       aria-haspopup="menu"
                       style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                      onClick={() => trackNavigation(link.href, link.label, "header_nav")}
                     >
                       {link.label}
                       <ChevronDown size={15} />
-                    </button>
-                    <div className="invisible absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-2 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                      {alumniLinks.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className="block rounded-xl px-4 py-3 text-sm font-semibold text-[color:var(--foreground)] transition hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                    </Link>
+                    <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                      <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-2 shadow-2xl">
+                        {alumniLinks.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className="block rounded-xl px-4 py-3 text-sm font-semibold text-[color:var(--foreground)] transition hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 );

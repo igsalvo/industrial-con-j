@@ -11,6 +11,7 @@ export const maxDuration = 15;
 const DB_TIMEOUT_MS = 5000;
 const CEIN_QUOTE_EMAIL = "cein@cein.cl";
 const QUOTE_CC_EMAIL = "vinculacion.dii@uchile.cl";
+const PURCHASE_ID_PREFIX = "INDUSTRIALCONJ";
 
 const quoteSchema = z.object({
   name: z.string().trim().min(1, "Ingresa tu nombre."),
@@ -43,7 +44,17 @@ function formatPrice(value: number | undefined) {
   return typeof value === "number" && Number.isFinite(value) ? `$${value.toLocaleString("es-CL")}` : "Sin precio";
 }
 
-function buildEmailText(payload: z.infer<typeof quoteSchema>) {
+function buildPurchaseId() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const suffix = randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase();
+  return `${PURCHASE_ID_PREFIX}-${timestamp}-${suffix}`;
+}
+
+function buildCcRecipients(requesterEmail: string) {
+  return Array.from(new Set([QUOTE_CC_EMAIL, requesterEmail].map((email) => email.trim().toLowerCase())));
+}
+
+function buildEmailText(payload: z.infer<typeof quoteSchema>, purchaseId: string) {
   const requestedAt = new Intl.DateTimeFormat("es-CL", {
     dateStyle: "full",
     timeStyle: "short",
@@ -57,6 +68,7 @@ function buildEmailText(payload: z.infer<typeof quoteSchema>) {
   return [
     "Nueva cotización TienDIIta",
     "",
+    `Identificador de compra: ${purchaseId}`,
     `Fecha de solicitud: ${requestedAt}`,
     `Nombre: ${payload.name}`,
     `Correo: ${payload.email}`,
@@ -72,14 +84,15 @@ function buildEmailText(payload: z.infer<typeof quoteSchema>) {
 export async function POST(request: Request) {
   try {
     const payload = quoteSchema.parse(await request.json());
-    const emailText = buildEmailText(payload);
+    const purchaseId = buildPurchaseId();
+    const emailText = buildEmailText(payload, purchaseId);
     const id = randomUUID();
 
     const result = await sendFormEmail({
       to: CEIN_QUOTE_EMAIL,
-      cc: QUOTE_CC_EMAIL,
+      cc: buildCcRecipients(payload.email),
       replyTo: payload.email,
-      subject: "Nueva cotización TienDIIta",
+      subject: `Nueva cotización TienDIIta ${purchaseId}`,
       text: emailText
     });
 
@@ -103,6 +116,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       id,
+      purchaseId,
       storageSkipped,
       emailSkipped: result.skipped,
       message: result.skipped ? "Recibimos tu cotización. Falta configurar RESEND_API_KEY para enviar el correo." : "Cotización enviada correctamente."

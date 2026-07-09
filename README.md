@@ -153,7 +153,7 @@ FORM_EMAIL_TO="vinculacion.dii@uchile.cl"
 FORM_EMAIL_FROM="Industrial con J <contacto@dominio-verificado.cl>"
 ```
 
-`FORM_EMAIL_TO` defaults to `vinculacion.dii@uchile.cl`. `FORM_EMAIL_FROM` must use a domain verified in Resend. Contact, donation, and quote forms use the visitor's email as `Reply-To`; without `RESEND_API_KEY`, requests are still stored as contact messages.
+`FORM_EMAIL_TO` defaults to `vinculacion.dii@uchile.cl`. `FORM_EMAIL_FROM` must use a domain verified in Resend. Contact and donation forms are sent only to `FORM_EMAIL_TO`; quote requests from TienDIIta are sent to `cein@cein.cl` with a copy to the configured quote email, or `FORM_EMAIL_TO` when no quote email is configured. All forms use the visitor's email as `Reply-To`; without `RESEND_API_KEY`, requests are still stored as contact messages.
 
 ## Local Setup
 

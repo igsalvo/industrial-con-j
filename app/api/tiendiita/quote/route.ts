@@ -2,13 +2,14 @@ import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { hasDatabase } from "@/lib/queries";
+import { getSiteConfig, hasDatabase } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
-import { sendFormEmail } from "@/lib/email";
+import { getDefaultFormEmailTo, sendFormEmail } from "@/lib/email";
 
 export const maxDuration = 15;
 
 const DB_TIMEOUT_MS = 5000;
+const CEIN_QUOTE_EMAIL = "cein@cein.cl";
 
 const quoteSchema = z.object({
   name: z.string().trim().min(1, "Ingresa tu nombre."),
@@ -67,13 +68,25 @@ function buildEmailText(payload: z.infer<typeof quoteSchema>) {
     .join("\n");
 }
 
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function getQuoteCcRecipient(productQuoteEmail: string | null) {
+  const recipient = productQuoteEmail || getDefaultFormEmailTo();
+  return normalizeEmail(recipient) === normalizeEmail(CEIN_QUOTE_EMAIL) ? undefined : recipient;
+}
+
 export async function POST(request: Request) {
   try {
     const payload = quoteSchema.parse(await request.json());
+    const config = await getSiteConfig();
     const emailText = buildEmailText(payload);
     const id = randomUUID();
 
     const result = await sendFormEmail({
+      to: CEIN_QUOTE_EMAIL,
+      cc: getQuoteCcRecipient(config.productQuoteEmail),
       replyTo: payload.email,
       subject: "Nueva cotización TienDIIta",
       text: emailText

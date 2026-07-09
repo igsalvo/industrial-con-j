@@ -5,6 +5,8 @@ type SendFormEmailInput = {
   replyTo: string;
   subject: string;
   text: string;
+  to?: string | string[];
+  cc?: string | string[];
 };
 
 function getResendErrorMessage(body: string) {
@@ -22,10 +24,14 @@ function getResendErrorMessage(body: string) {
   }
 }
 
-export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInput) {
+export function getDefaultFormEmailTo() {
+  return process.env.FORM_EMAIL_TO || DEFAULT_RECIPIENT;
+}
+
+export async function sendFormEmail({ replyTo, subject, text, to, cc }: SendFormEmailInput) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.FORM_EMAIL_FROM || process.env.QUOTE_EMAIL_FROM || "Industrial con J <onboarding@resend.dev>";
-  const to = process.env.FORM_EMAIL_TO || DEFAULT_RECIPIENT;
+  const recipients = to || getDefaultFormEmailTo();
 
   if (!apiKey) {
     return { skipped: true };
@@ -43,7 +49,8 @@ export async function sendFormEmail({ replyTo, subject, text }: SendFormEmailInp
     },
     body: JSON.stringify({
       from,
-      to,
+      to: recipients,
+      ...(cc ? { cc } : {}),
       reply_to: replyTo,
       subject,
       text

@@ -200,6 +200,7 @@ model SiteConfig {
   showParticipationSection    Boolean  @default(true)
   showCommunityLink           Boolean  @default(true)
   showContactLink             Boolean  @default(true)
+  showEnglishVersion          Boolean  @default(false)
   showThemeToggle             Boolean  @default(false)
   showDonationsSection        Boolean  @default(true)
   showHomePopup               Boolean  @default(false)

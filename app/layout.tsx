@@ -44,6 +44,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               showCommunityLink={siteConfig.showCommunityLink}
               showDonationsLink={siteConfig.showDonationsSection}
               showContactLink={siteConfig.showContactLink}
+              showEnglishVersion={siteConfig.showEnglishVersion}
               showThemeToggle={siteConfig.showThemeToggle}
               logoUrl={siteConfig.logoUrl}
             />

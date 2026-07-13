@@ -43,6 +43,7 @@ export function SiteHeader({
   showCommunityLink = true,
   showDonationsLink = true,
   showContactLink = true,
+  showEnglishVersion = false,
   showThemeToggle = false,
   logoUrl
 }: {
@@ -55,6 +56,7 @@ export function SiteHeader({
   showCommunityLink?: boolean;
   showDonationsLink?: boolean;
   showContactLink?: boolean;
+  showEnglishVersion?: boolean;
   showThemeToggle?: boolean;
   logoUrl?: string | null;
 }) {
@@ -266,7 +268,7 @@ export function SiteHeader({
               <span className="grid h-6 min-w-6 place-items-center rounded-full bg-white px-2 text-xs font-black text-[color:var(--accent)]">{cartCount}</span>
             </button>
           ) : null}
-          {!isAdminRoute ? <LanguageToggle /> : null}
+          {!isAdminRoute && showEnglishVersion ? <LanguageToggle /> : null}
           {showThemeToggle ? <div className="hidden sm:block">
             <ThemeToggle />
           </div> : null}
@@ -398,7 +400,7 @@ export function SiteHeader({
                 </button>
               ) : null}
               <div className="flex flex-wrap items-center gap-3">
-                <LanguageToggle />
+                {showEnglishVersion ? <LanguageToggle /> : null}
                 {showThemeToggle ? <ThemeToggle /> : null}
               </div>
             </div>

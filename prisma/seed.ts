@@ -41,6 +41,7 @@ async function main() {
       showEventsSection: true,
       showParticipationSection: true,
       showCommunityLink: true,
+      showEnglishVersion: false,
       showDonationsSection: true,
       showSponsorBanner: true,
       sponsorBannerTitle: "Aliados",

@@ -22,6 +22,7 @@ type SiteConfigShape = {
   showParticipationSection: boolean;
   showCommunityLink: boolean;
   showContactLink: boolean;
+  showEnglishVersion: boolean;
   showThemeToggle: boolean;
   showDonationsSection: boolean;
   showHomePopup: boolean;
@@ -295,6 +296,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
       showParticipationSection: formData.get("showParticipationSection") === "on",
       showCommunityLink: formData.get("showCommunityLink") === "on",
       showContactLink: formData.get("showContactLink") === "on",
+      showEnglishVersion: formData.get("showEnglishVersion") === "on",
       showThemeToggle: formData.get("showThemeToggle") === "on",
       showDonationsSection: formData.get("showDonationsSection") === "on",
       showHomePopup: formData.get("showHomePopup") === "on",
@@ -435,6 +437,7 @@ export function SiteConfigForm({ config }: { config: SiteConfigShape }) {
     { name: "showParticipationSection", label: "Mostrar participa", defaultChecked: config.showParticipationSection },
     { name: "showCommunityLink", label: "Mostrar Comunidad en footer", defaultChecked: config.showCommunityLink },
     { name: "showContactLink", label: "Mostrar Contacto en barra superior", defaultChecked: config.showContactLink },
+    { name: "showEnglishVersion", label: "Activar versión en inglés", defaultChecked: config.showEnglishVersion },
     { name: "showThemeToggle", label: "Permitir cambio modo claro/oscuro", defaultChecked: config.showThemeToggle }
   ];
 

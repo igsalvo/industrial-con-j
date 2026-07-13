@@ -18,6 +18,7 @@ export const defaultSiteConfig = {
   showParticipationSection: true,
   showCommunityLink: true,
   showContactLink: true,
+  showEnglishVersion: false,
   showThemeToggle: false,
   showDonationsSection: true,
   showHomePopup: false,

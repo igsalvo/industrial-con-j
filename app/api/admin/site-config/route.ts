@@ -96,6 +96,7 @@ export async function PATCH(request: Request) {
     showParticipationSection: payload.showParticipationSection === true,
     showCommunityLink: payload.showCommunityLink === true,
     showContactLink: payload.showContactLink === true,
+    showEnglishVersion: payload.showEnglishVersion === true,
     showThemeToggle: payload.showThemeToggle === true,
     showDonationsSection: payload.showDonationsSection === true,
     showHomePopup: payload.showHomePopup === true,
